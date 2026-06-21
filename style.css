@@ -5,17 +5,17 @@
     font-family:Arial,sans-serif;
 }
 
-/* الصفحة */
+/* الخلفية */
 body{
     display:flex;
     justify-content:center;
     align-items:flex-start;
     min-height:100vh;
-    padding:40px 0;
+    padding:40px 10px;
     background: radial-gradient(circle,#f3f4f6,#e5e7eb);
 }
 
-/* الكارت الرئيسي */
+/* الكارد */
 .phone{
     width:380px;
     min-height:750px;
@@ -28,12 +28,11 @@ body{
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:12px;
+
+    gap:18px; /* 👈 المسافات الصح */
 
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
     overflow:hidden;
-
-    border:1px solid rgba(255,255,255,0.2);
 }
 
 /* الصورة */
@@ -42,18 +41,6 @@ body{
     height:120px;
     border-radius:50%;
     object-fit:cover;
-}
-
-/* العنوان */
-h1{
-    margin:10px 0 5px;
-    font-size:22px;
-}
-
-/* الوصف */
-p{
-    opacity:0.85;
-    font-size:14px;
 }
 
 /* زر اللغة */
@@ -74,7 +61,20 @@ p{
     backdrop-filter: blur(10px);
 }
 
-/* أزرار الروابط */
+/* العنوان */
+h1{
+    font-size:22px;
+    margin-top:5px;
+}
+
+/* الوصف */
+p{
+    opacity:0.85;
+    font-size:14px;
+    margin-top:-10px;
+}
+
+/* الأزرار */
 .btn{
     width:100%;
     display:block;
@@ -97,7 +97,7 @@ p{
     box-shadow:0 10px 20px rgba(0,0,0,0.15);
 }
 
-/* السوشيال لو استخدمته */
+/* السوشيال */
 .socials{
     display:flex;
     justify-content:center;
