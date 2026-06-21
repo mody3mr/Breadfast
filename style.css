@@ -17,13 +17,19 @@ body{
 .phone{
     width:380px;
     min-height:750px;
-    border-radius:40px;
-    padding:40px 25px;
-    text-align:center;
-    background: linear-gradient(135deg,#B00A8B,#d946ef,#fb923c);
+    border-radius:30px;
+    padding:30px 20px;
+    box-sizing:border-box;
+
+    background: linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
     color:white;
 
-    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.25);
     overflow:hidden;
 }
 
@@ -77,15 +83,15 @@ p{
     width:100%;
     display:flex;
     justify-content:flex-end;
-    margin-bottom:15px;
 }
 
 .lang button{
-    background:white;
-    color:#333;
-    border:none;
-    padding:8px 15px;
+    background:rgba(255,255,255,0.2);
+    color:white;
+    border:1px solid rgba(255,255,255,0.4);
+    padding:6px 14px;
     border-radius:20px;
     cursor:pointer;
-    font-weight:bold;
+    font-size:13px;
+    backdrop-filter: blur(10px);
 }
