@@ -10,8 +10,8 @@ body{
     justify-content:center;
     align-items:flex-start;
     min-height:100vh;
-    padding:40px 10px;
-    background: radial-gradient(circle,#f3f4f6,#e5e7eb);
+    background:#f3f4f6;
+    padding:40px 0;
 }
 
 .phone{
@@ -19,6 +19,7 @@ body{
     min-height:750px;
     border-radius:30px;
     padding:30px 20px;
+    box-sizing:border-box;
 
     background: linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
     color:white;
@@ -26,19 +27,42 @@ body{
     display:flex;
     flex-direction:column;
     align-items:center;
-
-    gap:20px; /* 👈 ده اللي بيعمل المسافات */
+    gap:12px;
 
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
     overflow:hidden;
 }
 
-/* مهم جدًا: نمسح أي margins بتكسر الـ gap */
-.phone > *{
-    margin:0 !important;
+.avatar{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
 }
 
-/* زر اللغة */
+h1{
+    margin:10px 0 5px;
+    font-size:22px;
+}
+
+p{
+    opacity:0.85;
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.socials{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.socials a{
+    color:white;
+    font-size:24px;
+}
+
 .lang{
     width:100%;
     display:flex;
@@ -51,35 +75,7 @@ body{
     border:1px solid rgba(255,255,255,0.4);
     padding:6px 14px;
     border-radius:20px;
-}
-
-/* الصورة */
-.avatar{
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
-/* النص */
-h1{
-    font-size:22px;
-}
-
-p{
-    font-size:14px;
-    opacity:0.85;
-}
-
-/* الأزرار */
-.btn{
-    width:100%;
-    display:block;
-    background:white;
-    color:#222;
-    text-decoration:none;
-    padding:14px;
-    border-radius:12px;
-    font-weight:600;
-    text-align:center;
+    cursor:pointer;
+    font-size:13px;
+    backdrop-filter: blur(10px);
 }
