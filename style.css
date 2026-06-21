@@ -5,6 +5,7 @@
     font-family:Arial,sans-serif;
 }
 
+/* الصفحة */
 body{
     display:flex;
     justify-content:center;
@@ -28,15 +29,28 @@ body{
     flex-direction:column;
     align-items:center;
 
-    gap:25px; /* 👈 دي المهمة */
+    gap:18px;
 
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
     overflow:hidden;
 }
 
-/* أي عناصر جوه */
-.phone > *{
-    margin:0;
+/* زر اللغة */
+.lang{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.lang button{
+    background:rgba(255,255,255,0.2);
+    color:white;
+    border:1px solid rgba(255,255,255,0.4);
+    padding:6px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:13px;
+    backdrop-filter: blur(10px);
 }
 
 /* الصورة */
@@ -47,40 +61,33 @@ body{
     object-fit:cover;
 }
 
-/* زر اللغة */
-.lang{
-    width:100%;
-    display:flex;
-    justify-content:flex-end;
-}
-
-/* النص */
+/* العنوان */
 h1{
     font-size:22px;
+    margin:0;
 }
 
+/* الوصف */
 p{
     font-size:14px;
     opacity:0.85;
+    margin:0;
 }
 
 /* الأزرار */
 .btn{
     width:100%;
     display:block;
-
     background:white;
     color:#222;
     text-decoration:none;
-
     padding:14px;
     border-radius:12px;
     font-weight:600;
     text-align:center;
+    transition:0.2s;
 }
 
-/* سوشيال */
-.socials{
-    display:flex;
-    gap:15px;
+.btn:hover{
+    transform:translateY(-2px);
 }
