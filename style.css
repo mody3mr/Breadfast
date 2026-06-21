@@ -75,3 +75,19 @@ p{
 .btn:hover{
     transform:translateY(-3px);
 }
+
+.lang {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.lang button {
+    background: white;
+    color: #333;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
