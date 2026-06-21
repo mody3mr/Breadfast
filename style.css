@@ -10,7 +10,7 @@ body{
     justify-content:center;
     align-items:center;
     min-height:100vh;
-    background:#B00A8B;
+    background:#f3f4f6;
 }
 
 .phone{
@@ -22,7 +22,7 @@ body{
 
     background: linear-gradient(
         135deg,
-        #4f46e5,
+        #B00A8B,
         #d946ef,
         #fb923c
     );
