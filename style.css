@@ -5,7 +5,6 @@
     font-family:Arial,sans-serif;
 }
 
-/* الصفحة */
 body{
     display:flex;
     justify-content:center;
@@ -15,7 +14,6 @@ body{
     background: radial-gradient(circle,#f3f4f6,#e5e7eb);
 }
 
-/* الكارد */
 .phone{
     width:380px;
     min-height:750px;
@@ -29,10 +27,15 @@ body{
     flex-direction:column;
     align-items:center;
 
-    gap:18px;
+    gap:20px; /* 👈 ده اللي بيعمل المسافات */
 
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
     overflow:hidden;
+}
+
+/* مهم جدًا: نمسح أي margins بتكسر الـ gap */
+.phone > *{
+    margin:0 !important;
 }
 
 /* زر اللغة */
@@ -48,9 +51,6 @@ body{
     border:1px solid rgba(255,255,255,0.4);
     padding:6px 14px;
     border-radius:20px;
-    cursor:pointer;
-    font-size:13px;
-    backdrop-filter: blur(10px);
 }
 
 /* الصورة */
@@ -61,17 +61,14 @@ body{
     object-fit:cover;
 }
 
-/* العنوان */
+/* النص */
 h1{
     font-size:22px;
-    margin:0;
 }
 
-/* الوصف */
 p{
     font-size:14px;
     opacity:0.85;
-    margin:0;
 }
 
 /* الأزرار */
@@ -85,9 +82,4 @@ p{
     border-radius:12px;
     font-weight:600;
     text-align:center;
-    transition:0.2s;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
 }
