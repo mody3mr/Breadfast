@@ -78,13 +78,12 @@ p{
     margin-bottom: 15px;
 }
 
-.lang button {
-    background: white;
-    color: #333;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 20px;
-    font-size: 15px;
-    cursor: pointer;
-    font-weight: bold;
+.lang button{
+    background:white;
+    color:#333;
+    border:none;
+    padding:8px 15px;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:bold;
 }
