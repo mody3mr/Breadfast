@@ -85,20 +85,138 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 let isArabic = false;
 
+const texts = {
+    en: {
+        name: "Moaaz Mohamed",
+        desc: "Senior Manager",
+        btns: [
+            "Almaza",
+            "Madinaty",
+            "Madinaty Strip Zone",
+            "Total Zayed",
+            "TOTAL Alex Gates Drive Thru",
+            "New Cairo Drive Thru",
+            "Narges",
+            "City Center Maadi",
+            "Mindhaus",
+            "TOTAL Golden Square Drive-thru",
+            "Adonc Anab",
+            "Chillout El Rehab",
+            "Mobil Kiosk",
+            "Smart",
+            "Mall Of Arabia",
+            "Vodafone",
+            "Amazon Office",
+            "P&G",
+            "Pepsico",
+            "Etisalat",
+            "Ahli United Bank Egypt",
+            "CO-55 Lafarge Building",
+            "Webhelp",
+            "Incorta",
+            "Schneider",
+            "Alex Bank",
+            "Mall of Egypt",
+            "Sokhna Event",
+            "maadi 233",
+            "korba",
+            "smash",
+            "family park",
+            "AIB",
+            "BUE",
+            "WOC",
+            "cairo bank",
+            "Alex bank",
+            "AUC",
+            "ENBD bank",
+            "Nile Tower",
+            "poly park",
+            "East hub",
+            "giza system",
+            "uber",
+            "ryze club",
+            "B.tech",
+            "Full UP Zayed",
+            "Hillbirton",
+            "Campus"
+        ],
+        langBtn: "العربية"
+    },
+
+    ar: {
+        name: "معاذ محمد",
+        desc: "مدير أول",
+        btns: [
+            "الماظة",
+            "مدينتي",
+            "سترِيب زون مدينتي",
+            "توتال زايد",
+            "توتال الإسكندرية",
+            "نيو كايرو درايف",
+            "النرجس",
+            "سيتي سنتر المعادي",
+            "ميندهاوس",
+            "توتال جولدن سكوير",
+            "أدونِك عناب",
+            "تشيل أوت الرحاب",
+            "موبايل كيوسك",
+            "سمارت",
+            "مول العرب",
+            "فودافون",
+            "أمازون",
+            "بروكتر آند جامبل",
+            "بيبسيكو",
+            "اتصالات",
+            "بنك عوده",
+            "لافارج",
+            "ويب هيلب",
+            "إنكورتا",
+            "شنايدر",
+            "بنك الإسكندرية",
+            "مول مصر",
+            "السوخنة",
+            "المعادي 233",
+            "الكوربة",
+            "سمَاش",
+            "فاميلي بارك",
+            "AIB",
+            "الجامعة البريطانية",
+            "WOC",
+            "البنك الأهلي",
+            "بنك الإسكندرية",
+            "AUC",
+            "ENBD",
+            "نيل تاور",
+            "بولي بارك",
+            "إيست هب",
+            "جيزة سيستم",
+            "أوبر",
+            "رايز كلوب",
+            "بي تك",
+            "فول أب زايد",
+            "هيلبيرتون",
+            "كامبوس"
+        ],
+        langBtn: "English"
+    }
+};
+
 function changeLang(){
 
-    if(isArabic){
-        document.querySelector("h1").innerHTML = "Moaaz Mohamed";
-        document.querySelector("p").innerHTML = "Senior Manager";
-        document.querySelector(".lang button").innerHTML = "العربية";
-        isArabic = false;
-    }else{
-        document.querySelector("h1").innerHTML = "معاذ محمد";
-        document.querySelector("p").innerHTML = "مدير أول";
-        document.querySelector(".lang button").innerHTML = "English";
-        isArabic = true;
-    }
-}
+    isArabic = !isArabic;
+
+    let lang = isArabic ? "ar" : "en";
+
+    document.querySelector("h1").innerHTML = texts[lang].name;
+    document.querySelector("p").innerHTML = texts[lang].desc;
+    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
+
+    let buttons = document.querySelectorAll(".btn");
+
+    buttons.forEach((btn, i) => {
+        btn.innerHTML = texts[lang].btns[i];
+    });
+}}
 </script>
     
 </body>
