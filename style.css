@@ -26,40 +26,9 @@ body{
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:12px;
 
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
     overflow:hidden;
-}
-
-.avatar{
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
-h1{
-    margin:10px 0 5px;
-    font-size:22px;
-}
-
-p{
-    opacity:0.85;
-    font-size:14px;
-    margin-bottom:15px;
-}
-
-.socials{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    margin-bottom:30px;
-}
-
-.socials a{
-    color:white;
-    font-size:24px;
 }
 
 /* زر اللغة */
@@ -75,6 +44,38 @@ p{
     border:1px solid rgba(255,255,255,0.4);
     padding:6px 14px;
     border-radius:20px;
-    cursor:pointer;
-    font-size:13px;
+}
+
+/* الصورة */
+.avatar{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+/* النص */
+h1{
+    font-size:22px;
+    margin-top:10px;
+}
+
+p{
+    font-size:14px;
+    opacity:0.85;
+    margin-top:5px;
+}
+
+/* الزرار */
+.btn{
+    width:100%;
+    display:block;
+    background:white;
+    color:#222;
+    text-decoration:none;
+    padding:14px;
+    border-radius:12px;
+    font-weight:600;
+    text-align:center;
+    margin-top:10px;
 }
