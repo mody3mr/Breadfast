@@ -83,14 +83,22 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
     <script>
 
+let isArabic = false;
+
 function changeLang(){
 
-document.querySelector("h1").innerHTML = "معاذ محمد";
-
-document.querySelector("p").innerHTML = "موقع فروع FPs Coffee";
-
+    if(isArabic){
+        document.querySelector("h1").innerHTML = "Moaaz Mohamed";
+        document.querySelector("p").innerHTML = "Senior Manager";
+        document.querySelector(".lang button").innerHTML = "العربية";
+        isArabic = false;
+    }else{
+        document.querySelector("h1").innerHTML = "معاذ محمد";
+        document.querySelector("p").innerHTML = "مدير أول";
+        document.querySelector(".lang button").innerHTML = "English";
+        isArabic = true;
+    }
 }
-
 </script>
     
 </body>
