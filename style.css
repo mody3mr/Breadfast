@@ -73,9 +73,11 @@ p{
     transform:translateY(-3px);
 }
 
-.lang {
-    text-align: center;
-    margin-bottom: 15px;
+.lang{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:15px;
 }
 
 .lang button{
