@@ -6,10 +6,12 @@
 }
 
 body{
-    justify-content:flex-start;
+    display:flex;
+    justify-content:center;
     align-items:flex-start;
     min-height:100vh;
     background:#f3f4f6;
+    padding:40px 0;
 }
 
 .phone{
