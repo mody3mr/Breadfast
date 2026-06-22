@@ -3,534 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية - FPs Coffee</title>
+    <title>لوحة التحكم الاحترافية - تسجيل الدخول</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         body {
-            font-family: 'Cairo', sans-serif;
-        }
-        .swal2-popup {
-            font-family: 'Cairo', sans-serif !important;
-            direction: rtl !important;
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a;
         }
     </style>
 </head>
-<body class="bg-gray-100 antialiased text-right">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div id="login-screen" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-[100] px-4">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md space-y-6">
-            <div class="text-center space-y-2">
-                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800">تسجيل دخول الإدارة</h2>
-                <p class="text-sm text-gray-400">يرجى إدخال حساب Firebase الـ Auth للوصول للوحة</p>
-            </div>
-            
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">البريد الإلكتروني</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                        <input type="email" id="email" required placeholder="example@domain.com" class="w-full bg-gray-50 border border-gray-200 rounded-lg pr-10 pl-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-left" dir="ltr">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">كلمة المرور</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-                            <i class="fa-solid fa-key"></i>
-                        </span>
-                        <input type="password" id="password" required placeholder="••••••••" class="w-full bg-gray-50 border border-gray-200 rounded-lg pr-10 pl-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-left" dir="ltr">
-                    </div>
-                </div>
-
-                <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-md transition-colors text-sm flex items-center justify-center gap-2">
-                    <span>دخول النظام</span> <i class="fa-solid fa-arrow-left-to-bracket"></i>
-                </button>
-            </form>
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
+        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            <i class="fa-solid fa-lock"></i>
         </div>
+
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">تسجيل دخول الإدارة</h2>
+        <p class="text-sm text-gray-500 mb-6">يرجى إدخال حساب Auth الـ Firebase للوصول للوحة</p>
+
+        <form id="loginForm" class="space-y-4 text-right">
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">البريد الإلكتروني</label>
+                <div class="relative">
+                    <input type="email" id="email" required placeholder="name@example.com"
+                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 text-left" dir="ltr">
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">كلمة المرور</label>
+                <div class="relative">
+                    <input type="password" id="password" required placeholder="••••••••"
+                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 text-left" dir="ltr">
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition duration-200 flex items-center justify-center gap-2">
+                <span id="btnText">دخول النظام</span>
+                <i class="fa-solid fa-arrow-right-to-bracket rotate-180"></i>
+            </button>
+        </form>
     </div>
 
-    <div id="dashboard-content" class="flex h-screen overflow-hidden hidden">
-        
-        <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex flex-shrink-0">
-            <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
-                <i class="fa-solid mt-1 ml-2 fa-mug-hot text-amber-500"></i> FPs Coffee
-            </div>
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
-                    <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسية
-                </a>
-            </nav>
-            <div class="p-4 border-t border-slate-800 text-sm text-slate-500 text-center">
-                إصدار النظام 1.0
-            </div>
-        </div>
-
-        <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
-            
-            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 flex-shrink-0">
-                <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 w-64">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
-                    <input type="text" id="adminSearch" placeholder="بحث سريع في الفروع..." onkeyup="window.searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full">
-                </div>
-                
-                <div class="flex items-center space-x-4 space-x-reverse relative">
-                    <div onclick="window.toggleUserDropdown(event)" class="flex items-center cursor-pointer select-none hover:bg-gray-50 p-1.5 rounded-lg transition-colors" id="userMenuButton">
-                        <span class="text-sm font-medium text-gray-700 ml-2">مدير النظام</span>
-                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-sm">
-                            M
-                        </div>
-                        <i class="fa-solid fa-chevron-down text-xs text-gray-400 mr-2 transition-transform duration-200" id="dropdownArrow"></i>
-                    </div>
-
-                    <div id="userDropdown" class="absolute left-0 top-14 bg-white border border-gray-100 rounded-xl shadow-xl w-48 py-1 z-50 hidden opacity-0 transition-all duration-200 transform scale-95">
-                        <div class="px-4 py-2 border-b border-gray-50">
-                            <p class="text-xs text-gray-400">مرحباً بك</p>
-                            <p id="userEmailDisplay" class="text-xs font-bold text-gray-700 mt-0.5 truncate">جاري التحميل...</p>
-                        </div>
-                        <button onclick="window.handleLogout()" class="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors text-right">
-                            <i class="fa-solid fa-arrow-right-from-bracket ml-2.5 w-4 text-center"></i> تسجيل الخروج
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <main class="p-6 space-y-6 flex-1">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div class="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 text-2xl order-last">
-                            <i class="fa-solid fa-store"></i>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-400 font-medium">إجمالي عدد الفروع</p>
-                            <h3 id="firebase-branches-count" class="text-3xl font-bold text-gray-800 mt-1">جاري التحميل...</h3>
-                            <span class="text-xs text-blue-500 font-semibold flex items-center mt-2">
-                                <i class="fa-solid fa-circle-check ml-1"></i> محدث حياً من Firebase
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div class="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-green-500 text-2xl order-last">
-                            <i class="fa-solid fa-eye"></i>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-400 font-medium">إجمالي عدد الزيارات</p>
-                            <h3 id="total-visits-count" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
-                            <span class="text-xs text-green-500 font-semibold flex items-center mt-2">
-                                <i class="fa-solid fa-circle-check ml-1"></i> قراءة حية ومباشرة
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h4 class="text-lg font-bold text-gray-800">قائمة الفروع الحالية</h4>
-                        <button onclick="window.openModal()" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">
-                            <i class="fa-solid fa-plus ml-2"></i> إضافة فرع جديد
-                        </button>
-                    </div>
-
-                    <div id="branches-list-container" class="space-y-3">
-                        <div class="text-center text-gray-400 py-8">جاري جلب الفروع الحالية...</div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <div id="branchModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
-                <h3 id="modalTitle" class="font-bold text-gray-800 text-lg">إضافة فرع جديد</h3>
-                <button type="button" onclick="window.closeModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <form id="branchForm" class="p-6 space-y-4 overflow-y-auto flex-1">
-                <input type="hidden" id="branchId">
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالعربي)</label>
-                        <input type="text" id="branchNameAr" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالإنجليزي)</label>
-                        <input type="text" id="branchNameEn" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">اسم مدير الفرع</label>
-                        <input type="text" id="managerName" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">رقم هاتف المدير</label>
-                        <input type="text" id="managerPhone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-left" dir="ltr">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">مواعيد العمل</label>
-                    <input type="text" id="workingHours" required placeholder="من 9 صباحاً إلى 11 مساءً" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">رابط موقع الفرع على الخريطة (Google Maps URL)</label>
-                    <input type="url" id="branchLocation" placeholder="https://maps.google.com/..." required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-left" dir="ltr">
-                </div>
-
-                <div class="border-t border-gray-100 pt-4 mt-2">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-md font-bold">بيانات الموظفين</span>
-                        <button type="button" onclick="window.addEmployeeField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1 rounded-md font-semibold transition-colors">
-                            <i class="fa-solid fa-plus ml-1"></i> إضافة موظف آخر
-                        </button>
-                    </div>
-                    <div id="employees-fields-container" class="space-y-3"></div>
-                </div>
-
-                <div class="flex items-center justify-end space-x-2 space-x-reverse pt-4 border-t border-gray-100 flex-shrink-0">
-                    <button type="button" onclick="window.closeModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">إلغاء</button>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">حفظ البيانات</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
-            authDomain: "breadfast-coffee.firebaseapp.com",
-            projectId: "breadfast-coffee",
-            storageBucket: "breadfast-coffee.firebasestorage.app",
-            messagingSenderId: "803906042715",
-            appId: "1:803906042715:web:1e8977716adc54947b787e"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        let localBranchesCache = [];
-        let isListenerActive = false;
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-start',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-
-        window.showToast = function(message, type = 'success') {
-            Toast.fire({ icon: type, title: message });
-        };
-
-        // تتبع حالة تسجيل الدخول والتحويل الفوري الشغال
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById("login-screen").classList.add("hidden");
-                document.getElementById("dashboard-content").classList.remove("hidden");
-                document.getElementById("userEmailDisplay").innerText = user.email;
-                if (!isListenerActive) {
-                    startRealtimeListener();
-                    isListenerActive = true;
-                }
-            } else {
-                document.getElementById("login-screen").classList.remove("hidden");
-                document.getElementById("dashboard-content").classList.add("hidden");
-            }
-        });
-
-        // حدث تسجيل الدخول
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
-            const btn = document.getElementById("loginBtn");
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> جاري التحقق...`;
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                window.showToast("تم تسجيل الدخول بنجاح! مرحباً بك", "success");
-            } catch (error) {
-                console.error("Auth Error:", error);
-                let errMsg = "فشل تسجيل الدخول! تحقق من البيانات.";
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                    errMsg = "البريد الإلكتروني أو كلمة المرور غير صحيحة!";
-                } else if (error.code === 'auth/invalid-email') {
-                    errMsg = "صيغة البريد الإلكتروني غير صحيحة!";
-                }
-                window.showToast(errMsg, "error");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<span>دخول النظام</span> <i class="fa-solid fa-arrow-left-to-bracket"></i>`;
-            }
-        });
-
-        window.handleLogout = async function() {
-            try {
-                await signOut(auth);
-                window.showToast("تم تسجيل الخروج بنجاح", "success");
-            } catch (error) {
-                window.showToast("حدث خطأ أثناء تسجيل الخروج", "error");
-            }
-        };
-
-        function startRealtimeListener() {
-            onSnapshot(collection(db, "branches"), (snapshot) => {
-                const data = [];
-                let totalVisits = 0;
-
-                snapshot.forEach(doc => {
-                    const bData = doc.data();
-                    data.push({ id: doc.id, ...bData });
-                    if(bData.visits) {
-                        totalVisits += Number(bData.visits);
-                    }
-                });
-
-                localBranchesCache = data;
-                document.getElementById("firebase-branches-count").innerText = data.length + " فروع";
-                document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString() + " زيارة";
-
-                renderAdminBranches(data);
-            });
+    <script>
+        // 1. تنظيف الرابط فوراً إذا كان ينتهي بعلامة استفهام معلقة لمنع تجميد Firebase
+        if (window.location.href.endsWith('?')) {
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash;
+            window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
         }
 
-        function renderAdminBranches(list) {
-            const container = document.getElementById("branches-list-container");
-            container.innerHTML = "";
+        // 2. معالجة الفرم عند الضغط على زر الدخول
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            // منع السلوك الافتراضي للمتصفح تماماً لمنع إعادة تحميل الصفحة أو إضافة "?" جديدة
+            e.preventDefault(); 
 
-            if (list.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-400 py-8">لا توجد فروع حالياً.</div>`;
-                return;
-            }
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
 
-            list.forEach(b => {
-                const card = document.createElement("div");
-                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md";
-                const mapUrl = b.location || "https://maps.google.com";
+            // تغيير شكل الزر لشكل التحميل لمنع الضغط المزدوج
+            submitBtn.disabled = true;
+            btnText.innerText = "جاري التحقق...";
 
-                card.innerHTML = `
-                    <div class="flex items-center space-x-4 space-x-reverse">
-                        <a href="${mapUrl}" target="_blank" class="w-10 h-10 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg flex items-center justify-center text-lg font-bold flex-shrink-0">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </a>
-                        <div class="text-right">
-                            <h5 class="font-bold text-gray-800 text-base">${b.nameAr || b.name} (${b.name || b.nameAr})</h5>
-                            <p class="text-xs text-gray-400 mt-0.5">المدير: ${b.managerName || 'لا يوجد'} | هاتف: ${b.phone || 'لا يوجد'} | المواعيد: ${b.workingHours || 'غير محددة'}</p>
-                            <span class="text-[11px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md mt-1 inline-block font-medium">عدد الموظفين: ${(b.employees || []).length}</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
-                        <button onclick='window.prepareEdit("${b.id}")' class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium flex items-center">
-                            <i class="fa-solid fa-pen-to-square ml-1.5 text-xs"></i> تعديل
-                        </button>
-                        <button onclick='window.deleteBranch("${b.id}")' class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium flex items-center">
-                            <i class="fa-solid fa-trash ml-1.5 text-xs"></i> حذف
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+            console.log("جاري محاولة تسجيل الدخول للمستخدم:", email);
 
-        document.getElementById("branchForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const bId = document.getElementById("branchId").value;
-            const employeeRows = document.querySelectorAll(".employee-row");
-            let employeesArray = [];
-            
-            employeeRows.forEach(row => {
-                const empName = row.querySelector(".emp-name-input").value;
-                const empPhone = row.querySelector(".emp-phone-input").value;
-                if(empName.trim() !== "") {
-                    employeesArray.push({ name: empName, phone: empPhone });
-                }
-            });
+            /* 3. هنا يتم ربط كود Firebase Auth الخاص بك
+               مثال افتراضي مستقر لـ Firebase:
+               
+               firebase.auth().signInWithEmailAndPassword(email, password)
+               .then((userCredential) => {
+                   // تسجيل الدخول نجح، التوجيه للوحة التحكم مع الهاش #
+                   window.location.href = "admin.html#"; 
+               })
+               .catch((error) => {
+                   // فشل تسجيل الدخول، إعادة الزر لطبيعته وعرض الخطأ
+                   alert("خطأ في تسجيل الدخول: " + error.message);
+                   submitBtn.disabled = false;
+                   btnText.innerText = "دخول النظام";
+               });
+            */
 
-            const docData = {
-                nameAr: document.getElementById("branchNameAr").value,
-                name: document.getElementById("branchNameEn").value,
-                managerName: document.getElementById("managerName").value,
-                phone: document.getElementById("managerPhone").value,
-                workingHours: document.getElementById("workingHours").value,
-                location: document.getElementById("branchLocation").value,
-                employees: employeesArray
-            };
-
-            try {
-                if (bId === "") {
-                    docData.visits = 0;
-                    await addDoc(collection(db, "branches"), docData);
-                    window.showToast("تم إضافة الفرع الجديد بنجاح!", "success");
-                } else {
-                    await updateDoc(doc(db, "branches", bId), docData);
-                    window.showToast("تم تحديث بيانات الفرع بنجاح!", "success");
-                }
-                window.closeModal();
-            } catch (error) {
-                window.showToast("حدث خطأ أثناء حفظ البيانات!", "error");
-            }
-        });
-
-        window.deleteBranch = async function(id) {
-            Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: "لن تتمكن من استعادة بيانات هذا الفرع بعد الحذف!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'نعم، احذفه!',
-                cancelButtonText: 'إلغاء'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        await deleteDoc(doc(db, "branches", id));
-                        window.showToast("تم حذف الفرع بنجاح", "success");
-                    } catch (error) {
-                        window.showToast("فشل في حذف الفرع!", "error");
-                    }
-                }
-            });
-        };
-
-        window.prepareEdit = function(id) {
-            const b = localBranchesCache.find(item => item.id === id);
-            if (!b) return;
-
-            document.getElementById("branchId").value = b.id;
-            document.getElementById("branchNameAr").value = b.nameAr || '';
-            document.getElementById("branchNameEn").value = b.name || '';
-            document.getElementById("managerName").value = b.managerName || '';
-            document.getElementById("managerPhone").value = b.phone || '';
-            document.getElementById("workingHours").value = b.workingHours || '';
-            document.getElementById("branchLocation").value = b.location || '';
-            
-            const container = document.getElementById("employees-fields-container");
-            container.innerHTML = "";
-            
-            if(b.employees && b.employees.length > 0) {
-                b.employees.forEach(emp => {
-                    window.addEmployeeField(emp.name || emp, emp.phone || '');
-                });
-            } else {
-                window.addEmployeeField();
-            }
-            document.getElementById("modalTitle").innerText = "تعديل بيانات فرع: " + (b.nameAr || b.name);
-            window.openModal();
-        };
-
-        window.searchAdminBranches = function() {
-            const query = document.getElementById("adminSearch").value.toLowerCase();
-            const filtered = localBranchesCache.filter(b => 
-                (b.nameAr || "").toLowerCase().includes(query) || 
-                (b.name || "").toLowerCase().includes(query) || 
-                (b.managerName || "").toLowerCase().includes(query)
-            );
-            renderAdminBranches(filtered);
-        };
-
-        window.toggleUserDropdown = function(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById("userDropdown");
-            const arrow = document.getElementById("dropdownArrow");
-            if (dropdown.classList.contains("hidden")) {
-                dropdown.classList.remove("hidden");
-                setTimeout(() => {
-                    dropdown.classList.remove("opacity-0", "scale-95");
-                    arrow.classList.add("rotate-180");
-                }, 10);
-            } else {
-                closeUserDropdown();
-            }
-        };
-
-        function closeUserDropdown() {
-            const dropdown = document.getElementById("userDropdown");
-            const arrow = document.getElementById("dropdownArrow");
-            if(!dropdown) return;
-            dropdown.classList.add("opacity-0", "scale-95");
-            if(arrow) arrow.classList.remove("rotate-180");
-            setTimeout(() => dropdown.classList.add("hidden"), 200);
-        }
-
-        document.addEventListener("click", () => closeUserDropdown());
-
-        // تم إصلاح وبناء الدالة المقطوعة بالكامل هنا 👇
-        window.addEmployeeField = function(name = '', phone = '') {
-            const container = document.getElementById("employees-fields-container");
-            const rowId = 'emp_' + Date.now() + Math.random().toString(36).substr(2, 4);
-            const row = document.createElement("div");
-            row.id = rowId;
-            row.className = "employee-row grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-3 rounded-lg relative pt-6 sm:pt-3";
-            row.innerHTML = `
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">اسم الموظف</label>
-                    <input type="text" value="${name}" required class="emp-name-input w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">رقم هاتف الموظف</label>
-                    <input type="text" value="${phone}" required class="emp-phone-input w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-left" dir="ltr">
-                </div>
-                <button type="button" onclick="window.removeEmployeeField('${rowId}')" class="absolute top-1 left-2 sm:top-7 text-red-400 hover:text-red-600 text-sm">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-            `;
-            container.appendChild(row);
-        };
-
-        window.removeEmployeeField = function(id) {
-            const row = document.getElementById(id);
-            if(row) row.remove();
-        };
-
-        window.openModal = function() {
-            const modal = document.getElementById('branchModal');
-            const container = document.getElementById("employees-fields-container");
-            if(container.innerHTML.trim() === "") window.addEmployeeField();
-            modal.classList.remove('hidden');
+            // محاكاة مؤقتة للتوجيه (احذف هذا الجزء بمجرد تفعيل كود Firebase الخاص بك أعلاه)
             setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modal.querySelector('.transform').classList.remove('scale-95');
-            }, 10);
-        };
-
-        window.closeModal = function() {
-            const modal = document.getElementById('branchModal');
-            modal.classList.add('opacity-0');
-            modal.querySelector('.transform').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.getElementById("branchForm").reset();
-                document.getElementById("branchId").value = "";
-                document.getElementById("employees-fields-container").innerHTML = "";
-                document.getElementById("modalTitle").innerText = "إضافة فرع جديد";
-            }, 300);
-        };
+                // التوجيه للوحة المفاتيح مباشرة عبر الهاش كما في لقطات الشاشة عندك
+                window.location.href = "admin.html#"; 
+            }, 1000);
+        });
     </script>
 </body>
 </html>
