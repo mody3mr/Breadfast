@@ -10,7 +10,7 @@
 
 <style>
 
-/* ===== Skeleton ===== */
+/* ===== Skeleton Loading ===== */
 .skeleton {
     height: 45px;
     margin: 8px 0;
@@ -25,7 +25,7 @@
     100% { background-position: 200% 0; }
 }
 
-/* ===== Button Animation ===== */
+/* ===== Button animation ===== */
 .btn {
     display:block;
     opacity:0;
@@ -40,25 +40,26 @@
     }
 }
 
-/* ===== Layout ===== */
+/* ===== Fix layout ===== */
 body {
     margin:0;
     font-family: Arial;
     background:#f7f7f7;
 }
 
+/* 👇 أهم حاجة عشان الصفحة ترجع في النص */
 .phone {
     max-width:420px;
-    margin:auto;
+    margin:0 auto;
     padding:15px;
 }
 
-/* ===== LOGIN (رجعناه) ===== */
-#loginBox{
-    display:none; /* لو عندك نظام لوجين فعلي تفعّله من data.js */
+/* ===== Loading ===== */
+#loading {
+    margin-top: 10px;
 }
 
-/* ===== FOOTER ===== */
+/* ===== Footer fix ===== */
 footer{
     text-align:center;
     padding:15px;
@@ -72,15 +73,6 @@ footer{
 
 <body>
 
-<!-- 🔐 LOGIN (رجعته زي ما كان) -->
-<div id="loginBox" class="phone">
-    <h3>Admin Login</h3>
-    <input placeholder="Username">
-    <input type="password" placeholder="Password">
-    <button>Login</button>
-</div>
-
-<!-- APP -->
 <div class="phone">
 
 <div class="lang">
@@ -94,20 +86,20 @@ footer{
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- Skeleton -->
+<!-- 🔥 Loading -->
 <div id="loading"></div>
 
-<!-- Branches -->
+<!-- 🔥 Branches -->
 <div id="branches"></div>
 
 </div>
 
-<!-- Footer رجع -->
+<!-- Footer (تحت الصفحة طبيعي) -->
 <footer>
 <p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
 </footer>
 
-<!-- Firebase Data -->
+<!-- Firebase -->
 <script type="module" src="data.js"></script>
 
 <script>
@@ -131,8 +123,10 @@ ar: {
 
 /* ===== Skeleton ===== */
 function showSkeleton(count = 6){
+
     const loading = document.getElementById("loading");
     loading.innerHTML = "";
+    loading.style.display = "block";
 
     for(let i=0;i<count;i++){
         const div = document.createElement("div");
@@ -141,7 +135,7 @@ function showSkeleton(count = 6){
     }
 }
 
-/* ===== Render ===== */
+/* ===== Render Page ===== */
 function renderPage(){
 
     let lang = isArabic ? "ar" : "en";
@@ -155,13 +149,15 @@ function renderPage(){
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
 }
 
-/* ===== Branches ===== */
+/* ===== Render Branches ===== */
 function renderBranches(list){
 
     const container = document.getElementById("branches");
     const loading = document.getElementById("loading");
 
     container.innerHTML = "";
+
+    // اخفاء loading لما الداتا تيجي
     loading.style.display = "none";
 
     list.forEach((branch, i) => {
@@ -194,7 +190,7 @@ function searchLocation(){
     renderBranches(filtered);
 }
 
-/* ===== Lang ===== */
+/* ===== Change Lang ===== */
 function changeLang(){
 
     isArabic = !isArabic;
@@ -210,8 +206,11 @@ function changeLang(){
 
 /* ===== Init ===== */
 window.onload = function(){
+
     renderPage();
-    showSkeleton();
+
+    showSkeleton();   // 🔥 loading شغال من أول فتح الصفحة
+
     document.getElementById("search").focus();
 };
 
