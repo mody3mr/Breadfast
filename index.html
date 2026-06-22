@@ -2,36 +2,37 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Branches</title>
-<style>
-body{font-family:Arial;background:#f3f4f6;margin:0;padding:30px}
-.container{max-width:400px;margin:auto}
-.btn{
-  display:block;
-  background:white;
-  padding:15px;
-  margin:10px 0;
-  border-radius:12px;
-  text-decoration:none;
-  color:#333;
-  font-weight:bold;
-  text-align:center;
-  box-shadow:0 5px 15px #0001;
-}
-.btn:hover{transform:scale(1.02)}
-</style>
+<title>FPs Location Coffee</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
-<h2>Branches</h2>
+<div class="phone">
+
+<div class="lang">
+<button onclick="changeLang()">العربية</button>
+</div>
+
+<img class="avatar" src="breadfastlogo.jpg">
+
+<h1 id="title">FPs Coffee</h1>
+<p id="desc">Branches</p>
+
+<input id="search" placeholder="Search..." onkeyup="searchLocation()">
+
+<div id="loading">Loading...</div>
 <div id="branches"></div>
+
+<footer style="margin-top:auto;font-size:12px;opacity:0.7">
+© 2026 Created by Mohamed Amr Ibrahim
+</footer>
+
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, onSnapshot } 
+import { getFirestore, collection, onSnapshot }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -46,36 +47,46 @@ appId:"1:803906042715:web:1e8977716adc54947b787e"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let branchesData = [];
+window.branches = [];
 
 onSnapshot(collection(db,"branches"), (snap)=>{
 
-branchesData = [];
+let data = [];
 
 snap.forEach(d=>{
-branchesData.push({id:d.id,...d.data()});
+data.push({id:d.id,...d.data()});
 });
 
-render();
+window.branches = data;
+
+document.getElementById("loading").style.display="none";
+render(window.branches);
 });
 
-function render(){
-let box = document.getElementById("branches");
+function render(list){
+let box=document.getElementById("branches");
 box.innerHTML="";
 
-branchesData.forEach(b=>{
-
-let a = document.createElement("a");
+list.forEach(b=>{
+let a=document.createElement("a");
 a.className="btn";
-a.innerText = b.nameAr || b.name;
-
-// 👇 مهم: نفتح صفحة تفاصيل
-a.href = "branch.html?id=" + b.id;
-
+a.innerText=b.nameAr || b.name;
+a.href="branch.html?id="+b.id;
 box.appendChild(a);
-
 });
 }
+
+window.searchLocation=function(){
+let val=document.getElementById("search").value.toLowerCase();
+
+let filtered=window.branches.filter(b=>{
+return (b.nameAr||b.name).toLowerCase().includes(val);
+});
+
+render(filtered);
+}
+
+window.changeLang=function(){}
 </script>
 
 </body>
