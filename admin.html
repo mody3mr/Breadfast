@@ -1,1 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
+<style>
+body{
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.box{
+    width:350px;
+    margin:100px auto;
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+}
+
+input,button{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+}
+
+button{
+    background:#22c55e;
+    color:white;
+    cursor:pointer;
+}
+
+.dashboard{
+    display:none;
+    width:90%;
+    margin:40px auto;
+}
+
+table{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+}
+
+td,th{
+    padding:10px;
+    border-bottom:1px solid #334155;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="box" id="loginBox">
+<h2>Admin Login</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+
+<h2>Add Branch</h2>
+
+<input id="nameEn" placeholder="Name EN">
+<input id="nameAr" placeholder="Name AR">
+<input id="map" placeholder="Google Map Link">
+
+<button onclick="addBranch()">Add</button>
+
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Arabic</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+
+</div>
+
+<script>
+// ================= FIREBASE CONFIG =================
+const firebaseConfig = {
+  apiKey: "PUT_YOURS",
+  authDomain: "PUT_YOURS",
+  projectId: "PUT_YOURS",
+  storageBucket: "PUT_YOURS",
+  messagingSenderId: "PUT_YOURS",
+  appId: "PUT_YOURS"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ================= LOGIN =================
+function login(){
+
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    if(u === "admin" && p === "1234"){
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        loadBranches();
+    }else{
+        alert("Wrong login");
+    }
+}
+
+// ================= ADD =================
+function addBranch(){
+
+    db.collection("branches").add({
+        name: document.getElementById("nameEn").value,
+        nameAr: document.getElementById("nameAr").value,
+        map: document.getElementById("map").value
+    });
+
+    alert("Added!");
+    loadBranches();
+}
+
+// ================= LOAD =================
+function loadBranches(){
+
+    db.collection("branches").get().then(snapshot => {
+
+        let table = document.getElementById("table");
+        table.innerHTML = "";
+
+        snapshot.forEach(doc => {
+
+            let b = doc.data();
+
+            table.innerHTML += `
+            <tr>
+                <td>${b.name}</td>
+                <td>${b.nameAr}</td>
+                <td>
+                    <button onclick="deleteBranch('${doc.id}')">Delete</button>
+                </td>
+            </tr>
+            `;
+        });
+
+    });
+
+}
+
+// ================= DELETE =================
+function deleteBranch(id){
+
+    db.collection("branches").doc(id).delete();
+    loadBranches();
+}
+
+</script>
+
+</body>
+</html>
