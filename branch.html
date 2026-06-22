@@ -1,27 +1,116 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <title>Branch Details</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-.details-title{
-    font-size:22px;
-    margin-bottom:10px;
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#111827,#1f2937);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
 }
 
-.section{
+/* الكارت الرئيسي */
+.card{
     width:100%;
-    margin-top:10px;
+    max-width:420px;
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
 }
-</style>
 
+/* الهيدر */
+.header{
+    background:linear-gradient(135deg,#7c3aed,#ec4899);
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.header img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    margin-bottom:10px;
+    object-fit:cover;
+}
+
+/* المحتوى */
+.content{
+    padding:20px;
+}
+
+.title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+/* box info */
+.box{
+    background:#f3f4f6;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+/* زر */
+.btn{
+    display:block;
+    text-align:center;
+    padding:12px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white;
+    background:linear-gradient(135deg,#7c3aed,#ec4899);
+    margin-top:10px;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+.btn:hover{
+    transform:scale(1.03);
+}
+
+/* employees */
+.employees{
+    background:#eef2ff;
+    padding:12px;
+    border-radius:12px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+/* responsive */
+@media(max-width:480px){
+    .card{
+        border-radius:15px;
+    }
+
+    .header{
+        padding:15px;
+    }
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="phone" id="content">Loading...</div>
+<div class="card" id="content">
+Loading...
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -43,28 +132,39 @@ const db = getFirestore(app);
 const id = new URLSearchParams(location.search).get("id");
 
 async function load(){
+
 const snap = await getDoc(doc(db,"branches",id));
 const b = snap.data();
 
 document.getElementById("content").innerHTML = `
-<img class="avatar" src="breadfastlogo.jpg">
 
-<h2 class="details-title">${b.nameAr || b.name}</h2>
+<div class="header">
+<img src="breadfastlogo.jpg">
+<h2>${b.nameAr || b.name}</h2>
+</div>
 
-<div class="box">👤 المدير: ${b.managerName}</div>
-<div class="box">📞 الهاتف: ${b.phone}</div>
-<div class="box">💬 واتساب: ${b.whatsapp}</div>
-<div class="box">⏰ المواعيد: ${b.workingHours}</div>
+<div class="content">
 
-<div class="box section">
-<b>👥 الموظفين</b><br><br>
+<div class="title">Branch Information</div>
+
+<div class="box">👤 Manager: ${b.managerName}</div>
+<div class="box">📞 Phone: ${b.phone}</div>
+<div class="box">💬 WhatsApp: ${b.whatsapp}</div>
+<div class="box">⏰ Working Hours: ${b.workingHours}</div>
+
+<div class="employees">
+<b>👥 Employees</b><br><br>
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 
 <a class="btn" href="${b.location}" target="_blank">
-فتح الموقع
+Open Location
 </a>
+
+</div>
+
 `;
+
 }
 
 load();
