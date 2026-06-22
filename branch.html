@@ -181,7 +181,13 @@ body{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc }
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    updateDoc,
+    increment
+}
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -210,9 +216,19 @@ window.closeModal = function(){
 
 async function load(){
 
-const snap = await getDoc(doc(db,"branches",id));
-const b = snap.data();
+const visitKey = "visited_" + id;
 
+if(!localStorage.getItem(visitKey)){
+
+    await updateDoc(
+        doc(db,"branches",id),
+        {
+            visits: increment(1)
+        }
+    );
+
+    localStorage.setItem(visitKey,"true");
+}
 phoneNumber = String(b.phone).replace('+','');
 
 document.getElementById("content").innerHTML = `
