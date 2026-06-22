@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Branch Details</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f3f4f6;
+margin:0;
+padding:30px;
+}
+
+.card{
+max-width:400px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 10px 30px #0001;
+}
+
+h2{margin-top:0}
+
+.box{
+margin:10px 0;
+padding:10px;
+background:#f9f9f9;
+border-radius:10px;
+}
+
+.btn{
+display:block;
+margin-top:10px;
+padding:10px;
+text-align:center;
+border-radius:10px;
+text-decoration:none;
+color:white;
+background:#7c3aed;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="content">Loading...</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+authDomain:"breadfast-coffee.firebaseapp.com",
+projectId:"breadfast-coffee",
+storageBucket:"breadfast-coffee.firebasestorage.app",
+messagingSenderId:"803906042715",
+appId:"1:803906042715:web:1e8977716adc54947b787e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// get id from url
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+async function load(){
+
+const snap = await getDoc(doc(db,"branches",id));
+
+const b = snap.data();
+
+document.getElementById("content").innerHTML = `
+<h2>${b.nameAr || b.name}</h2>
+
+<div class="box">👤 المدير: ${b.managerName}</div>
+<div class="box">📞 الهاتف: ${b.phone}</div>
+<div class="box">💬 واتساب: ${b.whatsapp}</div>
+<div class="box">⏰ المواعيد: ${b.workingHours}</div>
+
+<h3>👥 الموظفين</h3>
+<div class="box">
+${b.employees.map(e=>`• ${e}`).join("<br>")}
+</div>
+
+<a class="btn" href="${b.location}" target="_blank">
+فتح الموقع
+</a>
+`;
+
+}
+
+load();
+</script>
+
+</body>
+</html>
