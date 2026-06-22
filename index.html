@@ -9,6 +9,17 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* 🔥 Loading بسيط */
+#loading{
+    text-align:center;
+    color:#555;
+    margin:20px 0;
+    font-size:18px;
+}
+</style>
+
 </head>
 
 <body>
@@ -27,7 +38,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- 🔥 الفروع هنا -->
+<!-- 🔥 Loading -->
+<div id="loading">Loading...</div>
+
+<!-- 🔥 الفروع -->
 <div id="branches"></div>
 
 </div>
@@ -54,20 +68,7 @@ ar: {
 }
 };
 
-// ================== انتظار البيانات ==================
-function waitForData(){
-
-    if(window.branches){
-
-        renderBranches(window.branches);
-
-    } else {
-
-        setTimeout(waitForData, 200);
-    }
-}
-
-// ================== رسم الصفحة ==================
+// ================== عرض الصفحة ==================
 function renderPage(){
 
     let lang = isArabic ? "ar" : "en";
@@ -79,41 +80,14 @@ function renderPage(){
     document.getElementById("search").placeholder = texts[lang].search;
 
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
-
-    waitForData();
-}
-
-// ================== تغيير اللغة ==================
-function changeLang(){
-
-    isArabic = !isArabic;
-
-    localStorage.setItem("language", isArabic ? "ar" : "en");
-
-    renderPage();
-}
-
-// ================== البحث ==================
-function searchLocation(){
-
-    let input = document.getElementById("search").value.toLowerCase();
-
-    if(!window.branches) return;
-
-    let filtered = window.branches.filter(b => {
-
-        let name = (isArabic ? b.nameAr : b.name).toLowerCase();
-
-        return name.includes(input);
-    });
-
-    renderBranches(filtered);
 }
 
 // ================== رسم الفروع ==================
 function renderBranches(list){
 
     const container = document.getElementById("branches");
+    const loading = document.getElementById("loading");
+
     container.innerHTML = "";
 
     list.forEach(branch => {
@@ -127,19 +101,48 @@ function renderBranches(list){
 
         container.appendChild(a);
     });
+
+    // 🔥 اخفاء loading أول ما الداتا تيجي
+    loading.style.display = "none";
 }
 
-// ================== تشغيل أول مرة ==================
+// ================== البحث ==================
+function searchLocation(){
+
+    let input = document.getElementById("search").value.toLowerCase();
+
+    if(!window.branches) return;
+
+    let filtered = window.branches.filter(b => {
+
+        let name = (isArabic ? b.nameAr : b.name).toLowerCase();
+        return name.includes(input);
+    });
+
+    renderBranches(filtered);
+}
+
+// ================== تغيير اللغة ==================
+function changeLang(){
+
+    isArabic = !isArabic;
+
+    localStorage.setItem("language", isArabic ? "ar" : "en");
+
+    renderPage();
+
+    if(window.branches){
+        renderBranches(window.branches);
+    }
+}
+
+// ================== أول تشغيل ==================
 window.onload = function(){
     renderPage();
     document.getElementById("search").focus();
 };
 
 </script>
-
-<footer>
-<p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم </p>
-</footer>
 
 </body>
 </html>
