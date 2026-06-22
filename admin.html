@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-100 font-sans antialiased opacity-0">
 
 <div id="loginPage" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-[9999]">
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md mx-4">
@@ -52,12 +52,17 @@
                     <input type="text" id="adminSearch" placeholder="بحث سريع في الفروع..." onkeyup="window.searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full">
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <div class="flex items-center cursor-pointer">
-                        <button onclick="window.logout()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-sm ml-2">خروج</button><span id="adminEmail" class="text-sm font-medium text-gray-700 ml-2">مدير النظام</span>
-                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                            M
-                        </div>
-                    </div>
+                    <div class="relative">
+        <button id="userMenuBtn" class="flex items-center cursor-pointer">
+            <span id="adminEmail" class="text-sm font-medium text-gray-700 ml-2">مدير النظام</span>
+            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">M</div>
+        </button>
+        <div id="userDropdown" class="hidden absolute left-0 top-12 w-48 bg-white rounded-xl shadow-lg border z-50">
+            <button onclick="window.logout()" class="w-full text-right px-4 py-3 hover:bg-red-50 text-red-600">
+                تسجيل الخروج
+            </button>
+        </div>
+    </div>
                 </div>
             </header>
 
@@ -199,9 +204,11 @@
 
         onAuthStateChanged(auth, (user) => {
 
+    document.body.classList.remove("opacity-0");
+
     if (user) {
 
-        loginPage.style.display = "none";
+        loginPage.classList.add("hidden");
 
         const adminEmail = document.getElementById("adminEmail");
 
@@ -211,7 +218,7 @@
 
     } else {
 
-        loginPage.style.display = "flex";
+        loginPage.classList.remove("hidden");
     }
 });
         document.getElementById("loginForm").addEventListener("submit", async (e)=>{
@@ -231,6 +238,22 @@
         window.logout = async function(){
             await signOut(auth);
         };
+
+        const menuBtn = document.getElementById("userMenuBtn");
+        const dropdown = document.getElementById("userDropdown");
+
+        if(menuBtn){
+            menuBtn.addEventListener("click", (e)=>{
+                e.stopPropagation();
+                dropdown.classList.toggle("hidden");
+            });
+        }
+
+        document.addEventListener("click", ()=>{
+            if(dropdown){
+                dropdown.classList.add("hidden");
+            }
+        });
 
 
         // 1. الاستماع المباشر لقاعدة البيانات
