@@ -197,23 +197,23 @@
 
         let localBranchesCache = [];
 
-        const ADMIN_EMAIL = "admin@fpscoffee.com";
-        const loginPage = document.getElementById("loginPage");
-
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if(user.email !== ADMIN_EMAIL){
-                    signOut(auth);
-                    return;
-                }
-                loginPage.style.display = "none";
-                const adminEmail = document.getElementById("adminEmail");
-                if(adminEmail) adminEmail.textContent = user.email;
-            } else {
-                loginPage.style.display = "flex";
-            }
-        });
 
+    if (user) {
+
+        loginPage.style.display = "none";
+
+        const adminEmail = document.getElementById("adminEmail");
+
+        if (adminEmail) {
+            adminEmail.textContent = user.email;
+        }
+
+    } else {
+
+        loginPage.style.display = "flex";
+    }
+});
         document.getElementById("loginForm").addEventListener("submit", async (e)=>{
             e.preventDefault();
             try{
