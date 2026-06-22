@@ -10,7 +10,7 @@
 
 <style>
 
-/* ===== Skeleton Loading ===== */
+/* ===== Skeleton ===== */
 .skeleton {
     height: 45px;
     margin: 8px 0;
@@ -40,31 +40,88 @@
     }
 }
 
-/* ===== Fix layout ===== */
-body {
+/* ===== Layout FIX ===== */
+body{
     margin:0;
-    font-family: Arial;
-    background:#f7f7f7;
+    font-family:Arial;
+    background:#f3f4f6;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 
-/* 👇 أهم حاجة عشان الصفحة ترجع في النص */
-.phone {
-    max-width:420px;
-    margin:0 auto;
-    padding:15px;
+/* الكارت */
+.phone{
+    width:380px;
+    min-height:750px;
+    border-radius:30px;
+    padding:30px 20px;
+
+    background: linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
+    color:white;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.25);
+    margin-top:40px;
 }
 
-/* ===== Loading ===== */
-#loading {
-    margin-top: 10px;
-}
-
-/* ===== Footer fix ===== */
+/* ===== Footer FIX (تحت الكارت مش فوق) ===== */
 footer{
+    margin-top:20px;
     text-align:center;
-    padding:15px;
     font-size:13px;
     color:#777;
+    width:100%;
+}
+
+/* lang */
+.lang{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.lang button{
+    background:rgba(255,255,255,0.2);
+    color:white;
+    border:1px solid rgba(255,255,255,0.4);
+    padding:6px 14px;
+    border-radius:20px;
+}
+
+.avatar{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+h1{ font-size:22px; margin-top:10px; }
+p{ font-size:14px; opacity:0.85; margin-top:5px; }
+
+#search{
+    width:90%;
+    padding:12px;
+    margin:15px 0;
+    border-radius:20px;
+    border:none;
+    text-align:center;
+}
+
+.btn{
+    width:100%;
+    background:white;
+    color:#222;
+    text-decoration:none;
+    padding:14px;
+    border-radius:12px;
+    font-weight:600;
+    text-align:center;
+    margin-top:10px;
 }
 
 </style>
@@ -86,20 +143,18 @@ footer{
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- 🔥 Loading -->
+<!-- Loading -->
 <div id="loading"></div>
 
-<!-- 🔥 Branches -->
+<!-- Branches -->
 <div id="branches"></div>
 
 </div>
 
-<!-- Footer (تحت الصفحة طبيعي) -->
 <footer>
 <p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
 </footer>
 
-<!-- Firebase -->
 <script type="module" src="data.js"></script>
 
 <script>
@@ -122,12 +177,9 @@ ar: {
 };
 
 /* ===== Skeleton ===== */
-function showSkeleton(count = 6){
-
+function showSkeleton(count=6){
     const loading = document.getElementById("loading");
     loading.innerHTML = "";
-    loading.style.display = "block";
-
     for(let i=0;i<count;i++){
         const div = document.createElement("div");
         div.className = "skeleton";
@@ -135,41 +187,36 @@ function showSkeleton(count = 6){
     }
 }
 
-/* ===== Render Page ===== */
+/* ===== Render ===== */
 function renderPage(){
-
     let lang = isArabic ? "ar" : "en";
 
     document.querySelector("h1").innerHTML = texts[lang].name;
     document.querySelector("p").innerHTML = texts[lang].desc;
     document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
-
     document.getElementById("search").placeholder = texts[lang].search;
 
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
 }
 
-/* ===== Render Branches ===== */
+/* ===== Render branches ===== */
 function renderBranches(list){
 
     const container = document.getElementById("branches");
     const loading = document.getElementById("loading");
 
     container.innerHTML = "";
-
-    // اخفاء loading لما الداتا تيجي
     loading.style.display = "none";
 
-    list.forEach((branch, i) => {
+    list.forEach((b,i)=>{
 
         const a = document.createElement("a");
         a.className = "btn";
-        a.href = branch.map;
+        a.href = b.map;
         a.target = "_blank";
+        a.innerText = isArabic ? b.nameAr : b.name;
 
-        a.innerText = isArabic ? branch.nameAr : branch.name;
-
-        a.style.animationDelay = (i * 40) + "ms";
+        a.style.animationDelay = (i*50)+"ms";
 
         container.appendChild(a);
     });
@@ -178,24 +225,22 @@ function renderBranches(list){
 /* ===== Search ===== */
 function searchLocation(){
 
-    let input = document.getElementById("search").value.toLowerCase();
-
     if(!window.branches) return;
 
-    let filtered = window.branches.filter(b => {
+    let val = document.getElementById("search").value.toLowerCase();
+
+    let filtered = window.branches.filter(b=>{
         let name = (isArabic ? b.nameAr : b.name).toLowerCase();
-        return name.includes(input);
+        return name.includes(val);
     });
 
     renderBranches(filtered);
 }
 
-/* ===== Change Lang ===== */
+/* ===== Lang ===== */
 function changeLang(){
-
     isArabic = !isArabic;
-
-    localStorage.setItem("language", isArabic ? "ar" : "en");
+    localStorage.setItem("language", isArabic ? "ar":"en");
 
     renderPage();
 
@@ -206,11 +251,8 @@ function changeLang(){
 
 /* ===== Init ===== */
 window.onload = function(){
-
     renderPage();
-
-    showSkeleton();   // 🔥 loading شغال من أول فتح الصفحة
-
+    showSkeleton();
     document.getElementById("search").focus();
 };
 
