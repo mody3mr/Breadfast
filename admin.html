@@ -6,6 +6,10 @@
     <title>لوحة التحكم الاحترافية - FPs Coffee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         body {
@@ -105,7 +109,7 @@
                         <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl flex items-center justify-between shadow-sm">
                             <div>
                                 <p class="text-sm text-slate-500 mb-1">إجمالي عدد الزيارات</p>
-                                <h3 class="text-3xl font-bold text-white mb-2">0 زيارة</h3>
+                                <h3 class="text-3xl font-bold text-white mb-2">2 زيارة</h3>
                                 <p class="text-xs text-emerald-500 flex items-center gap-1"><i class="fa-solid fa-circle-notch fa-spin"></i> قراءة حية ومباشرة</p>
                             </div>
                             <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-xl flex items-center justify-center text-xl border border-emerald-900">
@@ -162,7 +166,22 @@
     </div>
 
     <script>
-        // دالة الـ Routing للتحكم في النوافذ المعروضة بناءً على الـ Hash
+        // 🚨 خطوة مهمة: ضع بيانات Firebase Config الخاصة بمشروعك هنا ليعمل الاتصال
+        const firebaseConfig = {
+            apiKey: "ضع_الـ_apiKey_الخاص_بك_هنا",
+            authDomain: "ضع_الـ_authDomain_الخاص_بك_هنا",
+            projectId: "ضع_الـ_projectId_الخاص_بك_هنا",
+            storageBucket: "ضع_الـ_storageBucket_الخاص_بك_هنا",
+            messagingSenderId: "ضع_الـ_messagingSenderId_الخاص_بك_هنا",
+            appId: "ضع_الـ_appId_الخاص_بك_هنا"
+        };
+        
+        // تشغيل الـ Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // دالة التحكم في عرض الصفحات بناءً على الـ Hash
         function handleRouting() {
             const hash = window.location.hash;
             const loginPage = document.getElementById('loginPage');
@@ -173,10 +192,61 @@
             const btnUsers = document.getElementById('menu-users');
 
             if (!hash || hash === "" || hash === "#login") {
-                // عرض صفحة تسجيل الدخول وإخفاء لوحة التحكم
                 loginPage.classList.remove('hidden-section');
                 dashboardPage.classList.add('hidden-section');
             } else {
-                // عرض لوحة التحكم وإخفاء تسجيل الدخول
                 loginPage.classList.add('hidden-section');
-                dashboard
+                dashboardPage.classList.remove('hidden-section');
+
+                if (hash === "#users") {
+                    secMain.classList.add('hidden-section');
+                    secUsers.classList.remove('hidden-section');
+                    btnUsers.className = "flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition";
+                    btnMain.className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition";
+                } else {
+                    secMain.classList.remove('hidden-section');
+                    secUsers.classList.add('hidden-section');
+                    btnMain.className = "flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition";
+                    btnUsers.className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition";
+                }
+            }
+        }
+
+        window.addEventListener('hashchange', handleRouting);
+
+        // [حل علامة الاستفهام السحري]: تنظيفها فوراً لو ظهرت بالرابط
+        if (window.location.href.includes('?')) {
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash;
+            window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+            handleRouting();
+        } else {
+            handleRouting();
+        }
+
+        // معالجة تسجيل الدخول الفعلي
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+
+            submitBtn.disabled = true;
+            btnText.innerText = "جاري التحقق...";
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                console.log("تم تسجيل الدخول!");
+                window.location.hash = "#main"; 
+            })
+            .catch((error) => {
+                console.error("خطأ Firebase:", error);
+                alert("خطأ في تسجيل الدخول: " + error.message);
+                submitBtn.disabled = false;
+                btnText.innerText = "دخول النظام";
+            });
+        });
+    </script>
+</body>
+</html>
