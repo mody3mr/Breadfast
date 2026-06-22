@@ -2,51 +2,70 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FPs Dashboard Fixed</title>
+<title>Clean Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-
-body{background:#f6f7fb}
+body{margin:0;font-family:Arial;background:#f6f7fb}
 
 /* layout */
 .app{display:flex;min-height:100vh}
 
 .sidebar{
-width:240px;background:#0f172a;color:#fff;position:fixed;right:0;top:0;bottom:0;padding:20px;
+width:240px;background:#0f172a;color:#fff;
+position:fixed;right:0;top:0;bottom:0;padding:20px;
 }
 
-.menu{padding:10px;color:#cbd5e1;margin-bottom:6px;border-radius:8px}
-.menu:hover{background:#1e293b}
-
-.main{margin-right:240px;padding:25px;width:100%}
-
-/* top */
-.topbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.search{padding:10px;width:250px;border:1px solid #ddd;border-radius:8px}
-.add-btn{background:#6366f1;color:#fff;border:none;padding:10px 14px;border-radius:8px}
+.main{
+margin-right:240px;
+padding:25px;
+width:100%;
+}
 
 /* list */
-.branch{
-background:#fff;padding:14px;border-radius:10px;margin-bottom:10px;
-display:flex;justify-content:space-between;align-items:center;
+.item{
+background:#fff;padding:14px;border-radius:10px;
+margin-bottom:10px;
+display:flex;justify-content:space-between;
 }
 
-.actions button{margin-left:5px;border:none;padding:6px 10px;border-radius:6px;cursor:pointer}
-.edit{background:#3b82f6;color:#fff}
-.delete{background:#ef4444;color:#fff}
-
 /* modal */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);justify-content:center;align-items:center}
-.box{background:#fff;padding:20px;border-radius:12px;width:350px;max-height:90vh;overflow:auto}
+.modal{
+display:none;position:fixed;inset:0;
+background:rgba(0,0,0,0.5);
+justify-content:center;align-items:center;
+}
 
-input{width:100%;padding:10px;margin-bottom:8px;border:1px solid #ddd;border-radius:8px}
+.box{
+background:#fff;padding:20px;border-radius:12px;
+width:360px;
+}
 
-.save{width:100%;background:#6366f1;color:#fff;border:none;padding:10px;border-radius:8px}
+input{
+width:100%;padding:10px;margin-bottom:8px;
+border:1px solid #ddd;border-radius:8px;
+}
 
-.emp{margin-top:10px}
-.emp input{margin-top:5px}
+.emp{
+margin-top:10px;
+}
+
+.emp-item{
+margin-bottom:10px;
+}
+
+button{
+cursor:pointer;
+}
+
+.save{
+width:100%;
+padding:10px;
+background:#6366f1;
+color:#fff;
+border:none;
+border-radius:8px;
+}
 
 </style>
 </head>
@@ -56,16 +75,12 @@ input{width:100%;padding:10px;margin-bottom:8px;border:1px solid #ddd;border-rad
 <div class="app">
 
 <div class="sidebar">
-<div class="menu">Dashboard</div>
-<div class="menu">Branches</div>
+<h3>Dashboard</h3>
 </div>
 
 <div class="main">
 
-<div class="topbar">
-<input id="search" class="search" placeholder="Search">
-<button class="add-btn" onclick="openModal()">+ Add Branch</button>
-</div>
+<button onclick="openModal()">+ Add Branch</button>
 
 <div id="list"></div>
 
@@ -78,7 +93,7 @@ input{width:100%;padding:10px;margin-bottom:8px;border:1px solid #ddd;border-rad
 
 <input id="name" placeholder="Branch Name">
 <input id="manager" placeholder="Manager Name">
-<input id="phone" placeholder="Manager Phone">
+<input id="phone" placeholder="Phone">
 <input id="location" placeholder="Location">
 <input id="hours" placeholder="Working Hours">
 
@@ -104,81 +119,88 @@ addDoc, updateDoc, deleteDoc, doc
 const app = initializeApp({
 apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
 authDomain:"breadfast-coffee.firebaseapp.com",
-projectId:"breadfast-coffee",
-storageBucket:"breadfast-coffee.firebasestorage.app",
-messagingSenderId:"803906042715",
-appId:"1:803906042715:web:1e8977716adc54947b787e"
+projectId:"breadfast-coffee"
 });
 
 const db = getFirestore(app);
 
+/* GLOBAL STATE */
 let branches=[];
 let editId=null;
-let emp=[];
+let employees=[];
 
 /* LOAD */
 async function load(){
-const snap = await getDocs(collection(db,"branches"));
+const snap=await getDocs(collection(db,"branches"));
 
 branches=[];
 snap.forEach(d=>branches.push({id:d.id,...d.data()}));
 
-render(branches);
+render();
 }
 
-function render(list){
+/* RENDER */
+function render(){
 const box=document.getElementById("list");
 box.innerHTML="";
 
-list.forEach(b=>{
+branches.forEach(b=>{
 box.innerHTML+=`
-<div class="branch">
+<div class="item">
 <div>
 <strong>${b.name}</strong><br>
 <small>${b.manager}</small>
 </div>
 
 <div>
-<button class="edit" onclick="edit('${b.id}')">Edit</button>
-<button class="delete" onclick="del('${b.id}')">X</button>
+<button onclick="edit('${b.id}')">Edit</button>
+<button onclick="del('${b.id}')">Delete</button>
 </div>
 </div>
 `;
 });
 }
 
-/* SEARCH */
-document.getElementById("search").oninput=(e)=>{
-let v=e.target.value.toLowerCase();
-render(branches.filter(b=>b.name.toLowerCase().includes(v)));
-}
+/* RESET FORM */
+function resetForm(){
+document.getElementById("name").value="";
+document.getElementById("manager").value="";
+document.getElementById("phone").value="";
+document.getElementById("location").value="";
+document.getElementById("hours").value="";
 
-/* MODAL */
-window.openModal=()=>{
-editId=null;
-emp=[];
-document.getElementById("empBox").innerHTML="";
-document.getElementById("modal").style.display="flex";
+employees=[];
+renderEmployees();
 }
 
 /* EMP */
 window.addEmp=()=>{
-emp.push({name:"",phone:""});
-
-drawEmp();
+employees.push({name:"",phone:""});
+renderEmployees();
 }
 
-function drawEmp(){
+function renderEmployees(){
 const box=document.getElementById("empBox");
 box.innerHTML="";
 
-emp.forEach((e,i)=>{
+employees.forEach((e,i)=>{
 box.innerHTML+=`
-<input placeholder="Employee Name" oninput="emp[${i}].name=this.value">
-<input placeholder="Employee Phone" oninput="emp[${i}].phone=this.value">
-<hr>
+<div class="emp-item">
+<input placeholder="Employee Name"
+oninput="employees[${i}].name=this.value">
+
+<input placeholder="Employee Phone"
+oninput="employees[${i}].phone=this.value">
+</div>
 `;
 });
+}
+
+/* OPEN */
+window.openModal=()=>{
+editId=null;
+resetForm();
+document.getElementById("modal").style.display="flex";
 }
 
 /* SAVE */
@@ -190,7 +212,7 @@ manager:document.getElementById("manager").value,
 phone:document.getElementById("phone").value,
 location:document.getElementById("location").value,
 hours:document.getElementById("hours").value,
-employees:emp
+employees:[...employees]
 };
 
 if(editId){
@@ -203,10 +225,12 @@ close();
 load();
 }
 
-/* EDIT FIXED */
+/* EDIT */
 window.edit=(id)=>{
 const b=branches.find(x=>x.id===id);
 editId=id;
+
+resetForm();
 
 document.getElementById("name").value=b.name||"";
 document.getElementById("manager").value=b.manager||"";
@@ -214,9 +238,8 @@ document.getElementById("phone").value=b.phone||"";
 document.getElementById("location").value=b.location||"";
 document.getElementById("hours").value=b.hours||"";
 
-emp = b.employees ? [...b.employees] : [];
-
-drawEmp();
+employees = b.employees ? [...b.employees] : [];
+renderEmployees();
 
 document.getElementById("modal").style.display="flex";
 }
@@ -227,9 +250,12 @@ await deleteDoc(doc(db,"branches",id));
 load();
 }
 
+/* CLOSE */
 function close(){
 document.getElementById("modal").style.display="none";
 }
+
+window.close=close;
 
 load();
 
