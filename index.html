@@ -85,7 +85,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <script>
 
-let isArabic = false;
+let isArabic = localStorage.getItem("language") === "ar";
 
 const texts = {
 
@@ -221,6 +221,8 @@ function changeLang(){
 
     let lang = isArabic ? "ar" : "en";
 
+    localStorage.setItem("language", lang);
+
 
     document.querySelector("h1").innerHTML = texts[lang].name;
 
@@ -284,6 +286,29 @@ function searchLocation(){
     
 window.onload = function(){
     document.getElementById("search").focus();
+};
+
+    window.onload = function(){
+
+    let lang = isArabic ? "ar" : "en";
+
+    document.querySelector("h1").innerHTML = texts[lang].name;
+    document.querySelector("p").innerHTML = texts[lang].desc;
+    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
+    document.getElementById("search").placeholder = texts[lang].search;
+
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+
+
+    let buttons = document.querySelectorAll(".btn");
+
+    buttons.forEach((btn,i)=>{
+        btn.innerHTML = texts[lang].btns[i];
+    });
+
+
+    document.getElementById("search").focus();
+
 };
 
 </script>
