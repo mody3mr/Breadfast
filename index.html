@@ -9,45 +9,26 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-
-/* ===== Reset بسيط ===== */
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
 body{
-    min-height:100vh;
+    margin:0;
+    font-family:Arial;
     background:#f3f4f6;
-
-    /* ❌ شلت المسافات اللي كانت مسببالك فراغ */
     display:flex;
     justify-content:center;
-    align-items:center;
 }
 
-/* ===== الكارت ===== */
 .phone{
     width:380px;
-    min-height:750px;
-    border-radius:30px;
-    padding:30px 20px;
-
-    background: linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
+    min-height:100vh;
+    background:linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
     color:white;
-
+    padding:20px;
+    box-sizing:border-box;
     display:flex;
     flex-direction:column;
     align-items:center;
-
-    box-shadow:0 20px 60px rgba(0,0,0,0.25);
-
-    position:relative;
 }
 
-/* زر اللغة */
 .lang{
     width:100%;
     display:flex;
@@ -55,70 +36,48 @@ body{
 }
 
 .lang button{
-    background:rgba(255,255,255,0.2);
-    color:white;
-    border:1px solid rgba(255,255,255,0.4);
-    padding:6px 14px;
+    padding:6px 12px;
     border-radius:20px;
+    border:1px solid white;
+    background:transparent;
+    color:white;
 }
 
-/* الصورة */
 .avatar{
-    width:120px;
-    height:120px;
+    width:100px;
+    height:100px;
     border-radius:50%;
-    object-fit:cover;
     margin-top:10px;
 }
 
-/* النص */
-h1{
-    font-size:22px;
-    margin-top:10px;
-}
-
-p{
-    font-size:14px;
-    opacity:0.85;
-    margin-top:5px;
-}
-
-/* البحث */
 #search{
     width:90%;
-    padding:12px;
-    margin:15px auto;
-    display:block;
+    padding:10px;
     border-radius:20px;
     border:none;
-    font-size:16px;
+    margin:15px 0;
     text-align:center;
 }
 
-/* الأزرار */
 .btn{
-    width:100%;
     display:block;
+    width:100%;
     background:white;
-    color:#222;
+    color:black;
+    padding:12px;
+    margin:8px 0;
+    border-radius:10px;
     text-decoration:none;
-    padding:14px;
-    border-radius:12px;
-    font-weight:600;
     text-align:center;
-    margin-top:10px;
 }
 
-/* ===== الفوتر جوه الكارد ===== */
 footer{
     margin-top:auto;
-    text-align:center;
     font-size:12px;
     opacity:0.8;
-    padding-top:15px;
 }
-
 </style>
+
 </head>
 
 <body>
@@ -129,106 +88,74 @@ footer{
     <button onclick="changeLang()">العربية</button>
 </div>
 
-<img class="avatar" src="breadfastlogo.jpg" alt="profile">
+<img class="avatar" src="breadfastlogo.jpg">
 
 <h1>Moaaz Mohamed</h1>
 <p>Senior Manager</p>
 
-<input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
+<input id="search" placeholder="Search..." onkeyup="searchLocation()">
 
-<!-- الفروع -->
 <div id="branches"></div>
 
-<!-- الفوتر جوه الكارد -->
 <footer>
-  <p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
+© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
 </footer>
 
 </div>
 
-<script src="data.js"></script>
+<!-- Firebase -->
+<script type="module" src="data.js"></script>
 
 <script>
 
-let isArabic = localStorage.getItem("language") === "ar";
+let isArabic = localStorage.getItem("lang") === "ar";
 
-const texts = {
-en: {
-    name: "Moaaz Mohamed",
-    desc: "Senior Manager",
-    langBtn: "العربية",
-    search: "Search Location..."
-},
-ar: {
-    name: "معاذ Mohamed",
-    desc: "مدير أول",
-    langBtn: "English",
-    search: "ابحث عن المكان..."
-}
-};
+/* 🔥 أهم سطر */
+window.renderBranches = renderBranches;
 
-function renderPage(){
+/* ================= FIRE EVENT ================= */
+window.addEventListener("branchesReady", () => {
+    renderBranches(window.branches);
+});
 
-    let lang = isArabic ? "ar" : "en";
-
-    document.querySelector("h1").innerHTML = texts[lang].name;
-    document.querySelector("p").innerHTML = texts[lang].desc;
-    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
-
-    document.getElementById("search").placeholder = texts[lang].search;
-
-    document.documentElement.dir = isArabic ? "rtl" : "ltr";
-}
-
+/* ================= RENDER ================= */
 function renderBranches(list){
 
     const container = document.getElementById("branches");
     container.innerHTML = "";
 
-    list.forEach(branch => {
+    list.forEach(b => {
 
         const a = document.createElement("a");
         a.className = "btn";
-        a.href = branch.map;
+        a.href = b.map;
         a.target = "_blank";
-
-        a.innerText = isArabic ? branch.nameAr : branch.name;
+        a.innerText = b.name;
 
         container.appendChild(a);
     });
 }
 
+/* ================= SEARCH ================= */
 function searchLocation(){
 
-    let input = document.getElementById("search").value.toLowerCase();
+    let value = document.getElementById("search").value.toLowerCase();
 
     if(!window.branches) return;
 
-    let filtered = window.branches.filter(b => {
-        let name = (isArabic ? b.nameAr : b.name).toLowerCase();
-        return name.includes(input);
-    });
+    let filtered = window.branches.filter(b =>
+        b.name.toLowerCase().includes(value)
+    );
 
     renderBranches(filtered);
 }
 
+/* ================= LANGUAGE ================= */
 function changeLang(){
 
     isArabic = !isArabic;
-
-    localStorage.setItem("language", isArabic ? "ar" : "en");
-
-    renderPage();
-
-    if(window.branches){
-        renderBranches(window.branches);
-    }
+    localStorage.setItem("lang", isArabic ? "ar" : "en");
 }
-
-window.onload = function(){
-    renderPage();
-    document.getElementById("search").focus();
-};
 
 </script>
 
