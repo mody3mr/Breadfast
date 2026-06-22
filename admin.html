@@ -1,838 +1,245 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
+<title>Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>FPs Admin</title>
-
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:"Segoe UI",Arial,sans-serif;
-}
-
-
 body{
-
-margin:0;
-
-background:#f8fafc;
-
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0b1220;
+    display:flex;
 }
-
-
-/* ================= LOGIN ================= */
-
-
-.login-page{
-
-min-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:
-linear-gradient(135deg,#6d28d9,#db2777);
-
-}
-
-
-
-.login-card{
-
-background:white;
-
-width:380px;
-
-max-width:90%;
-
-padding:35px;
-
-border-radius:25px;
-
-box-shadow:0 25px 70px #0005;
-
-text-align:center;
-
-}
-
-
-
-.login-card h1{
-
-margin-bottom:25px;
-
-}
-
-
-
-.input{
-
-width:100%;
-
-padding:14px;
-
-margin:10px 0;
-
-border-radius:12px;
-
-border:1px solid #ddd;
-
-}
-
-
-
-.login-btn{
-
-width:100%;
-
-padding:14px;
-
-border:0;
-
-border-radius:12px;
-
-background:#7c3aed;
-
-color:white;
-
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-
-
-
-
-/* ================= DASHBOARD ================= */
-
-
-.dashboard{
-
-display:none;
-
-}
-
-
 
 /* SIDEBAR */
-
-
 .sidebar{
-
-position:fixed;
-
-right:0;
-
-top:0;
-
-height:100vh;
-
-width:270px;
-
-background:#111827;
-
-color:white;
-
-padding:25px;
-
-transition:.3s;
-
+    width:250px;
+    height:100vh;
+    background:#111827;
+    padding:20px;
+    color:white;
+    position:fixed;
+    right:0;
 }
-
-
 
 .logo{
-
-font-size:24px;
-
-font-weight:700;
-
-margin-bottom:30px;
-
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:25px;
 }
-
-
-
-.profile{
-
-background:#1f2937;
-
-padding:15px;
-
-border-radius:15px;
-
-margin-bottom:25px;
-
-}
-
-
 
 .menu{
-
-padding:15px;
-
-border-radius:14px;
-
-margin-bottom:10px;
-
-cursor:pointer;
-
-display:flex;
-
-gap:12px;
-
-align-items:center;
-
-color:#cbd5e1;
-
-transition:.3s;
-
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:8px;
+    cursor:pointer;
+    color:#cbd5e1;
+    transition:0.2s;
 }
 
-
-
-.menu:hover,
-.menu.active{
-
-background:linear-gradient(135deg,#7c3aed,#ec4899);
-
-color:white;
-
+.menu:hover{
+    background:#1f2937;
+    color:white;
 }
 
-
-
-
-.logout{
-
-position:absolute;
-
-bottom:25px;
-
-width:220px;
-
-background:#ef4444;
-
+/* MAIN */
+.main{
+    margin-right:250px;
+    padding:25px;
+    width:100%;
 }
 
-
-
-/* CONTENT */
-
-
-.content{
-
-margin-right:270px;
-
-padding:30px;
-
+/* HEADER */
+.header{
+    color:white;
+    margin-bottom:20px;
 }
 
-
-
-.top{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-flex-wrap:wrap;
-
-gap:15px;
-
-}
-
-
-
-.user-box{
-
-background:white;
-
-padding:12px 20px;
-
-border-radius:15px;
-
-box-shadow:0 10px 30px #0001;
-
-}
-
-
-
-
+/* CARDS */
 .cards{
-
-margin-top:30px;
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:20px;
-
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
 }
-
-
-
 
 .card{
-
-background:white;
-
-padding:25px;
-
-border-radius:20px;
-
-box-shadow:0 15px 35px #0001;
-
+    background:#111827;
+    padding:20px;
+    border-radius:15px;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
-
-
 
 .card h2{
-
-font-size:40px;
-
-color:#7c3aed;
-
-margin:10px 0;
-
+    margin:10px 0 0;
+    color:#7c3aed;
 }
 
+/* BRANCHES */
+.section{
+    margin-top:25px;
+}
 
+.branch{
+    background:#111827;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:10px;
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.actions button{
+    padding:6px 10px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    margin-left:5px;
+}
+
+.edit{background:#3b82f6;color:white;}
+.delete{background:#ef4444;color:white;}
 
 /* MOBILE */
-
-
-.mobile-btn{
-
-display:none;
-
-position:fixed;
-
-top:15px;
-
-right:15px;
-
-background:#111827;
-
-color:white;
-
-border:0;
-
-padding:12px;
-
-border-radius:12px;
-
-z-index:10;
-
-}
-
-
-
-
-/* TOAST */
-
-
-#toast{
-
-position:fixed;
-
-bottom:25px;
-
-right:25px;
-
-background:#111827;
-
-color:white;
-
-padding:15px 25px;
-
-border-radius:15px;
-
-display:none;
-
-z-index:100;
-
-}
-
-
-
-
 @media(max-width:768px){
 
-
 .sidebar{
-
-transform:translateX(100%);
-
-z-index:5;
-
+    position:relative;
+    width:100%;
+    height:auto;
 }
 
-
-.sidebar.show{
-
-transform:translateX(0);
-
+.main{
+    margin-right:0;
 }
 
-
-
-.content{
-
-margin-right:0;
-
-padding:20px;
-
-padding-top:70px;
-
 }
-
-
-
-.mobile-btn{
-
-display:block;
-
-}
-
-
-
-.logout{
-
-width:220px;
-
-}
-
-
-
-}
-
 
 </style>
-
 </head>
-
-
 
 <body>
 
+<!-- SIDEBAR -->
+<div class="sidebar">
+<div class="logo">☕ FPs Admin</div>
 
-
-<!-- LOGIN -->
-
-
-<div class="login-page" id="loginPage">
-
-
-<form class="login-card" onsubmit="event.preventDefault();login();">
-
-
-<h1>
-☕ FPs Admin
-</h1>
-
-
-<input class="input"
-id="email"
-placeholder="Email">
-
-
-<input class="input"
-id="password"
-type="password"
-placeholder="Password">
-
-
-
-<button class="login-btn">
-
-Login
-
-</button>
-
-
-</form>
-
-
+<div class="menu">📊 Dashboard</div>
+<div class="menu">📍 Branches</div>
+<div class="menu">👥 Users</div>
+<div class="menu">⚙ Settings</div>
+<div class="menu">🚪 Logout</div>
 </div>
 
+<!-- MAIN -->
+<div class="main">
 
-
-
-
-<!-- DASHBOARD -->
-
-
-<div class="dashboard" id="dashboard">
-
-
-
-<button class="mobile-btn" onclick="toggleMenu()">
-
-☰
-
-</button>
-
-
-
-
-<div class="sidebar" id="sidebar">
-
-
-<div class="logo">
-
-☕ FPs Coffee
-
+<div class="header">
+<h1>Dashboard Overview 👋</h1>
 </div>
 
-
-
-<div class="profile">
-
-👤 Admin
-
-</div>
-
-
-
-
-<div class="menu active">
-
-🏠 Dashboard
-
-</div>
-
-
-<div class="menu">
-
-📍 Branches
-
-</div>
-
-
-<div class="menu">
-
-👥 Users
-
-</div>
-
-
-<div class="menu">
-
-⚙ Settings
-
-</div>
-
-
-
-<div class="menu logout" onclick="logout()">
-
-🚪 Logout
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div class="content">
-
-
-<div class="top">
-
-
-<h1>
-Welcome Admin 👋
-</h1>
-
-
-<div class="user-box">
-
-Online
-
-</div>
-
-
-</div>
-
-
-
-
-
+<!-- CARDS -->
 <div class="cards">
 
-
-
 <div class="card">
-
-Total Branches
-
-<h2 id="branchesCount">
-
-0
-
-</h2>
-
+Branches
+<h2 id="branchesCount">0</h2>
 </div>
 
-
-
 <div class="card">
-
-Total Visits
-
-<h2>
-
-0
-
-</h2>
-
-</div>
-
-
-
-<div class="card">
-
 Admins
+<h2>1</h2>
+</div>
 
-<h2>
-
-1
-
-</h2>
+<div class="card">
+Visits
+<h2>0</h2>
+</div>
 
 </div>
 
+<!-- BRANCHES LIST -->
+<div class="section">
+<h2 style="color:white;">Branches List</h2>
 
-
-</div>
-
-
-
-</div>
-
-
+<div id="branchesList"></div>
 
 </div>
 
-
-
-
-<div id="toast"></div>
-
-
-
-
-
+</div>
 
 <script type="module">
-
-
-import {initializeApp}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-
-import {
-
-getAuth,
-
-signInWithEmailAndPassword,
-
-signOut
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-import {
-
-getFirestore,
-
-collection,
-
-getDocs
-
-}
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, deleteDoc, doc }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
-
-
-
-const firebaseConfig={
-
+const firebaseConfig = {
 apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
-
 authDomain:"breadfast-coffee.firebaseapp.com",
-
 projectId:"breadfast-coffee",
-
 storageBucket:"breadfast-coffee.firebasestorage.app",
-
 messagingSenderId:"803906042715",
-
 appId:"1:803906042715:web:1e8977716adc54947b787e"
-
 };
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
+/* LOAD BRANCHES */
+async function loadBranches(){
 
-const app=initializeApp(firebaseConfig);
+const snap = await getDocs(collection(db,"branches"));
 
-const auth=getAuth(app);
+document.getElementById("branchesCount").innerText = snap.size;
 
-const db=getFirestore(app);
+const list = document.getElementById("branchesList");
+list.innerHTML = "";
 
+snap.forEach(d=>{
 
+const b = d.data();
 
+list.innerHTML += `
+<div class="branch">
 
-function toast(msg){
+<div>
+<strong>${b.nameAr || b.name}</strong><br>
+<small>${b.managerName || ""}</small>
+</div>
 
-let t=document.getElementById("toast");
+<div class="actions">
+<button class="edit">Edit</button>
+<button class="delete" onclick="deleteBranch('${d.id}')">Delete</button>
+</div>
 
-t.innerHTML=msg;
-
-t.style.display="block";
-
-
-setTimeout(()=>{
-
-t.style.display="none";
-
-},3000);
-
-
-}
-
-
-
-
-window.login=async function(){
-
-
-let email=document.getElementById("email").value.trim();
-
-let pass=document.getElementById("password").value.trim();
-
-
-
-if(!email){
-
-toast("⚠️ اكتب البريد الإلكتروني");
-
-return;
+</div>
+`;
+});
 
 }
 
-
-
-if(!pass){
-
-toast("⚠️ اكتب كلمة المرور");
-
-return;
-
+/* DELETE */
+window.deleteBranch = async function(id){
+await deleteDoc(doc(db,"branches",id));
+loadBranches();
 }
 
-
-
-
-try{
-
-
-await signInWithEmailAndPassword(auth,email,pass);
-
-
-
-toast("✅ تم تسجيل الدخول");
-
-
-loginPage.style.display="none";
-
-dashboard.style.display="block";
-
+/* LOGOUT */
+window.logout = function(){
+signOut(auth);
+location.reload();
+}
 
 loadBranches();
 
-
-}
-
-
-
-catch(e){
-
-
-toast("❌ بيانات الدخول غير صحيحة");
-
-
-}
-
-
-}
-
-
-
-
-async function loadBranches(){
-
-
-let data=await getDocs(collection(db,"branches"));
-
-
-branchesCount.innerHTML=data.size;
-
-
-}
-
-
-
-
-
-window.logout=function(){
-
-signOut(auth);
-
-location.reload();
-
-}
-
-
-
-
-window.toggleMenu=function(){
-
-sidebar.classList.toggle("show");
-
-}
-
-
-
-
 </script>
 
-
-
 </body>
-
 </html>
