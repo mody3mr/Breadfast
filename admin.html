@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>FPs Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -10,34 +10,32 @@
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#0b1220;
+    background:#f6f7fb;
     display:flex;
 }
 
 /* SIDEBAR */
 .sidebar{
-    width:250px;
+    width:230px;
     height:100vh;
     background:#111827;
-    padding:20px;
     color:white;
+    padding:20px;
     position:fixed;
-    right:0;
 }
 
 .logo{
-    font-size:20px;
+    font-size:18px;
     font-weight:bold;
     margin-bottom:25px;
 }
 
 .menu{
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:8px;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:6px;
     cursor:pointer;
     color:#cbd5e1;
-    transition:0.2s;
 }
 
 .menu:hover{
@@ -47,15 +45,21 @@ body{
 
 /* MAIN */
 .main{
-    margin-right:250px;
-    padding:25px;
+    margin-left:230px;
     width:100%;
+    padding:30px;
 }
 
 /* HEADER */
-.header{
-    color:white;
-    margin-bottom:20px;
+.header h1{
+    margin:0;
+    font-size:22px;
+    color:#111827;
+}
+
+.sub{
+    color:#6b7280;
+    margin-top:5px;
 }
 
 /* CARDS */
@@ -63,14 +67,14 @@ body{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
     gap:15px;
+    margin-top:20px;
 }
 
 .card{
-    background:#111827;
-    padding:20px;
-    border-radius:15px;
-    color:white;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    background:white;
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.06);
 }
 
 .card h2{
@@ -78,46 +82,42 @@ body{
     color:#7c3aed;
 }
 
-/* BRANCHES */
+/* LIST */
 .section{
-    margin-top:25px;
+    margin-top:30px;
 }
 
 .branch{
-    background:#111827;
-    padding:15px;
-    border-radius:12px;
-    margin-bottom:10px;
-    color:white;
+    background:white;
+    padding:14px;
+    border-radius:10px;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    margin-bottom:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.05);
+}
+
+.branch small{
+    color:#6b7280;
 }
 
 .actions button{
-    padding:6px 10px;
     border:none;
-    border-radius:8px;
+    padding:6px 10px;
+    border-radius:6px;
     cursor:pointer;
-    margin-left:5px;
 }
 
-.edit{background:#3b82f6;color:white;}
-.delete{background:#ef4444;color:white;}
-
-/* MOBILE */
-@media(max-width:768px){
-
-.sidebar{
-    position:relative;
-    width:100%;
-    height:auto;
+.delete{
+    background:#ef4444;
+    color:white;
 }
 
-.main{
-    margin-right:0;
-}
-
+.edit{
+    background:#3b82f6;
+    color:white;
+    margin-right:5px;
 }
 
 </style>
@@ -129,18 +129,19 @@ body{
 <div class="sidebar">
 <div class="logo">☕ FPs Admin</div>
 
-<div class="menu">📊 Dashboard</div>
-<div class="menu">📍 Branches</div>
-<div class="menu">👥 Users</div>
-<div class="menu">⚙ Settings</div>
-<div class="menu">🚪 Logout</div>
+<div class="menu">Dashboard</div>
+<div class="menu">Branches</div>
+<div class="menu">Users</div>
+<div class="menu">Settings</div>
+<div class="menu">Logout</div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
 <div class="header">
-<h1>Dashboard Overview 👋</h1>
+<h1>Dashboard</h1>
+<div class="sub">Manage your branches & data</div>
 </div>
 
 <!-- CARDS -->
@@ -163,19 +164,16 @@ Visits
 
 </div>
 
-<!-- BRANCHES LIST -->
+<!-- LIST -->
 <div class="section">
-<h2 style="color:white;">Branches List</h2>
-
+<h3>Branches</h3>
 <div id="branchesList"></div>
-
 </div>
 
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, getDocs, deleteDoc, doc }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -190,10 +188,9 @@ appId:"1:803906042715:web:1e8977716adc54947b787e"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
 
-/* LOAD BRANCHES */
-async function loadBranches(){
+/* LOAD */
+async function load(){
 
 const snap = await getDocs(collection(db,"branches"));
 
@@ -216,7 +213,7 @@ list.innerHTML += `
 
 <div class="actions">
 <button class="edit">Edit</button>
-<button class="delete" onclick="deleteBranch('${d.id}')">Delete</button>
+<button class="delete" onclick="del('${d.id}')">Delete</button>
 </div>
 
 </div>
@@ -225,19 +222,12 @@ list.innerHTML += `
 
 }
 
-/* DELETE */
-window.deleteBranch = async function(id){
+window.del = async function(id){
 await deleteDoc(doc(db,"branches",id));
-loadBranches();
+load();
 }
 
-/* LOGOUT */
-window.logout = function(){
-signOut(auth);
-location.reload();
-}
-
-loadBranches();
+load();
 
 </script>
 
