@@ -6,11 +6,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FPs Admin Panel</title>
+<title>FPs Admin</title>
 
 
 <style>
-
 
 *{
 box-sizing:border-box;
@@ -22,7 +21,7 @@ body{
 
 margin:0;
 
-background:#f1f5f9;
+background:#f8fafc;
 
 }
 
@@ -32,16 +31,16 @@ background:#f1f5f9;
 
 .login-page{
 
-height:100vh;
+min-height:100vh;
 
 display:flex;
 
-align-items:center;
-
 justify-content:center;
 
+align-items:center;
+
 background:
-linear-gradient(135deg,#7c3aed,#ec4899);
+linear-gradient(135deg,#6d28d9,#db2777);
 
 }
 
@@ -52,6 +51,8 @@ linear-gradient(135deg,#7c3aed,#ec4899);
 background:white;
 
 width:380px;
+
+max-width:90%;
 
 padding:35px;
 
@@ -69,8 +70,6 @@ text-align:center;
 
 margin-bottom:25px;
 
-color:#111827;
-
 }
 
 
@@ -86,8 +85,6 @@ margin:10px 0;
 border-radius:12px;
 
 border:1px solid #ddd;
-
-font-size:15px;
 
 }
 
@@ -111,16 +108,9 @@ font-size:16px;
 
 cursor:pointer;
 
-transition:.3s;
-
 }
 
 
-.login-btn:hover{
-
-transform:translateY(-3px);
-
-}
 
 
 
@@ -146,15 +136,17 @@ right:0;
 
 top:0;
 
-width:260px;
-
 height:100vh;
+
+width:270px;
 
 background:#111827;
 
 color:white;
 
 padding:25px;
+
+transition:.3s;
 
 }
 
@@ -164,21 +156,35 @@ padding:25px;
 
 font-size:24px;
 
-font-weight:bold;
+font-weight:700;
 
-margin-bottom:40px;
+margin-bottom:30px;
 
 }
 
 
 
-.nav{
+.profile{
 
-padding:14px;
+background:#1f2937;
 
-margin-bottom:12px;
+padding:15px;
 
 border-radius:15px;
+
+margin-bottom:25px;
+
+}
+
+
+
+.menu{
+
+padding:15px;
+
+border-radius:14px;
+
+margin-bottom:10px;
 
 cursor:pointer;
 
@@ -196,17 +202,8 @@ transition:.3s;
 
 
 
-.nav:hover{
-
-background:#1f2937;
-
-color:white;
-
-}
-
-
-
-.nav.active{
+.menu:hover,
+.menu.active{
 
 background:linear-gradient(135deg,#7c3aed,#ec4899);
 
@@ -217,21 +214,17 @@ color:white;
 
 
 
-
 .logout{
 
 position:absolute;
 
-bottom:30px;
+bottom:25px;
 
-width:210px;
+width:220px;
 
 background:#ef4444;
 
-color:white;
-
 }
-
 
 
 
@@ -240,16 +233,15 @@ color:white;
 
 .content{
 
-margin-right:260px;
+margin-right:270px;
 
-padding:35px;
+padding:30px;
 
 }
 
 
 
-
-.header{
+.top{
 
 display:flex;
 
@@ -257,11 +249,15 @@ justify-content:space-between;
 
 align-items:center;
 
+flex-wrap:wrap;
+
+gap:15px;
+
 }
 
 
 
-.admin-box{
+.user-box{
 
 background:white;
 
@@ -269,16 +265,16 @@ padding:12px 20px;
 
 border-radius:15px;
 
-box-shadow:0 10px 25px #0001;
+box-shadow:0 10px 30px #0001;
 
 }
 
 
 
-/* CARDS */
-
 
 .cards{
+
+margin-top:30px;
 
 display:grid;
 
@@ -286,9 +282,8 @@ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 
 gap:20px;
 
-margin-top:30px;
-
 }
+
 
 
 
@@ -302,9 +297,8 @@ border-radius:20px;
 
 box-shadow:0 15px 35px #0001;
 
-animation:show .5s;
-
 }
+
 
 
 .card h2{
@@ -319,25 +313,33 @@ margin:10px 0;
 
 
 
-@keyframes show{
+/* MOBILE */
 
-from{
 
-opacity:0;
+.mobile-btn{
 
-transform:translateY(20px);
+display:none;
+
+position:fixed;
+
+top:15px;
+
+right:15px;
+
+background:#111827;
+
+color:white;
+
+border:0;
+
+padding:12px;
+
+border-radius:12px;
+
+z-index:10;
 
 }
 
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
 
 
 
@@ -348,48 +350,76 @@ transform:translateY(0);
 
 position:fixed;
 
-bottom:30px;
+bottom:25px;
 
-right:30px;
-
-padding:15px 25px;
+right:25px;
 
 background:#111827;
 
 color:white;
 
+padding:15px 25px;
+
 border-radius:15px;
 
 display:none;
 
-z-index:999;
-
-animation:toast .3s;
+z-index:100;
 
 }
 
 
 
-@keyframes toast{
 
-from{
+@media(max-width:768px){
 
-opacity:0;
 
-transform:translateY(30px);
+.sidebar{
 
-}
+transform:translateX(100%);
 
-to{
-
-opacity:1;
-
-transform:translateY(0);
+z-index:5;
 
 }
 
+
+.sidebar.show{
+
+transform:translateX(0);
+
 }
 
+
+
+.content{
+
+margin-right:0;
+
+padding:20px;
+
+padding-top:70px;
+
+}
+
+
+
+.mobile-btn{
+
+display:block;
+
+}
+
+
+
+.logout{
+
+width:220px;
+
+}
+
+
+
+}
 
 
 </style>
@@ -416,15 +446,12 @@ transform:translateY(0);
 </h1>
 
 
-<input 
-class="input"
+<input class="input"
 id="email"
 placeholder="Email">
 
 
-
-<input
-class="input"
+<input class="input"
 id="password"
 type="password"
 placeholder="Password">
@@ -447,7 +474,6 @@ Login
 
 
 
-
 <!-- DASHBOARD -->
 
 
@@ -455,7 +481,16 @@ Login
 
 
 
-<div class="sidebar">
+<button class="mobile-btn" onclick="toggleMenu()">
+
+☰
+
+</button>
+
+
+
+
+<div class="sidebar" id="sidebar">
 
 
 <div class="logo">
@@ -466,31 +501,37 @@ Login
 
 
 
-<div class="nav active">
+<div class="profile">
+
+👤 Admin
+
+</div>
+
+
+
+
+<div class="menu active">
 
 🏠 Dashboard
 
 </div>
 
 
-
-<div class="nav">
+<div class="menu">
 
 📍 Branches
 
 </div>
 
 
-
-<div class="nav">
+<div class="menu">
 
 👥 Users
 
 </div>
 
 
-
-<div class="nav">
+<div class="menu">
 
 ⚙ Settings
 
@@ -498,15 +539,15 @@ Login
 
 
 
-<div class="nav logout" onclick="logout()">
+<div class="menu logout" onclick="logout()">
 
 🚪 Logout
 
 </div>
 
 
-</div>
 
+</div>
 
 
 
@@ -515,7 +556,7 @@ Login
 <div class="content">
 
 
-<div class="header">
+<div class="top">
 
 
 <h1>
@@ -523,9 +564,9 @@ Welcome Admin 👋
 </h1>
 
 
-<div class="admin-box">
+<div class="user-box">
 
-Admin
+Online
 
 </div>
 
@@ -539,17 +580,16 @@ Admin
 <div class="cards">
 
 
+
 <div class="card">
 
-<p>
 Total Branches
-</p>
-
 
 <h2 id="branchesCount">
-0
-</h2>
 
+0
+
+</h2>
 
 </div>
 
@@ -557,15 +597,13 @@ Total Branches
 
 <div class="card">
 
-<p>
 Total Visits
-</p>
-
 
 <h2>
-0
-</h2>
 
+0
+
+</h2>
 
 </div>
 
@@ -573,22 +611,14 @@ Total Visits
 
 <div class="card">
 
-<p>
-Active Users
-</p>
-
+Admins
 
 <h2>
+
 1
+
 </h2>
 
-
-</div>
-
-
-</div>
-
-
 </div>
 
 
@@ -596,6 +626,12 @@ Active Users
 </div>
 
 
+
+</div>
+
+
+
+</div>
 
 
 
@@ -607,22 +643,12 @@ Active Users
 
 
 
-
-
 <script type="module">
 
 
+import {initializeApp}
 
-import {
-
-initializeApp
-
-}
-
-from
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
 import {
@@ -635,10 +661,7 @@ signOut
 
 }
 
-from
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
@@ -651,54 +674,44 @@ getDocs
 
 }
 
-from
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
 
 
-const firebaseConfig = {
+const firebaseConfig={
 
-apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
 
-authDomain: "breadfast-coffee.firebaseapp.com",
+authDomain:"breadfast-coffee.firebaseapp.com",
 
-projectId: "breadfast-coffee",
+projectId:"breadfast-coffee",
 
-storageBucket: "breadfast-coffee.firebasestorage.app",
+storageBucket:"breadfast-coffee.firebasestorage.app",
 
-messagingSenderId: "803906042715",
+messagingSenderId:"803906042715",
 
-appId: "1:803906042715:web:1e8977716adc54947b787e"
+appId:"1:803906042715:web:1e8977716adc54947b787e"
 
 };
 
 
 
-
-const app = initializeApp(firebaseConfig);
-
+const app=initializeApp(firebaseConfig);
 
 const auth=getAuth(app);
-
 
 const db=getFirestore(app);
 
 
 
 
-
-
-function showToast(message){
-
+function toast(msg){
 
 let t=document.getElementById("toast");
 
-
-t.innerHTML=message;
-
+t.innerHTML=msg;
 
 t.style.display="block";
 
@@ -715,23 +728,18 @@ t.style.display="none";
 
 
 
-
-
 window.login=async function(){
-
 
 
 let email=document.getElementById("email").value.trim();
 
-
-let password=document.getElementById("password").value.trim();
-
+let pass=document.getElementById("password").value.trim();
 
 
 
 if(!email){
 
-showToast("⚠️ من فضلك اكتب البريد الإلكتروني");
+toast("⚠️ اكتب البريد الإلكتروني");
 
 return;
 
@@ -739,9 +747,9 @@ return;
 
 
 
-if(!password){
+if(!pass){
 
-showToast("⚠️ من فضلك اكتب كلمة المرور");
+toast("⚠️ اكتب كلمة المرور");
 
 return;
 
@@ -753,19 +761,16 @@ return;
 try{
 
 
-await signInWithEmailAndPassword(auth,email,password);
+await signInWithEmailAndPassword(auth,email,pass);
 
 
 
-showToast("✅ تم تسجيل الدخول بنجاح");
+toast("✅ تم تسجيل الدخول");
 
 
+loginPage.style.display="none";
 
-document.getElementById("loginPage").style.display="none";
-
-
-document.getElementById("dashboard").style.display="block";
-
+dashboard.style.display="block";
 
 
 loadBranches();
@@ -775,35 +780,16 @@ loadBranches();
 
 
 
-catch(error){
+catch(e){
 
 
-
-if(error.code==="auth/user-not-found"){
-
-showToast("❌ البريد غير مسجل في النظام");
-
-}
-
-else if(error.code==="auth/wrong-password"){
-
-showToast("❌ كلمة المرور غير صحيحة");
-
-}
-
-else{
-
-showToast("❌ بيانات الدخول غير صحيحة");
-
-}
+toast("❌ بيانات الدخول غير صحيحة");
 
 
 }
 
 
 }
-
-
 
 
 
@@ -811,14 +797,13 @@ showToast("❌ بيانات الدخول غير صحيحة");
 async function loadBranches(){
 
 
-let snap=await getDocs(collection(db,"branches"));
+let data=await getDocs(collection(db,"branches"));
 
 
-document.getElementById("branchesCount").innerHTML=snap.size;
+branchesCount.innerHTML=data.size;
 
 
 }
-
 
 
 
@@ -826,14 +811,21 @@ document.getElementById("branchesCount").innerHTML=snap.size;
 
 window.logout=function(){
 
-
 signOut(auth);
-
 
 location.reload();
 
+}
+
+
+
+
+window.toggleMenu=function(){
+
+sidebar.classList.toggle("show");
 
 }
+
 
 
 
