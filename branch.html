@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <title>Branch Details</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+.details-title{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.section{
+    width:100%;
+    margin-top:10px;
+}
+</style>
+
 </head>
 
 <body>
@@ -33,22 +46,24 @@ async function load(){
 const snap = await getDoc(doc(db,"branches",id));
 const b = snap.data();
 
-document.getElementById("content").innerHTML=`
+document.getElementById("content").innerHTML = `
 <img class="avatar" src="breadfastlogo.jpg">
 
-<h2>${b.nameAr||b.name}</h2>
+<h2 class="details-title">${b.nameAr || b.name}</h2>
 
 <div class="box">👤 المدير: ${b.managerName}</div>
 <div class="box">📞 الهاتف: ${b.phone}</div>
 <div class="box">💬 واتساب: ${b.whatsapp}</div>
 <div class="box">⏰ المواعيد: ${b.workingHours}</div>
 
-<div class="box">
+<div class="box section">
 <b>👥 الموظفين</b><br><br>
-${(b.employees||[]).map(e=>"• "+e).join("<br>")}
+${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 
-<a class="btn" href="${b.location}" target="_blank">فتح الموقع</a>
+<a class="btn" href="${b.location}" target="_blank">
+فتح الموقع
+</a>
 `;
 }
 
