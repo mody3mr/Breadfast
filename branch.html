@@ -7,10 +7,11 @@
 
 <style>
 
+/* BACKGROUND */
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#0b1220;
+    background: radial-gradient(circle at top,#0f172a,#020617);
     display:flex;
     justify-content:center;
     align-items:center;
@@ -18,21 +19,23 @@ body{
     padding:20px;
 }
 
-/* الكارت */
+/* CARD */
 .card{
     width:100%;
-    max-width:420px;
-    background:#111827;
-    border-radius:20px;
+    max-width:440px;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:25px;
     overflow:hidden;
-    box-shadow:0 25px 70px rgba(0,0,0,0.6);
+    box-shadow:0 30px 90px rgba(0,0,0,0.6);
     color:white;
 }
 
-/* الهيدر */
+/* HEADER */
 .header{
-    padding:25px;
     text-align:center;
+    padding:25px;
     background:linear-gradient(135deg,#7c3aed,#ec4899);
 }
 
@@ -40,8 +43,8 @@ body{
     width:90px;
     height:90px;
     border-radius:50%;
-    object-fit:cover;
     border:3px solid white;
+    object-fit:cover;
 }
 
 .header h2{
@@ -49,50 +52,71 @@ body{
     font-size:20px;
 }
 
-/* المحتوى */
+/* TABS */
+.tabs{
+    display:flex;
+    justify-content:space-around;
+    background:rgba(0,0,0,0.2);
+}
+
+.tab{
+    flex:1;
+    padding:12px;
+    cursor:pointer;
+    text-align:center;
+    font-size:13px;
+    transition:0.3s;
+    color:#cbd5e1;
+}
+
+.tab.active{
+    background:#7c3aed;
+    color:white;
+}
+
+/* CONTENT */
 .content{
     padding:20px;
 }
 
-/* قسم المدير */
-.section-title{
-    color:#a78bfa;
-    font-size:14px;
-    margin:15px 0 8px;
-    font-weight:bold;
-}
-
+/* BOX */
 .box{
-    background:#1f2937;
+    background:rgba(255,255,255,0.08);
     padding:12px;
-    border-radius:12px;
+    border-radius:14px;
     margin-bottom:10px;
     font-size:14px;
+    transition:0.2s;
 }
 
-/* الموظفين */
-.section{
-    background:#0f172a;
-    padding:15px;
-    border-radius:12px;
-    margin-top:10px;
+.box:hover{
+    transform:translateY(-2px);
 }
 
-/* زر الموقع */
+/* BUTTON */
 .btn{
     display:block;
     text-align:center;
     padding:12px;
-    margin-top:15px;
     border-radius:12px;
-    text-decoration:none;
-    color:white;
     background:#3b82f6;
+    color:white;
+    text-decoration:none;
+    margin-top:15px;
     font-weight:bold;
 }
 
 .btn:hover{
-    transform:scale(1.02);
+    transform:scale(1.03);
+}
+
+/* hide sections */
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
 }
 
 </style>
@@ -133,35 +157,50 @@ document.getElementById("content").innerHTML = `
 <h2>${b.nameAr || b.name}</h2>
 </div>
 
-<div class="content">
-
-<!-- 👤 قسم المدير -->
-<div class="section-title">مدير الفرع</div>
-<div class="box">${b.managerName}</div>
-
-<div class="section-title">رقم مدير الفرع</div>
-<div class="box">${b.phone}</div>
-
-<div class="section-title">واتساب مدير الفرع</div>
-<div class="box">${b.whatsapp}</div>
-
-<!-- ⏰ مواعيد -->
-<div class="section-title">مواعيد العمل</div>
-<div class="box">${b.workingHours}</div>
-
-<!-- 👥 الموظفين -->
-<div class="section">
-<div class="section-title">الموظفين</div>
-${(b.employees || []).map(e=>"• "+e).join("<br>")}
+<div class="tabs">
+<div class="tab active" onclick="showTab(0)">المدير</div>
+<div class="tab" onclick="showTab(1)">المواعيد</div>
+<div class="tab" onclick="showTab(2)">الموظفين</div>
 </div>
 
-<a class="btn" href="${b.location}" target="_blank">
-📍 فتح الموقع
-</a>
+<div class="content">
+
+<!-- MANAGER -->
+<div class="section active">
+<div class="box">👤 مدير الفرع: ${b.managerName}</div>
+<div class="box">📞 رقم مديرالفرع: ${b.phone}</div>
+<div class="box">💬 واتساب مدير الفرع: ${b.whatsapp}</div>
+</div>
+
+<!-- HOURS -->
+<div class="section">
+<div class="box">⏰ ${b.workingHours}</div>
+<a class="btn" href="${b.location}" target="_blank">📍 لوكيشن الفرع</a>
+</div>
+
+<!-- EMPLOYEES -->
+<div class="section">
+<div class="box">
+${(b.employees || []).map(e=>"• "+e).join("<br>")}
+</div>
+</div>
 
 </div>
 
 `;
+
+window.showTab = function(i){
+
+let tabs = document.querySelectorAll(".tab");
+let sections = document.querySelectorAll(".section");
+
+tabs.forEach(t=>t.classList.remove("active"));
+sections.forEach(s=>s.classList.remove("active"));
+
+tabs[i].classList.add("active");
+sections[i].classList.add("active");
+
+};
 
 }
 
