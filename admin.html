@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية - الفروع</title>
+    <title>لوحة التحكم الاحترافية - المشروعات والفروع</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 font-sans antialiased">
 
     <div class="flex h-screen overflow-hidden">
         
-        <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
+        <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex flex-shrink-0">
             <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
                 <i class="fa-solid mt-1 ml-2 fa-mug-hot text-amber-500"></i> FPs Coffee
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
+                <button onclick="switchTab('dashboard-tab', this)" id="default-tab-btn" class="w-full flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors font-medium">
                     <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسية
-                </a>
-                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                </button>
+                <button class="w-full flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors font-medium text-right">
                     <i class="fa-solid fa-users ml-3 w-5"></i> المستخدمين
-                </a>
-                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                </button>
+                <button onclick="switchTab('branches-tab', this)" class="w-full flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors font-medium text-right">
                     <i class="fa-solid fa-store ml-3 w-5"></i> الفروع
-                </a>
+                </button>
             </nav>
             <div class="p-4 border-t border-slate-800 text-sm text-slate-500 text-center">
                 إصدار النظام 1.0
@@ -36,9 +37,13 @@
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 flex-shrink-0">
                 <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 w-64">
                     <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
-                    <input type="text" id="adminSearch" placeholder="بحث سريع في الفروع..." onkeyup="searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full">
+                    <input type="text" id="adminSearch" placeholder="بحث سريع..." onkeyup="handleGlobalSearch()" class="bg-transparent focus:outline-none text-sm w-full">
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
+                    <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
                     <div class="flex items-center cursor-pointer">
                         <span class="text-sm font-medium text-gray-700 ml-2">مدير النظام</span>
                         <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
@@ -48,13 +53,103 @@
                 </div>
             </header>
 
-            <main class="p-6 space-y-6 flex-1">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <main id="dashboard-tab" class="tab-content p-6 space-y-6 flex-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">إجمالي المبيعات</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">12,450 ج.م</h3>
+                            <span class="text-[11px] text-green-500 font-semibold flex items-center mt-1">
+                                <i class="fa-solid fa-arrow-trend-up ml-1"></i> +12% الأسبوع الحالي
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-500 text-xl">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">المستخدمين النشطين</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">1,240</h3>
+                            <span class="text-[11px] text-green-500 font-semibold flex items-center mt-1">
+                                <i class="fa-solid fa-arrow-trend-up ml-1"></i> +4.3% منذ أمس
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 text-xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">الطلبات الجديدة</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">85 طلب</h3>
+                            <span class="text-[11px] text-red-500 font-semibold flex items-center mt-1">
+                                <i class="fa-solid fa-arrow-trend-down ml-1"></i> -2% مقارنة بالشهر الماضي
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 text-xl">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">معدل التحويل</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">4.8%</h3>
+                            <span class="text-[11px] text-purple-500 font-semibold flex items-center mt-1">
+                                <i class="fa-solid fa-chart-pie ml-1"></i> استقرار ملحوظ
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500 text-xl">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
+                        <h4 class="font-bold text-gray-800 mb-4 text-sm">مؤشر الأداء والنمو (آخر 6 أشهر)</h4>
+                        <div class="h-64 relative">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-gray-800 mb-4 text-sm">أحدث العمليات</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between border-b border-gray-50 pb-2 text-xs">
+                                <div>
+                                    <p class="font-semibold text-gray-800">أحمد محمد</p>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">عميل</p>
+                                </div>
+                                <span class="bg-green-50 text-green-600 px-2 py-0.5 rounded font-medium">مكتمل</span>
+                                <span class="font-bold text-gray-700">1,500 ج.م</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-gray-50 pb-2 text-xs">
+                                <div>
+                                    <p class="font-semibold text-gray-800">سارة علي</p>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">عميل</p>
+                                </div>
+                                <span class="bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-medium">معلق</span>
+                                <span class="font-bold text-gray-700">450 ج.م</span>
+                            </div>
+                            <div class="flex items-center justify-between pb-1 text-xs">
+                                <div>
+                                    <p class="font-semibold text-gray-800">محمود حسن</p>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">عميل</p>
+                                </div>
+                                <span class="bg-red-50 text-red-600 px-2 py-0.5 rounded font-medium">ملغي</span>
+                                <span class="font-bold text-gray-700">300 ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <main id="branches-tab" class="tab-content p-6 space-y-6 flex-1 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-400 font-medium">إجمالي عدد الفروع</p>
-                            <h3 id="firebase-branches-count" class="text-3xl font-bold text-gray-800 mt-1">جاري التحميل...</h3>
+                            <h3 id="firebase-branches-count" class="text-3xl font-bold text-gray-800 mt-1">جاري جلب البيانات...</h3>
                             <span class="text-xs text-blue-500 font-semibold flex items-center mt-2">
                                 <i class="fa-solid fa-circle-check ml-1"></i> محدث حياً من Firebase
                             </span>
@@ -66,10 +161,10 @@
 
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-400 font-medium">إجمالي عدد الزيارات</p>
+                            <p class="text-sm text-gray-400 font-medium">إجمالي عدد الزيارات للفروع</p>
                             <h3 id="total-visits-count" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
                             <span class="text-xs text-green-500 font-semibold flex items-center mt-2">
-                                <i class="fa-solid fa-eye ml-1"></i> قراءة حية ومباشرة
+                                <i class="fa-solid fa-eye ml-1"></i> قراءة حية ومباشرة للزيارات
                             </span>
                         </div>
                         <div class="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-green-500 text-2xl">
@@ -85,19 +180,17 @@
                             <i class="fa-solid fa-plus ml-2"></i> إضافة فرع جديد
                         </button>
                     </div>
-
                     <div id="branches-list-container" class="space-y-3">
-                        <div class="text-center text-gray-400 py-8">جاري جلب الفروع الحالية...</div>
+                        <div class="text-center text-gray-400 py-8">جاري تحميل الفروع...</div>
                     </div>
                 </div>
-
             </main>
+
         </div>
     </div>
 
     <div id="branchModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
-            
             <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                 <h3 id="modalTitle" class="font-bold text-gray-800 text-lg">إضافة فرع جديد</h3>
                 <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
@@ -105,7 +198,6 @@
             
             <form id="branchForm" class="p-6 space-y-4 overflow-y-auto flex-1">
                 <input type="hidden" id="branchId">
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالعربي)</label>
@@ -116,7 +208,6 @@
                         <input type="text" id="branchNameEn" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 mb-1">اسم مدير الفرع</label>
@@ -127,12 +218,185 @@
                         <input type="text" id="managerPhone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-left" dir="ltr">
                     </div>
                 </div>
-
                 <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">مواعيد العمل</label>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">مواعيد العمل للفرع</label>
                     <input type="text" id="workingHours" required placeholder="مثال: من 9 صباحاً إلى 11 مساءً" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
                 </div>
 
                 <div class="border-t border-gray-100 pt-4 mt-2">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5
+                        <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-md font-bold">بيانات الموظفين</span>
+                        <button type="button" onclick="addEmployeeField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1 rounded-md font-semibold transition-colors">
+                            <i class="fa-solid fa-plus ml-1"></i> إضافة موظف آخر
+                        </button>
+                    </div>
+                    <div id="employees-fields-container" class="space-y-3"></div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 space-x-reverse pt-4 border-t border-gray-100 flex-shrink-0">
+                    <button type="button" onclick="closeModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">إلغاء</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">حفظ البيانات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } 
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+            authDomain: "breadfast-coffee.firebaseapp.com",
+            projectId: "breadfast-coffee",
+            storageBucket: "breadfast-coffee.firebasestorage.app",
+            messagingSenderId: "803906042715",
+            appId: "1:803906042715:web:1e8977716adc54947b787e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let localBranchesCache = [];
+
+        // الاستماع المباشر للفروع والزيارات
+        onSnapshot(collection(db, "branches"), (snapshot) => {
+            const data = [];
+            let totalVisits = 0;
+
+            snapshot.forEach(doc => {
+                const bData = doc.data();
+                data.push({ id: doc.id, ...bData });
+                if(bData.visits) {
+                    totalVisits += Number(bData.visits);
+                }
+            });
+
+            localBranchesCache = data;
+            document.getElementById("firebase-branches-count").innerText = data.length + " فروع";
+            document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString() + " زيارة";
+            renderAdminBranches(data);
+        });
+
+        window.renderAdminBranches = function(list) {
+            const container = document.getElementById("branches-list-container");
+            container.innerHTML = "";
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-400 py-8">لا توجد فروع حالياً.</div>`;
+                return;
+            }
+            list.forEach(b => {
+                const card = document.createElement("div");
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md";
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg font-bold flex-shrink-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800 text-base">${b.nameAr || b.name}</h5>
+                            <p class="text-xs text-gray-400 mt-0.5">المدير: ${b.managerName || 'غير محدد'} | هاتف: ${b.phone || 'لا يوجد'} | المواعيد: ${b.workingHours || 'غير محددة'}</p>
+                            <span class="text-[11px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md mt-1 inline-block font-medium">الموظفين: ${(b.employees || []).length} | الزيارات: ${b.visits || 0}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
+                        <button onclick='prepareEdit("${b.id}")' class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center"><i class="fa-solid fa-pen-to-square ml-1.5 text-xs"></i> تعديل</button>
+                        <button onclick='deleteBranch("${b.id}")' class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center"><i class="fa-solid fa-trash ml-1.5 text-xs"></i> حذف</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        document.getElementById("branchForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const bId = document.getElementById("branchId").value;
+            const nameAr = document.getElementById("branchNameAr").value;
+            const nameEn = document.getElementById("branchNameEn").value;
+            const managerName = document.getElementById("managerName").value;
+            const managerPhone = document.getElementById("managerPhone").value;
+            const workingHours = document.getElementById("workingHours").value;
+
+            const employeeRows = document.querySelectorAll(".employee-row");
+            let employeesArray = [];
+            employeeRows.forEach(row => {
+                const empName = row.querySelector(".emp-name-input").value;
+                const empPhone = row.querySelector(".emp-phone-input").value;
+                if(empName.trim() !== "") employeesArray.push({ name: empName, phone: empPhone });
+            });
+
+            const docData = { nameAr, name: nameEn, managerName, phone: managerPhone, workingHours, location: "http://maps.google.com", employees: employeesArray };
+
+            try {
+                if (bId === "") {
+                    docData.visits = 0;
+                    await addDoc(collection(db, "branches"), docData);
+                } else {
+                    await updateDoc(doc(db, "branches", bId), docData);
+                }
+                closeModal();
+            } catch (error) { alert("حدث خطأ أثناء الحفظ!"); }
+        });
+
+        window.deleteBranch = async function(id) {
+            if (confirm("هل أنت متأكد من حذف الفرع؟")) {
+                await deleteDoc(doc(db, "branches", id));
+            }
+        };
+
+        window.prepareEdit = function(id) {
+            const b = localBranchesCache.find(item => item.id === id);
+            if (!b) return;
+            document.getElementById("branchId").value = b.id;
+            document.getElementById("branchNameAr").value = b.nameAr || '';
+            document.getElementById("branchNameEn").value = b.name || '';
+            document.getElementById("managerName").value = b.managerName || '';
+            document.getElementById("managerPhone").value = b.phone || '';
+            document.getElementById("workingHours").value = b.workingHours || '';
+            
+            const container = document.getElementById("employees-fields-container");
+            container.innerHTML = "";
+            if(b.employees && b.employees.length > 0) {
+                b.employees.forEach(emp => addEmployeeField(emp.name || emp, emp.phone || ''));
+            } else { addEmployeeField(); }
+            document.getElementById("modalTitle").innerText = "تعديل بيانات الفرع";
+            openModal();
+        };
+
+        window.handleGlobalSearch = function() {
+            const query = document.getElementById("adminSearch").value.toLowerCase();
+            const activeTab = document.querySelector('.tab-content:not(.hidden)').id;
+            if (activeTab === 'branches-tab') {
+                const filtered = localBranchesCache.filter(b => (b.nameAr || "").toLowerCase().includes(query) || (b.managerName || "").toLowerCase().includes(query));
+                renderAdminBranches(filtered);
+            }
+        };
+    </script>
+
+    <script>
+        // دالة التنقل السلس بين التبويبات (Tabs)
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            // إعادة ضبط وتغيير لون الأزرار النشطة في القائمة الجانبية
+            const navButtons = btn.parentElement.querySelectorAll('button');
+            navButtons.forEach(b => {
+                b.classList.remove('bg-blue-600', 'text-white');
+                b.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+            });
+            btn.classList.add('bg-blue-600', 'text-white');
+            btn.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+        }
+
+        function addEmployeeField(name = '', phone = '') {
+            const container = document.getElementById("employees-fields-container");
+            const rowId = 'emp_' + Date.now() + Math.random().toString(36).substr(2, 4);
+            const row = document.createElement("div");
+            row.id = rowId;
+            row.className = "employee-row grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100 relative pt-7 sm:pt-3";
+            row.innerHTML = `
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 mb-1">اسم الموظف</label>
+                    <input type="text" value="${name}" required class="emp-name-input w-full bg-white border border-gray-200 rounded-lg px-
