@@ -10,7 +10,7 @@
 
 <style>
 
-/* ===== Skeleton Loading ===== */
+/* ===== Skeleton ===== */
 .skeleton {
     height: 45px;
     margin: 8px 0;
@@ -25,12 +25,12 @@
     100% { background-position: 200% 0; }
 }
 
-/* ===== Button animation ===== */
+/* ===== Button Animation ===== */
 .btn {
     display:block;
     opacity:0;
     transform: translateY(10px);
-    animation: fadeIn 0.4s forwards;
+    animation: fadeIn 0.35s forwards;
 }
 
 @keyframes fadeIn {
@@ -40,11 +40,7 @@
     }
 }
 
-/* ===== Loading container ===== */
-#loading {
-    margin-top: 10px;
-}
-
+/* ===== Layout ===== */
 body {
     margin:0;
     font-family: Arial;
@@ -57,12 +53,34 @@ body {
     padding:15px;
 }
 
+/* ===== LOGIN (رجعناه) ===== */
+#loginBox{
+    display:none; /* لو عندك نظام لوجين فعلي تفعّله من data.js */
+}
+
+/* ===== FOOTER ===== */
+footer{
+    text-align:center;
+    padding:15px;
+    font-size:13px;
+    color:#777;
+}
+
 </style>
 
 </head>
 
 <body>
 
+<!-- 🔐 LOGIN (رجعته زي ما كان) -->
+<div id="loginBox" class="phone">
+    <h3>Admin Login</h3>
+    <input placeholder="Username">
+    <input type="password" placeholder="Password">
+    <button>Login</button>
+</div>
+
+<!-- APP -->
 <div class="phone">
 
 <div class="lang">
@@ -76,7 +94,7 @@ body {
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- Skeleton Loading -->
+<!-- Skeleton -->
 <div id="loading"></div>
 
 <!-- Branches -->
@@ -84,6 +102,12 @@ body {
 
 </div>
 
+<!-- Footer رجع -->
+<footer>
+<p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
+</footer>
+
+<!-- Firebase Data -->
 <script type="module" src="data.js"></script>
 
 <script>
@@ -105,7 +129,7 @@ ar: {
 }
 };
 
-/* ===== Skeleton UI ===== */
+/* ===== Skeleton ===== */
 function showSkeleton(count = 6){
     const loading = document.getElementById("loading");
     loading.innerHTML = "";
@@ -117,7 +141,7 @@ function showSkeleton(count = 6){
     }
 }
 
-/* ===== Render Page ===== */
+/* ===== Render ===== */
 function renderPage(){
 
     let lang = isArabic ? "ar" : "en";
@@ -131,7 +155,7 @@ function renderPage(){
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
 }
 
-/* ===== Render Branches ===== */
+/* ===== Branches ===== */
 function renderBranches(list){
 
     const container = document.getElementById("branches");
@@ -149,7 +173,6 @@ function renderBranches(list){
 
         a.innerText = isArabic ? branch.nameAr : branch.name;
 
-        // delay animation
         a.style.animationDelay = (i * 40) + "ms";
 
         container.appendChild(a);
@@ -171,7 +194,7 @@ function searchLocation(){
     renderBranches(filtered);
 }
 
-/* ===== Change Language ===== */
+/* ===== Lang ===== */
 function changeLang(){
 
     isArabic = !isArabic;
@@ -187,11 +210,8 @@ function changeLang(){
 
 /* ===== Init ===== */
 window.onload = function(){
-
     renderPage();
-
     showSkeleton();
-
     document.getElementById("search").focus();
 };
 
