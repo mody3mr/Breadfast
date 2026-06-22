@@ -7,7 +7,6 @@
 
 <style>
 
-/* BACKGROUND */
 body{
     margin:0;
     font-family:Arial,sans-serif;
@@ -57,11 +56,11 @@ body{
     padding:20px;
 }
 
-/* SECTION TITLE */
+/* TITLES */
 .title{
     font-size:12px;
     color:#c4b5fd;
-    margin:14px 0 6px;
+    margin:12px 0 6px;
     font-weight:bold;
 }
 
@@ -72,23 +71,46 @@ body{
     border-radius:14px;
     font-size:14px;
     margin-bottom:10px;
-    transition:0.2s;
 }
 
-.box:hover{
-    transform:translateY(-2px);
-    background:rgba(255,255,255,0.15);
+/* EMPLOYEE CARD */
+.emp-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.08);
+    padding:10px 12px;
+    border-radius:12px;
+    margin-bottom:8px;
+    font-size:13px;
 }
 
-/* EMPLOYEES */
-.employees{
-    background:rgba(255,255,255,0.07);
-    padding:12px;
-    border-radius:14px;
+.emp-name{
+    font-weight:bold;
+}
+
+/* ACTION BUTTONS */
+.emp-actions{
+    display:flex;
+    gap:8px;
+}
+
+.icon-btn{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+    color:white;
     font-size:14px;
 }
 
-/* BUTTONS */
+.whatsapp{background:#25D366;}
+.call{background:#3b82f6;}
+
+/* MAIN BUTTON */
 .btn{
     display:block;
     text-align:center;
@@ -98,16 +120,9 @@ body{
     color:white;
     font-weight:bold;
     margin-top:12px;
-    transition:0.2s;
 }
 
-.btn:hover{
-    transform:scale(1.03);
-}
-
-/* ACTION COLORS */
 .map{background:#3b82f6;}
-.call{background:#22c55e;}
 .wa{background:#25D366;}
 
 </style>
@@ -165,8 +180,26 @@ document.getElementById("content").innerHTML = `
 <div class="box">${b.workingHours}</div>
 
 <div class="title">الموظفين</div>
-<div class="employees">
-${(b.employees || []).map(e=>"• "+e).join("<br>")}
+
+<div>
+${(b.employees || []).map(e => `
+<div class="emp-card">
+
+<div class="emp-name">👤 ${e.name || e}</div>
+
+<div class="emp-actions">
+
+<a class="icon-btn whatsapp"
+href="https://wa.me/${String(e.phone || '').replace('+','')}"
+target="_blank">💬</a>
+
+<a class="icon-btn call"
+href="tel:${e.phone || ''}">📞</a>
+
+</div>
+
+</div>
+`).join("")}
 </div>
 
 <a class="btn map" href="${b.location}" target="_blank">
