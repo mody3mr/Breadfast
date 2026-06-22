@@ -27,15 +27,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- 🔥 هنا الفايرباس هيحط الفروع -->
+<!-- 🔥 الفروع هنا -->
 <div id="branches"></div>
 
 </div>
 
-<!-- Firebase Data -->
+<!-- Firebase -->
 <script type="module" src="data.js"></script>
 
 <script>
+
 let isArabic = localStorage.getItem("language") === "ar";
 
 const texts = {
@@ -53,7 +54,20 @@ ar: {
 }
 };
 
-// 🔥 تحديث الصفحة
+// ================== انتظار البيانات ==================
+function waitForData(){
+
+    if(window.branches){
+
+        renderBranches(window.branches);
+
+    } else {
+
+        setTimeout(waitForData, 200);
+    }
+}
+
+// ================== رسم الصفحة ==================
 function renderPage(){
 
     let lang = isArabic ? "ar" : "en";
@@ -66,13 +80,10 @@ function renderPage(){
 
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
 
-    // مهم: data.js لازم يكون محمّل
-    if (window.branches) {
-        renderBranches(window.branches);
-    }
+    waitForData();
 }
 
-// 🔥 تغيير اللغة
+// ================== تغيير اللغة ==================
 function changeLang(){
 
     isArabic = !isArabic;
@@ -82,22 +93,24 @@ function changeLang(){
     renderPage();
 }
 
-// 🔥 البحث
+// ================== البحث ==================
 function searchLocation(){
 
     let input = document.getElementById("search").value.toLowerCase();
 
-    if (!window.branches) return;
+    if(!window.branches) return;
 
     let filtered = window.branches.filter(b => {
+
         let name = (isArabic ? b.nameAr : b.name).toLowerCase();
+
         return name.includes(input);
     });
 
     renderBranches(filtered);
 }
 
-// 🔥 رسم الفروع
+// ================== رسم الفروع ==================
 function renderBranches(list){
 
     const container = document.getElementById("branches");
@@ -116,11 +129,12 @@ function renderBranches(list){
     });
 }
 
-// أول تشغيل
+// ================== تشغيل أول مرة ==================
 window.onload = function(){
     renderPage();
     document.getElementById("search").focus();
 };
+
 </script>
 
 <footer>
