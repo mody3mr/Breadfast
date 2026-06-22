@@ -13,10 +13,7 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f172a;
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: #0f172a; }
         .hidden-section { display: none; }
     </style>
 </head>
@@ -28,226 +25,63 @@
                 <i class="fa-solid fa-lock"></i>
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">تسجيل دخول الإدارة</h2>
-            <p class="text-sm text-gray-500 mb-6">يرجى إدخال حساب الـ Firebase للوصول للوحة</p>
-
             <form id="loginForm" class="space-y-4 text-right">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">البريد الإلكتروني</label>
-                    <div class="relative">
-                        <input type="email" id="email" required placeholder="mohamedamr@breadfast.com"
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 text-left text-gray-800" dir="ltr">
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">كلمة المرور</label>
-                    <div class="relative">
-                        <input type="password" id="password" required placeholder="••••••••"
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 text-left text-gray-800" dir="ltr">
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-                            <i class="fa-solid fa-key"></i>
-                        </span>
-                    </div>
-                </div>
-                <button type="submit" id="submitBtn"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition duration-200 flex items-center justify-center gap-2">
-                    <span id="btnText">دخول النظام</span>
-                    <i class="fa-solid fa-arrow-right-to-bracket rotate-180"></i>
-                </button>
+                <input type="email" id="email" required placeholder="البريد الإلكتروني" class="w-full px-4 py-3 bg-gray-50 border rounded-lg text-gray-800 text-left" dir="ltr">
+                <input type="password" id="password" required placeholder="كلمة المرور" class="w-full px-4 py-3 bg-gray-50 border rounded-lg text-gray-800 text-left" dir="ltr">
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg">دخول النظام</button>
             </form>
         </div>
     </div>
 
     <div id="dashboardPage" class="hidden-section flex min-h-screen">
-        <aside class="w-64 bg-slate-950 p-6 flex flex-col justify-between border-l border-slate-800">
-            <div>
-                <div class="flex items-center gap-2 mb-8 justify-center">
-                    <h1 class="text-xl font-bold text-white flex items-center gap-2">
-                        FPs Coffee <span class="text-xl">☕</span>
-                    </h1>
-                </div>
-                <nav class="space-y-2">
-                    <a href="#main" id="menu-main" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition">
-                        <i class="fa-solid fa-house"></i> <span>الرئيسية</span>
-                    </a>
-                    <a href="#users" id="menu-users" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                        <i class="fa-solid fa-users"></i> <span>المستخدمين</span>
-                    </a>
-                </nav>
-            </div>
-            <div class="text-xs text-slate-600 text-center border-t border-slate-800 pt-4">
-                إصدار النظام 1.0
-            </div>
+        <aside class="w-64 bg-slate-950 p-6 border-l border-slate-800">
+            <h1 class="text-xl font-bold text-white mb-8 text-center">FPs Coffee ☕</h1>
+            <nav class="space-y-2">
+                <a href="#main" class="block px-4 py-3 bg-blue-600 rounded-lg text-white">الرئيسية</a>
+                <a href="#users" class="block px-4 py-3 text-slate-400 hover:text-white">المستخدمين</a>
+            </nav>
         </aside>
-
-        <main class="flex-1 flex flex-col">
-            <header class="bg-slate-900 border-b border-slate-800 h-16 flex items-center justify-between px-8">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">M</div>
-                    <span class="text-sm font-medium text-slate-300">مدير النظام</span>
+        <main class="flex-1 p-8">
+            <div id="section-main">
+                <h4 class="text-lg font-bold text-white mb-6">قائمة الفروع</h4>
                 </div>
-                <div class="relative w-80">
-                    <input type="text" placeholder="بحث سريع في الفروع..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 pr-10 text-sm text-slate-300 focus:outline-none focus:border-blue-500">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
-                </div>
-            </header>
-
-            <div class="p-8 flex-1">
-                <div id="section-main" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl flex items-center justify-between shadow-sm">
-                            <div>
-                                <p class="text-sm text-slate-500 mb-1">إجمالي عدد الفروع</p>
-                                <h3 class="text-3xl font-bold text-white mb-2">2 فروع</h3>
-                                <p class="text-xs text-blue-500 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> محدث حياً من Firebase</p>
-                            </div>
-                            <div class="w-12 h-12 bg-blue-950 text-blue-400 rounded-xl flex items-center justify-center text-xl border border-blue-900">
-                                <i class="fa-solid fa-store"></i>
-                            </div>
-                        </div>
-                        <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl flex items-center justify-between shadow-sm">
-                            <div>
-                                <p class="text-sm text-slate-500 mb-1">إجمالي عدد الزيارات</p>
-                                <h3 class="text-3xl font-bold text-white mb-2">0 زيارة</h3>
-                                <p class="text-xs text-emerald-500 flex items-center gap-1"><i class="fa-solid fa-circle-notch fa-spin"></i> قراءة حية ومباشرة</p>
-                            </div>
-                            <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-xl flex items-center justify-center text-xl border border-emerald-900">
-                                <i class="fa-solid fa-eye"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-4">
-                        <h4 class="text-lg font-bold text-white">قائمة الفروع الحالية</h4>
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition shadow-lg shadow-blue-950">
-                            <i class="fa-solid fa-plus"></i> إضافة فرع جديد
-                        </button>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center text-blue-500 text-lg border border-slate-800"><i class="fa-solid fa-location-dot"></i></div>
-                                <div>
-                                    <h5 class="font-bold text-white text-base">سماش (smash)</h5>
-                                    <p class="text-xs text-slate-500 mt-1">المدير: youssef amr | هاتف: 09876543212 | المواعيد: 8 صباحاً الي 5 مساءاً</p>
-                                    <span class="inline-block bg-amber-950/50 text-amber-500 text-[10px] px-2 py-0.5 rounded mt-2 border border-amber-900/50">عدد الموظفين: 1</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <button class="text-sm font-medium text-blue-500 hover:underline flex items-center gap-1"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
-                                <button class="text-sm font-medium text-rose-500 hover:underline flex items-center gap-1"><i class="fa-solid fa-trash"></i> حذف</button>
-                            </div>
-                        </div>
-                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center text-blue-500 text-lg border border-slate-800"><i class="fa-solid fa-location-dot"></i></div>
-                                <div>
-                                    <h5 class="font-bold text-white text-base">الماظة (Almaza)</h5>
-                                    <p class="text-xs text-slate-500 mt-1">المدير: mohamed amr | هاتف: 201145430199+ | المواعيد: 24 ساعة</p>
-                                    <span class="inline-block bg-amber-950/50 text-amber-500 text-[10px] px-2 py-0.5 rounded mt-2 border border-amber-900/50">عدد الموظفين: 1</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <button class="text-sm font-medium text-blue-500 hover:underline flex items-center gap-1"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
-                                <button class="text-sm font-medium text-rose-500 hover:underline flex items-center gap-1"><i class="fa-solid fa-trash"></i> حذف</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="section-users" class="hidden-section space-y-4">
-                    <h4 class="text-lg font-bold text-white">إدارة مستخدمين النظام</h4>
-                    <p class="text-sm text-slate-500">هنا تظهر لوحة التحكم الخاصة بالمستخدمين وصلاحياتهم.</p>
-                </div>
-            </div>
         </main>
     </div>
 
     <script>
-        // الـ Config الحقيقية الخاصة بمشروعك breadfast-coffee
+        // 🚨 هام جداً: تأكد إن هذه البيانات هي اللي كانت في ملفك الأصلي
         const firebaseConfig = {
-            apiKey: "AIzaSyAs-X1Y2Z3W4V5U6T7S8R9Q0P_EXAMPLE", 
-            authDomain: "breadfast-coffee.firebaseapp.com",
-            databaseURL: "https://breadfast-coffee-default-rtdb.firebaseio.com",
-            projectId: "breadfast-coffee",
-            storageBucket: "breadfast-coffee.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:a1b2c3d4e5f6g7h8i9j0k"
+            // انسخ هنا بيانات مشروعك الحقيقية من ملفك الأصلي
+            // apiKey: "...",
+            // authDomain: "...",
+            // projectId: "...",
+            // ... باقي البيانات
         };
         
-        // تشغيل Firebase تلقائياً
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        firebase.initializeApp(firebaseConfig);
 
-        // نظام التنقل الداخلي (Routing)
-        function handleRouting() {
-            const hash = window.location.hash;
-            const loginPage = document.getElementById('loginPage');
-            const dashboardPage = document.getElementById('dashboardPage');
-            const secMain = document.getElementById('section-main');
-            const secUsers = document.getElementById('section-users');
-            const btnMain = document.getElementById('menu-main');
-            const btnUsers = document.getElementById('menu-users');
-
-            if (!hash || hash === "" || hash === "#login") {
-                loginPage.classList.remove('hidden-section');
-                dashboardPage.classList.add('hidden-section');
-            } else {
-                loginPage.classList.add('hidden-section');
-                dashboardPage.classList.remove('hidden-section');
-
-                if (hash === "#users") {
-                    secMain.classList.add('hidden-section');
-                    secUsers.classList.remove('hidden-section');
-                    btnUsers.className = "flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition";
-                    btnMain.className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition";
-                } else {
-                    secMain.classList.remove('hidden-section');
-                    secUsers.classList.add('hidden-section');
-                    btnMain.className = "flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition";
-                    btnUsers.className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition";
-                }
-            }
-        }
-
-        window.addEventListener('hashchange', handleRouting);
-
-        // حل مشكلة علامة الاستفهام تلقائياً وصامتاً
+        // حل مشكلة علامة الاستفهام
         if (window.location.href.includes('?')) {
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash;
+            const cleanUrl = window.location.href.replace('?', '');
             window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
-            handleRouting();
-        } else {
-            handleRouting();
         }
 
-        // إرسال طلب تسجيل الدخول الفعلي
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault(); 
-
-            const email = document.getElementById('email').value.trim();
+            e.preventDefault();
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-
-            submitBtn.disabled = true;
-            btnText.innerText = "جاري التحقق...";
-
+            
             firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                console.log("تم تسجيل الدخول بنجاح!");
-                window.location.hash = "#main"; 
-            })
-            .catch((error) => {
-                console.error("خطأ Firebase:", error);
-                alert("خطأ في تسجيل الدخول: " + error.message);
-                submitBtn.disabled = false;
-                btnText.innerText = "دخول النظام";
-            });
+            .then(() => { window.location.hash = "#main"; location.reload(); })
+            .catch((error) => { alert("خطأ: " + error.message); });
+        });
+
+        // تشغيل اللوحة إذا كان المستخدم مسجل دخول
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('loginPage').classList.add('hidden-section');
+                document.getElementById('dashboardPage').classList.remove('hidden-section');
+            }
         });
     </script>
 </body>
