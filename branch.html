@@ -11,120 +11,104 @@
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background: radial-gradient(circle at top,#0f172a,#020617);
+    background:#0b0f1a;
     display:flex;
     justify-content:center;
-    align-items:center;
+    align-items:flex-end;
     min-height:100vh;
-    padding:20px;
 }
 
-/* CARD */
-.card{
+/* SHEET */
+.sheet{
     width:100%;
-    max-width:440px;
-    background:rgba(255,255,255,0.06);
-    backdrop-filter: blur(20px);
-    border:1px solid rgba(255,255,255,0.12);
-    border-radius:25px;
-    overflow:hidden;
-    box-shadow:0 30px 90px rgba(0,0,0,0.6);
+    max-width:500px;
+    background:#111827;
+    border-top-left-radius:25px;
+    border-top-right-radius:25px;
+    padding:20px;
+    box-shadow:0 -20px 60px rgba(0,0,0,0.6);
     color:white;
+    animation:up 0.4s ease;
+}
+
+@keyframes up{
+    from{transform:translateY(100px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
 }
 
 /* HEADER */
 .header{
     text-align:center;
-    padding:25px;
-    background:linear-gradient(135deg,#7c3aed,#ec4899);
+    margin-bottom:15px;
 }
 
 .header img{
-    width:90px;
-    height:90px;
+    width:80px;
+    height:80px;
     border-radius:50%;
-    border:3px solid white;
-    object-fit:cover;
+    border:2px solid #7c3aed;
 }
 
 .header h2{
     margin:10px 0 0;
-    font-size:20px;
+    font-size:18px;
 }
 
-/* TABS */
-.tabs{
-    display:flex;
-    justify-content:space-around;
-    background:rgba(0,0,0,0.2);
+/* SECTION */
+.section{
+    margin-top:15px;
 }
 
-.tab{
-    flex:1;
+/* TITLE */
+.title{
+    font-size:12px;
+    color:#a78bfa;
+    margin-bottom:6px;
+}
+
+/* CARD ROW */
+.row{
+    background:#1f2937;
     padding:12px;
-    cursor:pointer;
-    text-align:center;
-    font-size:13px;
-    transition:0.3s;
-    color:#cbd5e1;
-}
-
-.tab.active{
-    background:#7c3aed;
-    color:white;
-}
-
-/* CONTENT */
-.content{
-    padding:20px;
-}
-
-/* BOX */
-.box{
-    background:rgba(255,255,255,0.08);
-    padding:12px;
-    border-radius:14px;
+    border-radius:12px;
     margin-bottom:10px;
     font-size:14px;
-    transition:0.2s;
 }
 
-.box:hover{
-    transform:translateY(-2px);
+/* EMPLOYEES */
+.emps{
+    background:#0f172a;
+    padding:12px;
+    border-radius:12px;
+    font-size:14px;
 }
 
-/* BUTTON */
+/* BUTTONS */
+.actions{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
 .btn{
-    display:block;
     text-align:center;
     padding:12px;
     border-radius:12px;
-    background:#3b82f6;
-    color:white;
     text-decoration:none;
-    margin-top:15px;
+    color:white;
     font-weight:bold;
 }
 
-.btn:hover{
-    transform:scale(1.03);
-}
-
-/* hide sections */
-.section{
-    display:none;
-}
-
-.section.active{
-    display:block;
-}
+.map{background:#3b82f6;}
+.call{background:#22c55e;}
+.wa{background:#25D366;}
 
 </style>
 </head>
 
 <body>
 
-<div class="card" id="content">Loading...</div>
+<div class="sheet" id="content">Loading...</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -157,50 +141,40 @@ document.getElementById("content").innerHTML = `
 <h2>${b.nameAr || b.name}</h2>
 </div>
 
-<div class="tabs">
-<div class="tab active" onclick="showTab(0)">المدير</div>
-<div class="tab" onclick="showTab(1)">المواعيد</div>
-<div class="tab" onclick="showTab(2)">الموظفين</div>
-</div>
-
-<div class="content">
-
-<!-- MANAGER -->
-<div class="section active">
-<div class="box">👤 مدير الفرع: ${b.managerName}</div>
-<div class="box">📞 رقم مديرالفرع: ${b.phone}</div>
-<div class="box">💬 واتساب مدير الفرع: ${b.whatsapp}</div>
-</div>
-
-<!-- HOURS -->
 <div class="section">
-<div class="box">⏰ ${b.workingHours}</div>
-<a class="btn" href="${b.location}" target="_blank">📍 لوكيشن الفرع</a>
+<div class="title">مدير الفرع</div>
+<div class="row">${b.managerName}</div>
+
+<div class="title">رقم المدير</div>
+<div class="row">${b.phone}</div>
+
+<div class="title">واتساب المدير</div>
+<div class="row">${b.whatsapp}</div>
+
+<div class="title">مواعيد العمل</div>
+<div class="row">${b.workingHours}</div>
 </div>
 
-<!-- EMPLOYEES -->
 <div class="section">
-<div class="box">
+<div class="title">الموظفين</div>
+<div class="emps">
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 </div>
 
+<div class="actions">
+
+<a class="btn map" href="${b.location}" target="_blank">📍 الموقع</a>
+
+<a class="btn call" href="tel:${b.phone}">📞 اتصال</a>
+
+<a class="btn wa" href="https://wa.me/${String(b.whatsapp).replace('+','')}" target="_blank">
+💬 واتساب
+</a>
+
 </div>
 
 `;
-
-window.showTab = function(i){
-
-let tabs = document.querySelectorAll(".tab");
-let sections = document.querySelectorAll(".section");
-
-tabs.forEach(t=>t.classList.remove("active"));
-sections.forEach(s=>s.classList.remove("active"));
-
-tabs[i].classList.add("active");
-sections[i].classList.add("active");
-
-};
 
 }
 
