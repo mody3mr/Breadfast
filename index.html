@@ -16,17 +16,17 @@
 
 <img class="avatar" src="breadfastlogo.jpg">
 
-<h1 id="title">FPs Coffee</h1>
-<p id="desc">Branches</p>
+<h1 id="name">معاذ محمد</h1>
+<p id="desc">مدير أول</p>
 
-<input id="search" placeholder="Search..." onkeyup="searchLocation()">
+<input id="search" placeholder="ابحث عن المكان..." onkeyup="searchLocation()">
 
 <div id="loading">Loading...</div>
 <div id="branches"></div>
 
-<footer style="margin-top:auto;font-size:12px;opacity:0.7">
-© 2026 Created by Mohamed Amr Ibrahim
-</footer>
+<div class="footer">
+© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
+</div>
 
 </div>
 
@@ -52,7 +52,6 @@ window.branches = [];
 onSnapshot(collection(db,"branches"), (snap)=>{
 
 let data = [];
-
 snap.forEach(d=>{
 data.push({id:d.id,...d.data()});
 });
@@ -70,12 +69,13 @@ box.innerHTML="";
 list.forEach(b=>{
 let a=document.createElement("a");
 a.className="btn";
-a.innerText=b.nameAr || b.name;
+a.innerText = (isArabic ? b.nameAr : b.name);
 a.href="branch.html?id="+b.id;
 box.appendChild(a);
 });
 }
 
+/* SEARCH */
 window.searchLocation=function(){
 let val=document.getElementById("search").value.toLowerCase();
 
@@ -86,7 +86,26 @@ return (b.nameAr||b.name).toLowerCase().includes(val);
 render(filtered);
 }
 
-window.changeLang=function(){}
+/* LANGUAGE */
+let isArabic = true;
+
+window.changeLang=function(){
+isArabic = !isArabic;
+
+document.getElementById("name").innerText =
+isArabic ? "معاذ محمد" : "Moaaz Mohamed";
+
+document.getElementById("desc").innerText =
+isArabic ? "مدير أول" : "Senior Manager";
+
+document.getElementById("search").placeholder =
+isArabic ? "ابحث عن المكان..." : "Search Location...";
+
+document.querySelector(".lang button").innerText =
+isArabic ? "English" : "العربية";
+
+render(window.branches);
+}
 </script>
 
 </body>
