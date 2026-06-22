@@ -10,7 +10,7 @@
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background: radial-gradient(circle at top,#111827,#0f172a);
+    background:#0b1220;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -22,12 +22,10 @@ body{
 .card{
     width:100%;
     max-width:420px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    border:1px solid rgba(255,255,255,0.15);
-    border-radius:25px;
+    background:#111827;
+    border-radius:20px;
     overflow:hidden;
-    box-shadow:0 25px 80px rgba(0,0,0,0.5);
+    box-shadow:0 25px 70px rgba(0,0,0,0.6);
     color:white;
 }
 
@@ -39,8 +37,8 @@ body{
 }
 
 .header img{
-    width:95px;
-    height:95px;
+    width:90px;
+    height:90px;
     border-radius:50%;
     object-fit:cover;
     border:3px solid white;
@@ -51,73 +49,50 @@ body{
     font-size:20px;
 }
 
-/* BODY */
+/* CONTENT */
 .content{
     padding:20px;
 }
 
-/* info cards */
-.info{
-    display:grid;
-    gap:10px;
-}
-
+/* INFO BOXES */
 .box{
-    background:rgba(255,255,255,0.12);
+    background:#1f2937;
     padding:12px;
-    border-radius:14px;
+    border-radius:12px;
+    margin-bottom:10px;
     font-size:14px;
-    transition:0.2s;
 }
 
-.box:hover{
-    transform:translateY(-2px);
-    background:rgba(255,255,255,0.18);
-}
-
-/* employees */
+/* EMPLOYEES */
 .section{
     margin-top:15px;
-    padding:12px;
-    border-radius:14px;
-    background:rgba(255,255,255,0.10);
+    padding:15px;
+    background:#0f172a;
+    border-radius:12px;
 }
 
 .section h3{
     margin:0 0 10px;
     font-size:14px;
+    color:#a78bfa;
 }
 
-/* buttons */
-.actions{
-    display:grid;
-    gap:10px;
-    margin-top:15px;
-}
-
+/* BUTTON */
 .btn{
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display:block;
+    text-align:center;
     padding:12px;
+    margin-top:15px;
     border-radius:12px;
     text-decoration:none;
     color:white;
+    background:#3b82f6;
     font-weight:bold;
     transition:0.2s;
 }
 
 .btn:hover{
-    transform:scale(1.03);
-}
-
-.map{background:#3b82f6;}
-.call{background:#22c55e;}
-.whatsapp{background:#25D366;}
-
-/* mobile */
-@media(max-width:480px){
-    .card{border-radius:18px;}
+    transform:scale(1.02);
 }
 
 </style>
@@ -160,28 +135,18 @@ document.getElementById("content").innerHTML = `
 
 <div class="content">
 
-<div class="info">
-
 <div class="box">👤 Manager: ${b.managerName}</div>
 <div class="box">📞 Phone: ${b.phone}</div>
 <div class="box">⏰ Working Hours: ${b.workingHours}</div>
-
-</div>
 
 <div class="section">
 <h3>👥 Employees</h3>
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 
-<div class="actions">
-
-<a class="btn map" href="${b.location}" target="_blank">📍 Open Map</a>
-
-<a class="btn call" href="tel:${b.phone}">📞 Call</a>
-
-<a class="btn whatsapp" href="https://wa.me/${b.whatsapp}" target="_blank">💬 WhatsApp</a>
-
-</div>
+<a class="btn" href="${b.location}" target="_blank">
+📍 Open Location
+</a>
 
 </div>
 
