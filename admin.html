@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>FPs Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -16,10 +16,11 @@
 }
 
 body{
-    background:#f4f6fb;
+    background:#f6f7fb;
+    color:#111827;
 }
 
-/* WRAPPER */
+/* APP LAYOUT */
 .app{
     display:flex;
     min-height:100vh;
@@ -28,49 +29,46 @@ body{
 /* SIDEBAR */
 .sidebar{
     width:240px;
-    background:#111827;
+    background:#0f172a;
     color:white;
-    padding:20px;
     position:fixed;
     right:0;
     top:0;
     bottom:0;
+    padding:20px;
 }
 
 .logo{
     font-weight:bold;
-    margin-bottom:25px;
     font-size:18px;
+    margin-bottom:25px;
 }
 
 .menu{
     padding:10px;
     border-radius:8px;
     margin-bottom:6px;
-    cursor:pointer;
     color:#cbd5e1;
+    cursor:pointer;
+    transition:0.2s;
 }
 
 .menu:hover{
-    background:#1f2937;
+    background:#1e293b;
     color:white;
 }
 
 /* MAIN */
 .main{
-    flex:1;
-    margin-right:240px; /* 👈 أهم سطر يمنع التداخل */
-    padding:25px;
+    margin-right:240px;
+    width:100%;
+    padding:30px;
 }
 
 /* HEADER */
-.header{
-    margin-bottom:20px;
-}
-
 .header h1{
     font-size:22px;
-    color:#111827;
+    margin-bottom:5px;
 }
 
 .header p{
@@ -82,25 +80,31 @@ body{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
     gap:15px;
+    margin-top:20px;
 }
 
 .card{
     background:white;
     padding:18px;
     border-radius:12px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.06);
+    box-shadow:0 1px 8px rgba(0,0,0,0.06);
 }
 
 .card h2{
     margin-top:10px;
-    color:#7c3aed;
+    color:#6366f1;
 }
 
-/* LIST */
+/* SECTION */
 .section{
-    margin-top:25px;
+    margin-top:30px;
 }
 
+.section h3{
+    margin-bottom:12px;
+}
+
+/* BRANCH ITEM */
 .branch{
     background:white;
     padding:14px;
@@ -109,18 +113,20 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 3px 10px rgba(0,0,0,0.05);
+    box-shadow:0 1px 6px rgba(0,0,0,0.05);
 }
 
 .branch small{
     color:#6b7280;
 }
 
+/* BUTTONS */
 .actions button{
     border:none;
     padding:6px 10px;
     border-radius:6px;
     cursor:pointer;
+    font-size:12px;
 }
 
 .edit{
@@ -156,8 +162,8 @@ body{
 <div class="main">
 
 <div class="header">
-<h1>Dashboard</h1>
-<p>Overview of system data</p>
+<h1>Dashboard Overview</h1>
+<p>Manage branches, users and system data</p>
 </div>
 
 <!-- CARDS -->
@@ -180,7 +186,7 @@ Visits
 
 </div>
 
-<!-- BRANCHES -->
+<!-- BRANCH LIST -->
 <div class="section">
 <h3>Branches</h3>
 <div id="branchesList"></div>
@@ -207,7 +213,7 @@ appId:"1:803906042715:web:1e8977716adc54947b787e"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* LOAD */
+/* LOAD DATA */
 async function load(){
 
 const snap = await getDocs(collection(db,"branches"));
@@ -240,6 +246,7 @@ list.innerHTML += `
 
 }
 
+/* DELETE */
 window.del = async function(id){
 await deleteDoc(doc(db,"branches",id));
 load();
