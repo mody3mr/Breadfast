@@ -1,322 +1,549 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Admin Dashboard</title>
 
 <style>
+
+*{
+box-sizing:border-box;
+font-family:Arial;
+}
+
 body{
-    margin:0;
-    font-family:Arial;
-    background:#0f172a;
-    color:white;
+margin:0;
+background:#f1f5f9;
 }
 
 /* LOGIN */
-#loginBox{
-    width:320px;
-    margin:120px auto;
-    background:#1e293b;
-    padding:20px;
-    border-radius:12px;
+
+.login-box{
+
+width:350px;
+background:white;
+padding:30px;
+border-radius:20px;
+
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+
+box-shadow:0 20px 40px #0002;
+
 }
 
-input,button{
-    width:100%;
-    padding:10px;
-    margin:8px 0;
-    border:none;
-    border-radius:8px;
+
+.login-box h2{
+text-align:center;
 }
+
+
+input{
+
+width:100%;
+padding:12px;
+margin:10px 0;
+
+border:1px solid #ddd;
+border-radius:10px;
+
+}
+
 
 button{
-    background:#22c55e;
-    color:white;
-    cursor:pointer;
+
+width:100%;
+padding:12px;
+
+border:0;
+border-radius:10px;
+
+background:#2563eb;
+color:white;
+
+cursor:pointer;
+
 }
 
-/* APP */
-#app{display:none;}
 
-/* SIDEBAR */
+/* DASHBOARD */
+
+
+.dashboard{
+
+display:none;
+
+}
+
+
 .sidebar{
-    width:220px;
-    background:#111827;
-    height:100vh;
-    position:fixed;
-    left:0;
-    top:0;
-    padding:15px;
+
+position:fixed;
+
+right:0;
+
+top:0;
+
+height:100vh;
+
+width:230px;
+
+background:#111827;
+
+color:white;
+
+padding:20px;
+
 }
+
 
 .sidebar button{
-    background:#1f2937;
+
+background:none;
+
+text-align:right;
+
+margin-bottom:15px;
+
 }
 
-/* MAIN */
-.main{
-    margin-left:240px;
-    padding:20px;
+
+.content{
+
+margin-right:250px;
+
+padding:30px;
+
 }
 
-.page{display:none;}
-.active{display:block;}
 
-/* TABLE */
-table{
-    width:100%;
-    background:#1e293b;
-    border-collapse:collapse;
+/* CARDS */
+
+
+.cards{
+
+display:flex;
+
+gap:20px;
+
 }
 
-td,th{
-    padding:10px;
-    border-bottom:1px solid #334155;
+
+.card{
+
+background:white;
+
+padding:25px;
+
+border-radius:15px;
+
+width:200px;
+
+box-shadow:0 10px 25px #0001;
+
 }
 
-/* TOAST CENTER */
-.toast{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%) scale(0.8);
-    background:#22c55e;
-    color:white;
-    padding:15px 20px;
-    border-radius:12px;
-    opacity:0;
-    transition:0.25s;
-    z-index:9999;
-    text-align:center;
-    min-width:220px;
+
+
+/* TOAST */
+
+
+#toast{
+
+position:fixed;
+
+bottom:30px;
+
+right:30px;
+
+background:#111827;
+
+color:white;
+
+padding:15px 25px;
+
+border-radius:12px;
+
+display:none;
+
+animation:show .3s;
+
 }
 
-.toast.show{
-    opacity:1;
-    transform:translate(-50%,-50%) scale(1);
+
+@keyframes show{
+
+from{
+
+transform:translateY(50px);
+
+opacity:0;
+
 }
 
-.toast.error{
-    background:#ef4444;
+to{
+
+transform:translateY(0);
+
+opacity:1;
+
 }
+
+}
+
+
+
 </style>
+
 </head>
+
 
 <body>
 
+
+
 <!-- LOGIN -->
-<div id="loginBox">
-<h2>Login</h2>
+
+<div class="login-box" id="loginBox">
+
+
+<h2>Admin Login</h2>
+
 
 <input id="email" placeholder="Email">
+
+
 <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+
+<button onclick="login()">
+Login
+</button>
+
+
 </div>
 
-<!-- APP -->
-<div id="app">
+
+
+
+
+<!-- DASHBOARD -->
+
+
+<div class="dashboard" id="dashboard">
+
 
 <div class="sidebar">
-<h3>Admin</h3>
 
-<button onclick="show('home')">Home</button>
-<button onclick="show('branches')">Branches</button>
-<button onclick="logout()">Logout</button>
-</div>
 
-<div class="main">
+<h2>
+Menu
+</h2>
 
-<div id="home" class="page active">
-<h2>Dashboard</h2>
-<h3 id="count">0</h3>
-</div>
 
-<div id="branches" class="page">
+<button>
+Dashboard
+</button>
 
-<h2>Branches</h2>
 
-<input id="nameEn" placeholder="Name EN">
-<input id="nameAr" placeholder="Name AR">
-<input id="map" placeholder="Map">
+<button onclick="showBranches()">
+Branches
+</button>
 
-<button onclick="addBranch()">Add</button>
 
-<table>
-<tbody id="table"></tbody>
-</table>
+<button>
+Users
+</button>
 
-</div>
+
+<button>
+Settings
+</button>
+
+
 
 </div>
+
+
+
+
+
+<div class="content">
+
+
+<h1>
+Dashboard
+</h1>
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+Total Branches
+</h3>
+
+<h1 id="count">
+0
+</h1>
+
+
 </div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div id="toast"></div>
+
+
+
+
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+import {initializeApp}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
 
 import {
+
 getAuth,
-signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+signInWithEmailAndPassword
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+
+
+import {
+
+getFirestore,
+
+collection,
+
+getDocs
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
-  authDomain: "breadfast-coffee.firebaseapp.com",
-  projectId: "breadfast-coffee",
-  storageBucket: "breadfast-coffee.firebasestorage.app",
-  messagingSenderId: "803906042715",
-  appId: "1:803906042715:web:1e8977716adc54947b787e"
+
+
+apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+
+authDomain: "breadfast-coffee.firebaseapp.com",
+
+projectId: "breadfast-coffee",
+
+storageBucket: "breadfast-coffee.firebasestorage.app",
+
+messagingSenderId: "803906042715",
+
+appId: "1:803906042715:web:1e8977716adc54947b787e"
+
 };
+
+
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+
 const auth = getAuth(app);
 
-let branches = [];
 
-/* ================= TOAST ================= */
-function toast(msg,type="success"){
+const db = getFirestore(app);
 
-    let t=document.createElement("div");
-    t.className="toast";
-    t.innerText=msg;
 
-    if(type==="error") t.classList.add("error");
 
-    document.body.appendChild(t);
 
-    setTimeout(()=>t.classList.add("show"),100);
 
-    setTimeout(()=>{
-        t.classList.remove("show");
-        setTimeout(()=>t.remove(),200);
-    },2500);
+
+// TOAST
+
+
+function toast(msg){
+
+
+let t=document.getElementById("toast");
+
+
+t.innerHTML=msg;
+
+
+t.style.display="block";
+
+
+setTimeout(()=>{
+
+
+t.style.display="none";
+
+
+},3000);
+
+
 }
 
-/* ================= LOGIN ================= */
-window.login = function(){
 
-    let email = document.getElementById("email").value.trim();
-    let pass = document.getElementById("password").value.trim();
 
-    // 🔥 VALIDATION BEFORE FIREBASE
-    if(!email){
-        toast("Please enter email ❌","error");
-        return;
-    }
 
-    if(!pass){
-        toast("Please enter password ❌","error");
-        return;
-    }
 
-    signInWithEmailAndPassword(auth,email,pass)
-    .then(()=>{
-        toast("Login successful 🔥");
-    })
-    .catch((err)=>{
 
-        if(err.code === "auth/user-not-found"){
-            toast("This email is not registered ❌","error");
-        }
-        else if(err.code === "auth/wrong-password"){
-            toast("Wrong password ❌","error");
-        }
-        else{
-            toast("Login failed ❌","error");
-        }
-    });
-};
 
-/* ================= AUTH ================= */
-onAuthStateChanged(auth,(user)=>{
+// LOGIN
 
-    if(user){
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("app").style.display="block";
-    }else{
-        document.getElementById("loginBox").style.display="block";
-        document.getElementById("app").style.display="none";
-    }
-});
 
-/* ================= LOGOUT ================= */
-window.logout = function(){
-    signOut(auth);
-};
+window.login=async function(){
 
-/* ================= REALTIME ================= */
-onSnapshot(collection(db,"branches"),(snap)=>{
 
-    branches=[];
-    snap.forEach(d=>{
-        branches.push({id:d.id,...d.data()});
-    });
+let email=document.getElementById("email").value.trim();
 
-    document.getElementById("count").innerText = branches.length;
 
-    render();
-});
+let pass=document.getElementById("password").value.trim();
 
-/* ================= ADD ================= */
-window.addBranch = async function(){
 
-    if(!nameEn.value || !nameAr.value || !map.value){
-        toast("Please fill all fields ❌","error");
-        return;
-    }
 
-    await addDoc(collection(db,"branches"),{
-        name:nameEn.value,
-        nameAr:nameAr.value,
-        map:map.value
-    });
+if(email==""){
 
-    toast("Branch added successfully ✅");
-};
+toast("⚠️ من فضلك أدخل البريد الإلكتروني");
 
-/* ================= DELETE ================= */
-window.deleteBranch = async function(id){
+return;
 
-    await deleteDoc(doc(db,"branches",id));
-
-    toast("Branch deleted 🗑️");
-};
-
-/* ================= RENDER ================= */
-function render(){
-
-    let table=document.getElementById("table");
-    table.innerHTML="";
-
-    branches.forEach(b=>{
-
-        table.innerHTML+=`
-        <tr>
-            <td>${b.name}</td>
-            <td>${b.nameAr}</td>
-            <td>
-                <button onclick="deleteBranch('${b.id}')">Delete</button>
-            </td>
-        </tr>
-        `;
-    });
 }
 
-/* ================= NAV ================= */
-window.show=function(id){
 
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-};
+
+if(pass==""){
+
+toast("⚠️ من فضلك أدخل كلمة المرور");
+
+return;
+
+}
+
+
+
+
+try{
+
+
+await signInWithEmailAndPassword(auth,email,pass);
+
+
+
+toast("✅ تم تسجيل الدخول بنجاح");
+
+
+
+document.getElementById("loginBox").style.display="none";
+
+
+document.getElementById("dashboard").style.display="block";
+
+
+
+loadCount();
+
+
+
+}
+
+
+
+catch(error){
+
+
+
+if(error.code=="auth/user-not-found"){
+
+toast("❌ هذا البريد غير مسجل في النظام");
+
+}
+
+
+else if(error.code=="auth/wrong-password"){
+
+toast("❌ كلمة المرور غير صحيحة");
+
+}
+
+
+else{
+
+toast("❌ حدث خطأ أثناء تسجيل الدخول");
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+async function loadCount(){
+
+
+let snap=await getDocs(collection(db,"branches"));
+
+
+document.getElementById("count").innerHTML=snap.size;
+
+
+}
+
+
+
+window.showBranches=function(){
+
+toast("صفحة الفروع هنكملها بالنسخة القادمة");
+
+}
+
+
+
+
 
 </script>
 
+
+
 </body>
+
 </html>
