@@ -10,24 +10,32 @@
 
 <style>
 
-/* ===== Layout ===== */
-body{
+/* ===== Reset بسيط ===== */
+*{
     margin:0;
-    font-family:Arial;
-    background:#f3f4f6;
-    display:flex;
-    justify-content:center;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
-/* ===== CARD ===== */
+body{
+    min-height:100vh;
+    background:#f3f4f6;
+
+    /* ❌ شلت المسافات اللي كانت مسببالك فراغ */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===== الكارت ===== */
 .phone{
     width:380px;
     min-height:750px;
-    margin-top:40px;
+    border-radius:30px;
     padding:30px 20px;
 
-    border-radius:30px;
-    background:linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
+    background: linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
     color:white;
 
     display:flex;
@@ -35,9 +43,11 @@ body{
     align-items:center;
 
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
+
+    position:relative;
 }
 
-/* ===== LANG ===== */
+/* زر اللغة */
 .lang{
     width:100%;
     display:flex;
@@ -52,31 +62,43 @@ body{
     border-radius:20px;
 }
 
-/* ===== IMAGE ===== */
+/* الصورة */
 .avatar{
     width:120px;
     height:120px;
     border-radius:50%;
     object-fit:cover;
+    margin-top:10px;
 }
 
-/* ===== TEXT ===== */
-h1{ font-size:22px; margin-top:10px; }
-p{ font-size:14px; opacity:0.85; }
+/* النص */
+h1{
+    font-size:22px;
+    margin-top:10px;
+}
 
-/* ===== SEARCH ===== */
+p{
+    font-size:14px;
+    opacity:0.85;
+    margin-top:5px;
+}
+
+/* البحث */
 #search{
     width:90%;
     padding:12px;
-    margin:15px 0;
+    margin:15px auto;
+    display:block;
     border-radius:20px;
     border:none;
+    font-size:16px;
     text-align:center;
 }
 
-/* ===== BUTTON ===== */
+/* الأزرار */
 .btn{
     width:100%;
+    display:block;
     background:white;
     color:#222;
     text-decoration:none;
@@ -87,25 +109,16 @@ p{ font-size:14px; opacity:0.85; }
     margin-top:10px;
 }
 
-/* ===== SIMPLE LOADING ===== */
-#loading{
-    margin:10px 0;
-    font-size:14px;
-    opacity:0.8;
-    display:none;
-}
-
-/* ===== FOOTER ===== */
+/* ===== الفوتر جوه الكارد ===== */
 footer{
-    margin-top:15px;
-    font-size:12px;
-    opacity:0.7;
+    margin-top:auto;
     text-align:center;
-    width:100%;
+    font-size:12px;
+    opacity:0.8;
+    padding-top:15px;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -123,101 +136,87 @@ footer{
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- loading بسيط -->
-<div id="loading">Loading...</div>
-
+<!-- الفروع -->
 <div id="branches"></div>
 
+<!-- الفوتر جوه الكارد -->
 <footer>
-<p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
+  <p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
 </footer>
 
 </div>
 
-<script type="module" src="data.js"></script>
+<script src="data.js"></script>
 
 <script>
 
 let isArabic = localStorage.getItem("language") === "ar";
 
 const texts = {
-en:{
-    name:"Moaaz Mohamed",
-    desc:"Senior Manager",
-    langBtn:"العربية",
-    search:"Search Location..."
+en: {
+    name: "Moaaz Mohamed",
+    desc: "Senior Manager",
+    langBtn: "العربية",
+    search: "Search Location..."
 },
-ar:{
-    name:"معاذ Mohamed",
-    desc:"مدير أول",
-    langBtn:"English",
-    search:"ابحث عن المكان..."
+ar: {
+    name: "معاذ Mohamed",
+    desc: "مدير أول",
+    langBtn: "English",
+    search: "ابحث عن المكان..."
 }
 };
 
-/* ===== RENDER PAGE ===== */
 function renderPage(){
-    let lang = isArabic ? "ar":"en";
 
-    document.querySelector("h1").innerText = texts[lang].name;
-    document.querySelector("p").innerText = texts[lang].desc;
-    document.querySelector(".lang button").innerText = texts[lang].langBtn;
+    let lang = isArabic ? "ar" : "en";
+
+    document.querySelector("h1").innerHTML = texts[lang].name;
+    document.querySelector("p").innerHTML = texts[lang].desc;
+    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
+
     document.getElementById("search").placeholder = texts[lang].search;
 
-    document.documentElement.dir = isArabic ? "rtl":"ltr";
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
 }
 
-/* ===== SHOW LOADING ===== */
-function showLoading(){
-    document.getElementById("loading").style.display = "block";
-}
-
-/* ===== HIDE LOADING ===== */
-function hideLoading(){
-    document.getElementById("loading").style.display = "none";
-}
-
-/* ===== RENDER BRANCHES ===== */
 function renderBranches(list){
 
     const container = document.getElementById("branches");
-
     container.innerHTML = "";
 
-    hideLoading();
-
-    list.forEach(b=>{
+    list.forEach(branch => {
 
         const a = document.createElement("a");
         a.className = "btn";
-        a.href = b.map;
+        a.href = branch.map;
         a.target = "_blank";
-        a.innerText = isArabic ? b.nameAr : b.name;
+
+        a.innerText = isArabic ? branch.nameAr : branch.name;
 
         container.appendChild(a);
     });
 }
 
-/* ===== SEARCH ===== */
 function searchLocation(){
+
+    let input = document.getElementById("search").value.toLowerCase();
 
     if(!window.branches) return;
 
-    let val = document.getElementById("search").value.toLowerCase();
-
-    let filtered = window.branches.filter(b=>{
+    let filtered = window.branches.filter(b => {
         let name = (isArabic ? b.nameAr : b.name).toLowerCase();
-        return name.includes(val);
+        return name.includes(input);
     });
 
     renderBranches(filtered);
 }
 
-/* ===== LANGUAGE ===== */
 function changeLang(){
 
     isArabic = !isArabic;
-    localStorage.setItem("language", isArabic ? "ar":"en");
+
+    localStorage.setItem("language", isArabic ? "ar" : "en");
 
     renderPage();
 
@@ -226,13 +225,9 @@ function changeLang(){
     }
 }
 
-/* ===== INIT ===== */
 window.onload = function(){
-
     renderPage();
-    showLoading();
     document.getElementById("search").focus();
-
 };
 
 </script>
