@@ -7,108 +7,95 @@
 
 <style>
 
-/* BACKGROUND */
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#0b0f1a;
+    background:#f5f6f8;
     display:flex;
     justify-content:center;
-    align-items:flex-end;
-    min-height:100vh;
-}
-
-/* SHEET */
-.sheet{
-    width:100%;
-    max-width:500px;
-    background:#111827;
-    border-top-left-radius:25px;
-    border-top-right-radius:25px;
     padding:20px;
-    box-shadow:0 -20px 60px rgba(0,0,0,0.6);
-    color:white;
-    animation:up 0.4s ease;
 }
 
-@keyframes up{
-    from{transform:translateY(100px);opacity:0;}
-    to{transform:translateY(0);opacity:1;}
+/* CARD */
+.card{
+    width:100%;
+    max-width:420px;
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 40px rgba(0,0,0,0.1);
 }
 
 /* HEADER */
 .header{
+    padding:20px;
     text-align:center;
-    margin-bottom:15px;
+    background:#111827;
+    color:white;
 }
 
 .header img{
     width:80px;
     height:80px;
     border-radius:50%;
-    border:2px solid #7c3aed;
+    margin-bottom:10px;
+    border:2px solid white;
 }
 
-.header h2{
-    margin:10px 0 0;
-    font-size:18px;
+/* BODY */
+.content{
+    padding:20px;
 }
 
 /* SECTION */
 .section{
-    margin-top:15px;
+    margin-bottom:15px;
 }
 
-/* TITLE */
 .title{
     font-size:12px;
-    color:#a78bfa;
+    color:#6b7280;
     margin-bottom:6px;
 }
 
-/* CARD ROW */
-.row{
-    background:#1f2937;
+/* INFO */
+.box{
+    background:#f3f4f6;
     padding:12px;
-    border-radius:12px;
-    margin-bottom:10px;
+    border-radius:10px;
     font-size:14px;
+    color:#111827;
 }
 
 /* EMPLOYEES */
-.emps{
-    background:#0f172a;
+.employees{
+    background:#f9fafb;
     padding:12px;
-    border-radius:12px;
+    border-radius:10px;
     font-size:14px;
 }
 
 /* BUTTONS */
-.actions{
-    display:grid;
-    gap:10px;
-    margin-top:15px;
-}
-
 .btn{
+    display:block;
     text-align:center;
     padding:12px;
-    border-radius:12px;
+    border-radius:10px;
     text-decoration:none;
-    color:white;
     font-weight:bold;
+    margin-top:10px;
 }
 
-.map{background:#3b82f6;}
-.call{background:#22c55e;}
-.wa{background:#25D366;}
+.map{background:#2563eb;color:white;}
+.call{background:#16a34a;color:white;}
+.wa{background:#22c55e;color:white;}
 
 </style>
 </head>
 
 <body>
 
-<div class="sheet" id="content">Loading...</div>
+<div class="card" id="content">Loading...</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -141,35 +128,39 @@ document.getElementById("content").innerHTML = `
 <h2>${b.nameAr || b.name}</h2>
 </div>
 
+<div class="content">
+
 <div class="section">
 <div class="title">مدير الفرع</div>
-<div class="row">${b.managerName}</div>
+<div class="box">${b.managerName}</div>
+</div>
 
+<div class="section">
 <div class="title">رقم المدير</div>
-<div class="row">${b.phone}</div>
+<div class="box">${b.phone}</div>
+</div>
 
+<div class="section">
 <div class="title">واتساب المدير</div>
-<div class="row">${b.whatsapp}</div>
+<a class="btn wa" href="https://wa.me/${String(b.whatsapp).replace('+','')}" target="_blank">
+مراسلة واتساب
+</a>
+</div>
 
+<div class="section">
 <div class="title">مواعيد العمل</div>
-<div class="row">${b.workingHours}</div>
+<div class="box">${b.workingHours}</div>
 </div>
 
 <div class="section">
 <div class="title">الموظفين</div>
-<div class="emps">
+<div class="employees">
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 </div>
 
-<div class="actions">
-
-<a class="btn map" href="${b.location}" target="_blank">📍 الموقع</a>
-
-<a class="btn call" href="tel:${b.phone}">📞 اتصال</a>
-
-<a class="btn wa" href="https://wa.me/${String(b.whatsapp).replace('+','')}" target="_blank">
-💬 واتساب
+<a class="btn map" href="${b.location}" target="_blank">
+فتح الموقع
 </a>
 
 </div>
