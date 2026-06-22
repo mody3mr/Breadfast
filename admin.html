@@ -2,89 +2,166 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Clean Dashboard</title>
+<title>FPs Dashboard Stable</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#f6f7fb}
 
-/* layout */
-.app{display:flex;min-height:100vh}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
 
+body{
+    background:#f6f7fb;
+}
+
+/* LAYOUT */
+.app{
+    display:flex;
+}
+
+/* SIDEBAR */
 .sidebar{
-width:240px;background:#0f172a;color:#fff;
-position:fixed;right:0;top:0;bottom:0;padding:20px;
+    width:240px;
+    background:#0f172a;
+    color:#fff;
+    height:100vh;
+    position:fixed;
+    right:0;
+    top:0;
+    padding:20px;
 }
 
+.menu{
+    padding:10px;
+    margin-bottom:6px;
+    border-radius:8px;
+    color:#cbd5e1;
+}
+
+.menu:hover{
+    background:#1e293b;
+}
+
+/* MAIN */
 .main{
-margin-right:240px;
-padding:25px;
-width:100%;
+    margin-right:240px;
+    width:100%;
+    padding:25px;
 }
 
-/* list */
-.item{
-background:#fff;padding:14px;border-radius:10px;
-margin-bottom:10px;
-display:flex;justify-content:space-between;
+/* TOP */
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-/* modal */
+.search{
+    padding:10px;
+    width:250px;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+
+.add{
+    padding:10px 14px;
+    background:#6366f1;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* CARD */
+.card{
+    background:#fff;
+    padding:15px;
+    border-radius:12px;
+    margin-top:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.branch{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px;
+    border-radius:10px;
+    background:#fff;
+    margin-top:10px;
+}
+
+/* MODAL */
 .modal{
-display:none;position:fixed;inset:0;
-background:rgba(0,0,0,0.5);
-justify-content:center;align-items:center;
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
 }
 
 .box{
-background:#fff;padding:20px;border-radius:12px;
-width:360px;
+    background:#fff;
+    padding:20px;
+    width:350px;
+    border-radius:12px;
 }
 
 input{
-width:100%;padding:10px;margin-bottom:8px;
-border:1px solid #ddd;border-radius:8px;
-}
-
-.emp{
-margin-top:10px;
-}
-
-.emp-item{
-margin-bottom:10px;
-}
-
-button{
-cursor:pointer;
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    border:1px solid #ddd;
+    border-radius:8px;
 }
 
 .save{
-width:100%;
-padding:10px;
-background:#6366f1;
-color:#fff;
-border:none;
-border-radius:8px;
+    width:100%;
+    padding:10px;
+    background:#6366f1;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+}
+
+.emp input{
+    margin-top:5px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="app">
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-<h3>Dashboard</h3>
+<h3>FPs Admin</h3>
+<div class="menu">Dashboard</div>
+<div class="menu">Branches</div>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
-<button onclick="openModal()">+ Add Branch</button>
+<div class="top">
+<input class="search" id="search" placeholder="Search">
+<button class="add" onclick="openModal()">+ Add Branch</button>
+</div>
 
 <div id="list"></div>
 
 </div>
+
 </div>
 
 <!-- MODAL -->
@@ -94,14 +171,11 @@ border-radius:8px;
 <input id="name" placeholder="Branch Name">
 <input id="manager" placeholder="Manager Name">
 <input id="phone" placeholder="Phone">
-<input id="location" placeholder="Location">
 <input id="hours" placeholder="Working Hours">
 
-<div class="emp">
 <h4>Employees</h4>
 <div id="empBox"></div>
 <button onclick="addEmp()">+ Add Employee</button>
-</div>
 
 <button class="save" onclick="save()">Save</button>
 
@@ -124,7 +198,6 @@ projectId:"breadfast-coffee"
 
 const db = getFirestore(app);
 
-/* GLOBAL STATE */
 let branches=[];
 let editId=null;
 let employees=[];
@@ -146,10 +219,11 @@ box.innerHTML="";
 
 branches.forEach(b=>{
 box.innerHTML+=`
-<div class="item">
+<div class="branch">
 <div>
 <strong>${b.name}</strong><br>
-<small>${b.manager}</small>
+<small>${b.manager}</small><br>
+<small>${b.hours || ""}</small>
 </div>
 
 <div>
@@ -161,46 +235,42 @@ box.innerHTML+=`
 });
 }
 
-/* RESET FORM */
-function resetForm(){
+/* OPEN */
+window.openModal=()=>{
+editId=null;
+reset();
+document.getElementById("modal").style.display="flex";
+}
+
+/* RESET */
+function reset(){
 document.getElementById("name").value="";
 document.getElementById("manager").value="";
 document.getElementById("phone").value="";
-document.getElementById("location").value="";
 document.getElementById("hours").value="";
-
 employees=[];
-renderEmployees();
+drawEmp();
 }
 
 /* EMP */
 window.addEmp=()=>{
 employees.push({name:"",phone:""});
-renderEmployees();
+drawEmp();
 }
 
-function renderEmployees(){
+function drawEmp(){
 const box=document.getElementById("empBox");
 box.innerHTML="";
 
 employees.forEach((e,i)=>{
 box.innerHTML+=`
-<div class="emp-item">
 <input placeholder="Employee Name"
 oninput="employees[${i}].name=this.value">
 
 <input placeholder="Employee Phone"
 oninput="employees[${i}].phone=this.value">
-</div>
 `;
 });
-}
-
-/* OPEN */
-window.openModal=()=>{
-editId=null;
-resetForm();
-document.getElementById("modal").style.display="flex";
 }
 
 /* SAVE */
@@ -210,7 +280,6 @@ const data={
 name:document.getElementById("name").value,
 manager:document.getElementById("manager").value,
 phone:document.getElementById("phone").value,
-location:document.getElementById("location").value,
 hours:document.getElementById("hours").value,
 employees:[...employees]
 };
@@ -230,16 +299,15 @@ window.edit=(id)=>{
 const b=branches.find(x=>x.id===id);
 editId=id;
 
-resetForm();
+reset();
 
 document.getElementById("name").value=b.name||"";
 document.getElementById("manager").value=b.manager||"";
 document.getElementById("phone").value=b.phone||"";
-document.getElementById("location").value=b.location||"";
 document.getElementById("hours").value=b.hours||"";
 
 employees = b.employees ? [...b.employees] : [];
-renderEmployees();
+drawEmp();
 
 document.getElementById("modal").style.display="flex";
 }
@@ -250,7 +318,6 @@ await deleteDoc(doc(db,"branches",id));
 load();
 }
 
-/* CLOSE */
 function close(){
 document.getElementById("modal").style.display="none";
 }
