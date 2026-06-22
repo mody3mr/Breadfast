@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <title>Admin Dashboard</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
-
 <style>
 body{
     font-family: Arial;
@@ -55,6 +52,7 @@ td,th{
 }
 </style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
@@ -74,13 +72,13 @@ td,th{
 <input id="nameAr" placeholder="Name AR">
 <input id="map" placeholder="Google Map Link">
 
-<button onclick="addBranch()">Add</button>
+<button onclick="addBranch()">Add Branch</button>
 
 <table>
 <thead>
 <tr>
-<th>English</th>
-<th>Arabic</th>
+<th>EN</th>
+<th>AR</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -89,22 +87,35 @@ td,th{
 
 </div>
 
-<script>
-// ================= FIREBASE CONFIG =================
+<!-- FIREBASE MODULAR SDK -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ================= YOUR FIREBASE CONFIG =================
 const firebaseConfig = {
-  apiKey: "PUT_YOURS",
-  authDomain: "PUT_YOURS",
-  projectId: "PUT_YOURS",
-  storageBucket: "PUT_YOURS",
-  messagingSenderId: "PUT_YOURS",
-  appId: "PUT_YOURS"
+  apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+  authDomain: "breadfast-coffee.firebaseapp.com",
+  projectId: "breadfast-coffee",
+  storageBucket: "breadfast-coffee.firebasestorage.app",
+  messagingSenderId: "803906042715",
+  appId: "1:803906042715:web:1e8977716adc54947b787e"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// INIT
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // ================= LOGIN =================
-function login(){
+window.login = function(){
 
     let u = document.getElementById("user").value;
     let p = document.getElementById("pass").value;
@@ -116,54 +127,51 @@ function login(){
     }else{
         alert("Wrong login");
     }
-}
+};
 
 // ================= ADD =================
-function addBranch(){
+window.addBranch = async function(){
 
-    db.collection("branches").add({
+    await addDoc(collection(db, "branches"), {
         name: document.getElementById("nameEn").value,
         nameAr: document.getElementById("nameAr").value,
         map: document.getElementById("map").value
     });
 
-    alert("Added!");
     loadBranches();
-}
+};
 
 // ================= LOAD =================
-function loadBranches(){
+window.loadBranches = async function(){
 
-    db.collection("branches").get().then(snapshot => {
+    const snapshot = await getDocs(collection(db, "branches"));
 
-        let table = document.getElementById("table");
-        table.innerHTML = "";
+    let table = document.getElementById("table");
+    table.innerHTML = "";
 
-        snapshot.forEach(doc => {
+    snapshot.forEach((d) => {
 
-            let b = doc.data();
+        let b = d.data();
 
-            table.innerHTML += `
-            <tr>
-                <td>${b.name}</td>
-                <td>${b.nameAr}</td>
-                <td>
-                    <button onclick="deleteBranch('${doc.id}')">Delete</button>
-                </td>
-            </tr>
-            `;
-        });
-
+        table.innerHTML += `
+        <tr>
+            <td>${b.name}</td>
+            <td>${b.nameAr}</td>
+            <td>
+                <button onclick="deleteBranch('${d.id}')">Delete</button>
+            </td>
+        </tr>
+        `;
     });
-
-}
+};
 
 // ================= DELETE =================
-function deleteBranch(id){
+window.deleteBranch = async function(id){
 
-    db.collection("branches").doc(id).delete();
+    await deleteDoc(doc(db, "branches", id));
+
     loadBranches();
-}
+};
 
 </script>
 
