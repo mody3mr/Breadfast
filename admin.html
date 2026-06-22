@@ -37,9 +37,7 @@ button{
 }
 
 /* APP */
-#app{
-    display:none;
-}
+#app{display:none;}
 
 /* SIDEBAR */
 .sidebar{
@@ -77,26 +75,26 @@ td,th{
     border-bottom:1px solid #334155;
 }
 
-.delete{background:#ef4444;}
-
-/* TOAST */
+/* TOAST CENTER */
 .toast{
     position:fixed;
-    top:20px;
-    right:20px;
-    padding:12px 18px;
-    border-radius:10px;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0.8);
     background:#22c55e;
     color:white;
+    padding:15px 20px;
+    border-radius:12px;
     opacity:0;
-    transform:translateY(-20px);
-    transition:0.3s;
+    transition:0.25s;
     z-index:9999;
+    text-align:center;
+    min-width:220px;
 }
 
 .toast.show{
     opacity:1;
-    transform:translateY(0);
+    transform:translate(-50%,-50%) scale(1);
 }
 
 .toast.error{
@@ -109,34 +107,32 @@ td,th{
 
 <!-- LOGIN -->
 <div id="loginBox">
-<h2>Admin Login</h2>
+<h2>Login</h2>
+
 <input id="email" placeholder="Email">
 <input id="password" type="password" placeholder="Password">
+
 <button onclick="login()">Login</button>
 </div>
 
 <!-- APP -->
 <div id="app">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-<h3>Dashboard</h3>
+<h3>Admin</h3>
 
 <button onclick="show('home')">Home</button>
 <button onclick="show('branches')">Branches</button>
 <button onclick="logout()">Logout</button>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-<!-- HOME -->
 <div id="home" class="page active">
-<h2>Welcome Admin</h2>
-<h3 id="count">0 branches</h3>
+<h2>Dashboard</h2>
+<h3 id="count">0</h3>
 </div>
 
-<!-- BRANCHES -->
 <div id="branches" class="page">
 
 <h2>Branches</h2>
@@ -145,17 +141,9 @@ td,th{
 <input id="nameAr" placeholder="Name AR">
 <input id="map" placeholder="Map">
 
-<button onclick="addBranch()">Add Branch</button>
+<button onclick="addBranch()">Add</button>
 
 <table>
-<thead>
-<tr>
-<th>EN</th>
-<th>AR</th>
-<th>Actions</th>
-</tr>
-</thead>
-
 <tbody id="table"></tbody>
 </table>
 
@@ -164,7 +152,6 @@ td,th{
 </div>
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
@@ -195,21 +182,39 @@ let branches = [];
 
 /* ================= TOAST ================= */
 function toast(msg,type="success"){
+
     let t=document.createElement("div");
     t.className="toast";
     t.innerText=msg;
+
     if(type==="error") t.classList.add("error");
+
     document.body.appendChild(t);
 
     setTimeout(()=>t.classList.add("show"),100);
-    setTimeout(()=>{t.classList.remove("show");setTimeout(()=>t.remove(),300)},2500);
+
+    setTimeout(()=>{
+        t.classList.remove("show");
+        setTimeout(()=>t.remove(),200);
+    },2500);
 }
 
 /* ================= LOGIN ================= */
 window.login = function(){
 
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
+    let email = document.getElementById("email").value.trim();
+    let pass = document.getElementById("password").value.trim();
+
+    // 🔥 VALIDATION BEFORE FIREBASE
+    if(!email){
+        toast("Please enter email ❌","error");
+        return;
+    }
+
+    if(!pass){
+        toast("Please enter password ❌","error");
+        return;
+    }
 
     signInWithEmailAndPassword(auth,email,pass)
     .then(()=>{
@@ -218,7 +223,7 @@ window.login = function(){
     .catch((err)=>{
 
         if(err.code === "auth/user-not-found"){
-            toast("Email not registered ❌","error");
+            toast("This email is not registered ❌","error");
         }
         else if(err.code === "auth/wrong-password"){
             toast("Wrong password ❌","error");
@@ -254,7 +259,7 @@ onSnapshot(collection(db,"branches"),(snap)=>{
         branches.push({id:d.id,...d.data()});
     });
 
-    document.getElementById("count").innerText = branches.length + " branches";
+    document.getElementById("count").innerText = branches.length;
 
     render();
 });
@@ -262,13 +267,18 @@ onSnapshot(collection(db,"branches"),(snap)=>{
 /* ================= ADD ================= */
 window.addBranch = async function(){
 
+    if(!nameEn.value || !nameAr.value || !map.value){
+        toast("Please fill all fields ❌","error");
+        return;
+    }
+
     await addDoc(collection(db,"branches"),{
         name:nameEn.value,
         nameAr:nameAr.value,
         map:map.value
     });
 
-    toast("Branch added ✅");
+    toast("Branch added successfully ✅");
 };
 
 /* ================= DELETE ================= */
@@ -303,7 +313,6 @@ function render(){
 window.show=function(id){
 
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-
     document.getElementById(id).classList.add("active");
 };
 
