@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import {
   getFirestore,
   collection,
-  getDocs
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -17,27 +17,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔥 نخزن الداتا هنا عشان index يشوفها
 window.branches = [];
 
-async function loadBranches() {
+// ⚡ REALTIME LISTENER
+onSnapshot(collection(db, "branches"), (snapshot) => {
 
-  const snapshot = await getDocs(collection(db, "branches"));
+    let data = [];
 
-  let data = [];
-
-  snapshot.forEach(doc => {
-    data.push({
-      id: doc.id,
-      ...doc.data()
+    snapshot.forEach(doc => {
+        data.push({
+            id: doc.id,
+            ...doc.data()
+        });
     });
-  });
 
-  // 🔥 مهم جداً
-  window.branches = data;
+    window.branches = data;
 
-  console.log("Branches loaded:", window.branches);
-}
+    // 🔥 لو الصفحة جاهزة اعرض فوراً
+    if (typeof renderBranches === "function") {
+        renderBranches(window.branches);
+    }
 
-// تشغيل مباشر
-loadBranches();
+});
