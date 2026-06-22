@@ -7,71 +7,84 @@
 
 <style>
 
+/* BACKGROUND */
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#f5f6f8;
+    background: radial-gradient(circle at top,#1e1b4b,#0f172a,#020617);
     display:flex;
     justify-content:center;
+    align-items:center;
+    min-height:100vh;
     padding:20px;
 }
 
 /* CARD */
 .card{
     width:100%;
-    max-width:420px;
-    background:white;
-    border-radius:18px;
+    max-width:440px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:25px;
     overflow:hidden;
-    box-shadow:0 10px 40px rgba(0,0,0,0.1);
+    box-shadow:0 30px 90px rgba(0,0,0,0.7);
+    color:white;
 }
 
 /* HEADER */
 .header{
-    padding:20px;
     text-align:center;
-    background:#111827;
-    color:white;
+    padding:25px;
+    background:linear-gradient(135deg,#7c3aed,#ec4899,#f97316);
 }
 
 .header img{
-    width:80px;
-    height:80px;
+    width:90px;
+    height:90px;
     border-radius:50%;
-    margin-bottom:10px;
-    border:2px solid white;
+    border:3px solid white;
+    object-fit:cover;
 }
 
-/* BODY */
+.header h2{
+    margin:10px 0 0;
+    font-size:20px;
+}
+
+/* CONTENT */
 .content{
     padding:20px;
 }
 
-/* SECTION */
-.section{
-    margin-bottom:15px;
-}
-
+/* SECTION TITLE */
 .title{
     font-size:12px;
-    color:#6b7280;
-    margin-bottom:6px;
+    color:#c4b5fd;
+    margin:14px 0 6px;
+    font-weight:bold;
 }
 
-/* INFO */
+/* BOX */
 .box{
-    background:#f3f4f6;
+    background:rgba(255,255,255,0.10);
     padding:12px;
-    border-radius:10px;
+    border-radius:14px;
     font-size:14px;
-    color:#111827;
+    margin-bottom:10px;
+    transition:0.2s;
+}
+
+.box:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,0.15);
 }
 
 /* EMPLOYEES */
 .employees{
-    background:#f9fafb;
+    background:rgba(255,255,255,0.07);
     padding:12px;
-    border-radius:10px;
+    border-radius:14px;
     font-size:14px;
 }
 
@@ -80,15 +93,22 @@ body{
     display:block;
     text-align:center;
     padding:12px;
-    border-radius:10px;
+    border-radius:14px;
     text-decoration:none;
+    color:white;
     font-weight:bold;
-    margin-top:10px;
+    margin-top:12px;
+    transition:0.2s;
 }
 
-.map{background:#2563eb;color:white;}
-.call{background:#16a34a;color:white;}
-.wa{background:#22c55e;color:white;}
+.btn:hover{
+    transform:scale(1.03);
+}
+
+/* ACTION COLORS */
+.map{background:#3b82f6;}
+.call{background:#22c55e;}
+.wa{background:#25D366;}
 
 </style>
 </head>
@@ -130,37 +150,27 @@ document.getElementById("content").innerHTML = `
 
 <div class="content">
 
-<div class="section">
 <div class="title">مدير الفرع</div>
 <div class="box">${b.managerName}</div>
-</div>
 
-<div class="section">
 <div class="title">رقم المدير</div>
 <div class="box">${b.phone}</div>
-</div>
 
-<div class="section">
 <div class="title">واتساب المدير</div>
 <a class="btn wa" href="https://wa.me/${String(b.whatsapp).replace('+','')}" target="_blank">
-مراسلة واتساب
+💬 تواصل واتساب
 </a>
-</div>
 
-<div class="section">
 <div class="title">مواعيد العمل</div>
 <div class="box">${b.workingHours}</div>
-</div>
 
-<div class="section">
 <div class="title">الموظفين</div>
 <div class="employees">
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
-</div>
 
 <a class="btn map" href="${b.location}" target="_blank">
-فتح الموقع
+📍 فتح الموقع
 </a>
 
 </div>
