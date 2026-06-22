@@ -216,12 +216,23 @@ window.closeModal = function(){
 
 async function load(){
 
+const branchRef = doc(db,"branches",id);
+
+const snap = await getDoc(branchRef);
+
+if(!snap.exists()){
+    document.getElementById("content").innerHTML = "الفرع غير موجود";
+    return;
+}
+
+const b = snap.data();
+
 const visitKey = "visited_" + id;
 
 if(!localStorage.getItem(visitKey)){
 
     await updateDoc(
-        doc(db,"branches",id),
+        branchRef,
         {
             visits: increment(1)
         }
@@ -229,6 +240,7 @@ if(!localStorage.getItem(visitKey)){
 
     localStorage.setItem(visitKey,"true");
 }
+
 phoneNumber = String(b.phone).replace('+','');
 
 document.getElementById("content").innerHTML = `
