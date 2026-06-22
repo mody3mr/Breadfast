@@ -27,6 +27,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         Senior Manager
     </p>
     
+    <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
+    
     <div>
 
     <a href="https://goo.gl/maps/S1VEK49xuYqERfTS8" class="btn">Almaza</a>
@@ -216,6 +218,26 @@ function changeLang(){
     buttons.forEach((btn, i) => {
         btn.innerHTML = texts[lang].btns[i];
     });
+}
+
+        function searchLocation(){
+
+    let input = document.getElementById("search").value.toLowerCase();
+
+    let buttons = document.querySelectorAll(".btn");
+
+    buttons.forEach(btn => {
+
+        let text = btn.innerHTML.toLowerCase();
+
+        if(text.includes(input)){
+            btn.style.display = "block";
+        }else{
+            btn.style.display = "none";
+        }
+
+    });
+
 }
 </script>
     <footer>
