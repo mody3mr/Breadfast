@@ -145,4 +145,239 @@
                     <button type="button" onclick="closeModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">إلغاء</button>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">حفظ البيانات</button>
                 </div>
-            </
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } 
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+            authDomain: "breadfast-coffee.firebaseapp.com",
+            projectId: "breadfast-coffee",
+            storageBucket: "breadfast-coffee.firebasestorage.app",
+            messagingSenderId: "803906042715",
+            appId: "1:803906042715:web:1e8977716adc54947b787e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let localBranchesCache = [];
+
+        // 1. الاستماع المباشر لقاعدة البيانات
+        onSnapshot(collection(db, "branches"), (snapshot) => {
+            const data = [];
+            let totalVisits = 0;
+
+            snapshot.forEach(doc => {
+                const bData = doc.data();
+                data.push({ id: doc.id, ...bData });
+                if(bData.visits) {
+                    totalVisits += Number(bData.visits);
+                }
+            });
+
+            localBranchesCache = data;
+            document.getElementById("firebase-branches-count").innerText = data.length + " فروع";
+            document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString() + " زيارة";
+
+            renderAdminBranches(data);
+        });
+
+        // 2. رندرة كروت الفروع في الصفحة
+        function renderAdminBranches(list) {
+            const container = document.getElementById("branches-list-container");
+            container.innerHTML = "";
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-400 py-8">لا توجد فروع حالياً.</div>`;
+                return;
+            }
+
+            list.forEach(b => {
+                const card = document.createElement("div");
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md";
+                
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg font-bold flex-shrink-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div class="text-right">
+                            <h5 class="font-bold text-gray-800 text-base">${b.nameAr || b.name} (${b.name || b.nameAr})</h5>
+                            <p class="text-xs text-gray-400 mt-0.5">المدير: ${b.managerName || 'لا يوجد'} | هاتف: ${b.phone || 'لا يوجد'} | المواعيد: ${b.workingHours || 'غير محددة'}</p>
+                            <span class="text-[11px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md mt-1 inline-block font-medium">عدد الموظفين: ${(b.employees || []).length}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
+                        <button onclick='prepareEdit("${b.id}")' class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
+                            <i class="fa-solid fa-pen-to-square ml-1.5 text-xs"></i> تعديل
+                        </button>
+                        <button onclick='deleteBranch("${b.id}")' class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
+                            <i class="fa-solid fa-trash ml-1.5 text-xs"></i> حذف
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 3. حفظ وإضافة وتعديل الفروع
+        document.getElementById("branchForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const bId = document.getElementById("branchId").value;
+            const nameAr = document.getElementById("branchNameAr").value;
+            const nameEn = document.getElementById("branchNameEn").value;
+            const managerName = document.getElementById("managerName").value;
+            const managerPhone = document.getElementById("managerPhone").value;
+            const workingHours = document.getElementById("workingHours").value;
+
+            const employeeRows = document.querySelectorAll(".employee-row");
+            let employeesArray = [];
+            
+            employeeRows.forEach(row => {
+                const empName = row.querySelector(".emp-name-input").value;
+                const empPhone = row.querySelector(".emp-phone-input").value;
+                if(empName.trim() !== "") {
+                    employeesArray.push({ name: empName, phone: empPhone });
+                }
+            });
+
+            const docData = {
+                nameAr: nameAr,
+                name: nameEn,
+                managerName: managerName,
+                phone: managerPhone,
+                workingHours: workingHours,
+                location: "https://maps.google.com",
+                employees: employeesArray
+            };
+
+            try {
+                if (bId === "") {
+                    docData.visits = 0;
+                    await addDoc(collection(db, "branches"), docData);
+                    alert("تم إضافة الفرع بنجاح!");
+                } else {
+                    await updateDoc(doc(db, "branches", bId), docData);
+                    alert("تم تحديث بيانات الفرع بنجاح!");
+                }
+                closeModal();
+            } catch (error) {
+                alert("حدث خطأ أثناء الحفظ!");
+            }
+        });
+
+        // 4. حذف الفرع
+        window.deleteBranch = async function(id) {
+            if (confirm("هل أنت متأكد من رغبتك في حذف هذا الفرع نهائياً؟")) {
+                try {
+                    await deleteDoc(doc(db, "branches", id));
+                    alert("تم حذف الفرع بنجاح!");
+                } catch (error) {
+                    alert("فشل عملية الحذف!");
+                }
+            }
+        };
+
+        // 5. تجهيز الداتا للتعديل
+        window.prepareEdit = function(id) {
+            const b = localBranchesCache.find(item => item.id === id);
+            if (!b) return;
+
+            document.getElementById("branchId").value = b.id;
+            document.getElementById("branchNameAr").value = b.nameAr || '';
+            document.getElementById("branchNameEn").value = b.name || '';
+            document.getElementById("managerName").value = b.managerName || '';
+            document.getElementById("managerPhone").value = b.phone || '';
+            document.getElementById("workingHours").value = b.workingHours || '';
+            
+            const container = document.getElementById("employees-fields-container");
+            container.innerHTML = "";
+            
+            if(b.employees && b.employees.length > 0) {
+                b.employees.forEach(emp => {
+                    window.addEmployeeField(emp.name || emp, emp.phone || '');
+                });
+            } else {
+                window.addEmployeeField();
+            }
+
+            document.getElementById("modalTitle").innerText = "تعديل بيانات الفرع";
+            window.openModal();
+        };
+
+        // 6. فلترة البحث في السيرش بار
+        window.searchAdminBranches = function() {
+            const query = document.getElementById("adminSearch").value.toLowerCase();
+            const filtered = localBranchesCache.filter(b => {
+                return (b.nameAr || "").toLowerCase().includes(query) || 
+                       (b.name || "").toLowerCase().includes(query) || 
+                       (b.managerName || "").toLowerCase().includes(query);
+            });
+            renderAdminBranches(filtered);
+        };
+
+        // 7. ربط دوال الـ UI بـ window لتعمل بشكل سليم بداخل الـ Module
+        window.addEmployeeField = function(name = '', phone = '') {
+            const container = document.getElementById("employees-fields-container");
+            const rowId = 'emp_' + Date.now() + Math.random().toString(36).substr(2, 4);
+
+            const row = document.createElement("div");
+            row.id = rowId;
+            row.className = "employee-row grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100 relative pt-7 sm:pt-3 text-right";
+
+            row.innerHTML = `
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 mb-1">اسم Mوظف</label>
+                    <input type="text" value="${name}" required class="emp-name-input w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 mb-1">رقم هاتف الموظف</label>
+                    <input type="text" value="${phone}" required class="emp-phone-input w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-left" dir="ltr">
+                </div>
+                <button type="button" onclick="window.removeEmployeeField('${rowId}')" class="absolute top-1 left-2 sm:top-7 text-red-500 hover:text-red-700 text-sm">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            `;
+            container.appendChild(row);
+        };
+
+        window.removeEmployeeField = function(id) {
+            const row = document.getElementById(id);
+            if(row) row.remove();
+        };
+
+        window.openModal = function() {
+            const modal = document.getElementById('branchModal');
+            const container = document.getElementById("employees-fields-container");
+            if(container.innerHTML.trim() === "") {
+                window.addEmployeeField();
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('.transform').classList.remove('scale-95');
+            }, 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('branchModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById("branchForm").reset();
+                document.getElementById("branchId").value = "";
+                document.getElementById("employees-fields-container").innerHTML = "";
+                document.getElementById("modalTitle").innerText = "إضافة فرع جديد";
+            }, 300);
+        };
+    </script>
+</body>
+</html>
