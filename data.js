@@ -17,12 +17,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// تخزين البيانات بشكل عالمي
 window.branches = [];
+
+// أول ما الداتا تبدأ تتحمل
+window.dispatchEvent(new Event("dataLoading"));
 
 // ⚡ REALTIME LISTENER
 onSnapshot(collection(db, "branches"), (snapshot) => {
 
-    let data = [];
+    const data = [];
 
     snapshot.forEach(doc => {
         data.push({
@@ -33,9 +37,11 @@ onSnapshot(collection(db, "branches"), (snapshot) => {
 
     window.branches = data;
 
-    // 🔥 لو الصفحة جاهزة اعرض فوراً
-    if (typeof renderBranches === "function") {
-        renderBranches(window.branches);
-    }
+    // لو في لودينج اقفله
+    window.dispatchEvent(new Event("dataLoaded"));
 
+    // 🔥 لو function موجودة في الصفحة
+    if (typeof window.renderBranches === "function") {
+        window.renderBranches(window.branches);
+    }
 });
