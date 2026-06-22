@@ -87,27 +87,15 @@ p{ font-size:14px; opacity:0.85; }
     margin-top:10px;
 }
 
-/* ===== LOADING ===== */
+/* ===== SIMPLE LOADING ===== */
 #loading{
-    width:100%;
     margin:10px 0;
+    font-size:14px;
+    opacity:0.8;
+    display:none;
 }
 
-.skeleton{
-    height:45px;
-    margin:8px 0;
-    border-radius:10px;
-    background:linear-gradient(90deg,#eee,#f5f5f5,#eee);
-    background-size:200% 100%;
-    animation:shimmer 1.2s infinite;
-}
-
-@keyframes shimmer{
-    0%{background-position:-200% 0;}
-    100%{background-position:200% 0;}
-}
-
-/* ===== FOOTER داخل الكارت ===== */
+/* ===== FOOTER ===== */
 footer{
     margin-top:15px;
     font-size:12px;
@@ -135,20 +123,17 @@ footer{
 
 <input type="text" id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
-<!-- LOADING -->
-<div id="loading"></div>
+<!-- loading بسيط -->
+<div id="loading">Loading...</div>
 
-<!-- BRANCHES -->
 <div id="branches"></div>
 
-<!-- FOOTER داخل الكارت -->
 <footer>
 <p>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</p>
 </footer>
 
 </div>
 
-<!-- Firebase -->
 <script type="module" src="data.js"></script>
 
 <script>
@@ -170,18 +155,6 @@ ar:{
 }
 };
 
-/* ===== LOADING ===== */
-function showSkeleton(){
-    const loading = document.getElementById("loading");
-    loading.innerHTML = "";
-
-    for(let i=0;i<5;i++){
-        const div = document.createElement("div");
-        div.className = "skeleton";
-        loading.appendChild(div);
-    }
-}
-
 /* ===== RENDER PAGE ===== */
 function renderPage(){
     let lang = isArabic ? "ar":"en";
@@ -194,24 +167,32 @@ function renderPage(){
     document.documentElement.dir = isArabic ? "rtl":"ltr";
 }
 
+/* ===== SHOW LOADING ===== */
+function showLoading(){
+    document.getElementById("loading").style.display = "block";
+}
+
+/* ===== HIDE LOADING ===== */
+function hideLoading(){
+    document.getElementById("loading").style.display = "none";
+}
+
 /* ===== RENDER BRANCHES ===== */
 function renderBranches(list){
 
     const container = document.getElementById("branches");
-    const loading = document.getElementById("loading");
 
     container.innerHTML = "";
-    loading.style.display = "none";
 
-    list.forEach((b,i)=>{
+    hideLoading();
+
+    list.forEach(b=>{
 
         const a = document.createElement("a");
         a.className = "btn";
         a.href = b.map;
         a.target = "_blank";
         a.innerText = isArabic ? b.nameAr : b.name;
-
-        a.style.animationDelay = (i*40)+"ms";
 
         container.appendChild(a);
     });
@@ -249,7 +230,7 @@ function changeLang(){
 window.onload = function(){
 
     renderPage();
-    showSkeleton();
+    showLoading();
     document.getElementById("search").focus();
 
 };
