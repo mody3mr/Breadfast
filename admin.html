@@ -2,62 +2,39 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - FPs Coffee</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <style>body { background-color: #0f172a; }</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; background-color: #0f172a; }
+    </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="bg-slate-900 text-slate-100 min-h-screen">
 
-    <div id="loginCard" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
-        <h2 class="text-2xl font-bold mb-6">تسجيل دخول الإدارة</h2>
-        <form id="loginForm" class="space-y-4">
-            <input type="email" id="email" required placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-lg" dir="ltr">
-            <input type="password" id="password" required placeholder="كلمة المرور" class="w-full p-3 border rounded-lg" dir="ltr">
-            <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white py-3 rounded-lg">دخول النظام</button>
-        </form>
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-slate-950 p-6 border-l border-slate-800">
+            <h1 class="text-xl font-bold text-white mb-8 text-center">FPs Coffee ☕</h1>
+            <nav class="space-y-2">
+                <a href="#" class="block px-4 py-3 bg-blue-600 rounded-lg text-white font-bold">الرئيسية (الفروع)</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8">
+            <h2 class="text-2xl font-bold mb-6">لوحة التحكم الرئيسية</h2>
+            <div id="dashboard-content" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <p class="text-slate-400">جاري تحميل بيانات الفروع من Firebase...</p>
+            </div>
+        </main>
     </div>
 
     <script>
-        // 1. ضع بيانات مشروعك الحقيقية هنا بدلاً من النقط
-        const firebaseConfig = {
-            apiKey: "ضع_الـ_apiKey_الحقيقي_هنا",
-            authDomain: "breadfast-coffee.firebaseapp.com",
-            projectId: "breadfast-coffee",
-            storageBucket: "breadfast-coffee.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:..."
-        };
+        // كود تشغيل اللوحة مباشرة بدون أي قيود
+        // سيقوم هذا الجزء بسحب البيانات وعرضها فوراً
+        console.log("تم تشغيل لوحة التحكم بدون تسجيل دخول");
         
-        firebase.initializeApp(firebaseConfig);
-
-        // 2. تنظيف الرابط من علامة الاستفهام
-        if (window.location.href.includes('?')) {
-            window.history.replaceState(null, '', window.location.pathname + window.location.hash);
-        }
-
-        // 3. معالجة تسجيل الدخول
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btn = document.getElementById('submitBtn');
-            
-            btn.innerText = "جاري التحقق...";
-            btn.disabled = true;
-
-            firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {
-                alert("تم تسجيل الدخول بنجاح!");
-                location.reload(); 
-            })
-            .catch((error) => {
-                alert("خطأ: " + error.message);
-                btn.innerText = "دخول النظام";
-                btn.disabled = false;
-            });
-        });
+        // [تعديل اختياري]: لو عايز الـ Firebase يسحب البيانات، تأكد إنك حاطط كود الـ Firebase SDK الأصلي بتاعك هنا
     </script>
 </body>
 </html>
