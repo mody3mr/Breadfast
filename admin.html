@@ -6,55 +6,18 @@
     <title>لوحة التحكم الاحترافية - FPs Coffee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- نظام تسجيل الدخول -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
-            authDomain: "breadfast-coffee.firebaseapp.com",
-            projectId: "breadfast-coffee",
-            storageBucket: "breadfast-coffee.firebasestorage.app",
-            messagingSenderId: "803906042715",
-            appId: "1:803906042715:web:1e8977716adc54947b787e"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // مراقبة حالة الدخول
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                document.getElementById('login-modal').classList.remove('hidden');
-            }
-        });
-
-        window.login = async () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                document.getElementById('login-modal').classList.add('hidden');
-            } catch(e) {
-                alert("خطأ في بيانات الدخول");
-            }
-        }
-    </script>
 </head>
 <body class="bg-gray-100 font-sans antialiased">
 
-    <!-- مودال تسجيل الدخول -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900 z-[9999] flex items-center justify-center hidden">
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/90 z-[9999] flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-80 text-center">
             <h2 class="text-xl font-bold mb-4">تسجيل الدخول للإدارة</h2>
-            <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="w-full border p-2 mb-2 rounded">
-            <input type="password" id="login-pass" placeholder="كلمة المرور" class="w-full border p-2 mb-4 rounded">
-            <button onclick="window.login()" class="bg-blue-600 text-white w-full py-2 rounded">دخول</button>
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="w-full border p-2 mb-2 rounded text-right">
+            <input type="password" id="login-pass" placeholder="كلمة المرور" class="w-full border p-2 mb-4 rounded text-right">
+            <button onclick="window.handleLogin()" class="bg-blue-600 text-white w-full py-2 rounded">دخول</button>
         </div>
     </div>
 
-    <!-- المحتوى الخاص بك بالكامل -->
     <div class="flex h-screen overflow-hidden">
         <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
             <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
@@ -63,9 +26,6 @@
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
                     <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسية
-                </a>
-                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <i class="fa-solid fa-users ml-3 w-5"></i> المستخدمين
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-sm text-slate-500 text-center">إصدار النظام 1.0</div>
@@ -77,12 +37,7 @@
                     <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
                     <input type="text" id="adminSearch" placeholder="بحث سريع في الفروع..." onkeyup="window.searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full">
                 </div>
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <span class="text-sm font-medium text-gray-700 ml-2">مدير النظام</span>
-                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">M</div>
-                </div>
             </header>
-
             <main class="p-6 space-y-6 flex-1">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
@@ -103,9 +58,38 @@
         </div>
     </div>
 
-    <!-- باقي الكود الخاص بالـ Modal والـ Script الخاص بك كما هو -->
     <script type="module">
-        // ... نفس الكود الخاص بك بالضبط للتعامل مع الفروع ...
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+            authDomain: "breadfast-coffee.firebaseapp.com",
+            projectId: "breadfast-coffee",
+            storageBucket: "breadfast-coffee.firebasestorage.app",
+            messagingSenderId: "803906042715",
+            appId: "1:803906042715:web:1e8977716adc54947b787e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // حماية الصفحة
+        onAuthStateChanged(auth, (user) => {
+            if (!user) document.getElementById('login-modal').classList.remove('hidden');
+        });
+
+        window.handleLogin = async () => {
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value);
+                document.getElementById('login-modal').classList.add('hidden');
+            } catch(e) { alert("خطأ في تسجيل الدخول"); }
+        };
+
+        // --- باقي وظائف الكود الخاص بك (الـ Render، الـ CRUD، إلخ) ---
+        // (قم بنسخ باقي الـ script الخاص بك هنا كما هو تماماً)
     </script>
 </body>
 </html>
