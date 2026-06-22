@@ -351,14 +351,14 @@
                 if (bId === "") {
                     docData.visits = 0;
                     await addDoc(collection(db, "branches"), docData);
-                    alert("تم إضافة الفرع بنجاح!");
+                    showToast("تم إضافة الفرع بنجاح");
                 } else {
                     await updateDoc(doc(db, "branches", bId), docData);
-                    alert("تم تحديث بيانات الفرع بنجاح!");
+                    showToast("تم تحديث بيانات الفرع بنجاح");
                 }
                 window.closeModal();
             } catch (error) {
-                alert("حدث خطأ أثناء الحفظ!");
+                showToast("حدث خطأ أثناء الحفظ","error");
             }
         });
 
@@ -367,9 +367,9 @@
             if (confirm("هل أنت متأكد من رغبتك في حذف هذا الفرع نهائياً؟")) {
                 try {
                     await deleteDoc(doc(db, "branches", id));
-                    alert("تم حذف الفرع بنجاح!");
+                    showToast("تم حذف الفرع بنجاح");
                 } catch (error) {
-                    alert("فشل عملية الحذف!");
+                    showToast("فشل عملية الحذف","error");
                 }
             }
         };
@@ -469,5 +469,39 @@
             }, 300);
         };
     </script>
+
+
+<div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[99999] hidden">
+  <div id="toastContent" class="bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-[280px]">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-green-400"></i>
+    <span id="toastText">تمت العملية بنجاح</span>
+  </div>
+</div>
+
+<script>
+window.showToast = function(message,type='success'){
+ const toast=document.getElementById('toast');
+ const text=document.getElementById('toastText');
+ const icon=document.getElementById('toastIcon');
+ text.textContent=message;
+
+ if(type==='error'){
+   icon.className='fa-solid fa-circle-xmark text-red-400';
+ }else{
+   icon.className='fa-solid fa-circle-check text-green-400';
+ }
+
+ toast.classList.remove('hidden');
+ toast.animate([
+   {transform:'translate(-50%,-20px)',opacity:0},
+   {transform:'translate(-50%,0)',opacity:1}
+ ],{duration:250,fill:'forwards'});
+
+ clearTimeout(window.toastTimer);
+ window.toastTimer=setTimeout(()=>{
+   toast.classList.add('hidden');
+ },3000);
+}
+</script>
 </body>
 </html>
