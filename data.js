@@ -1,8 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-getFirestore,
-collection,
-getDocs
+  getFirestore,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -17,25 +17,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔥 تحميل البيانات من Firebase
-async function loadBranches(){
+// 🔥 نخزن الداتا هنا عشان index يشوفها
+window.branches = [];
 
-    const snapshot = await getDocs(collection(db, "branches"));
+async function loadBranches() {
 
-    let data = [];
+  const snapshot = await getDocs(collection(db, "branches"));
 
-    snapshot.forEach((doc) => {
-        data.push({
-            id: doc.id,
-            ...doc.data()
-        });
+  let data = [];
+
+  snapshot.forEach(doc => {
+    data.push({
+      id: doc.id,
+      ...doc.data()
     });
+  });
 
-    // 🔥 نخزنهم عالميًا عشان index يستخدمهم
-    window.branches = data;
+  // 🔥 مهم جداً
+  window.branches = data;
 
-    console.log("Branches loaded:", data);
+  console.log("Branches loaded:", window.branches);
 }
 
-// تشغيل أول ما الملف يشتغل
+// تشغيل مباشر
 loadBranches();
