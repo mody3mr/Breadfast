@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FPs Pro Dashboard</title>
+<title>FPs Dashboard Clean Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -12,34 +12,31 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Inter, Arial;
+font-family:Arial;
 }
 
 body{
-background:#f4f6fb;
-color:#111827;
+background:#f3f6fb;
 }
 
 /* APP */
 .app{
 display:flex;
-min-height:100vh;
 }
 
 /* SIDEBAR */
 .sidebar{
-width:260px;
-background:#0b1220;
+width:240px;
+background:#0f172a;
 color:#fff;
-padding:20px;
+height:100vh;
 position:fixed;
 right:0;
 top:0;
-bottom:0;
+padding:20px;
 }
 
 .logo{
-font-size:18px;
 font-weight:bold;
 margin-bottom:20px;
 }
@@ -48,41 +45,42 @@ margin-bottom:20px;
 padding:10px;
 border-radius:10px;
 color:#cbd5e1;
-margin-bottom:6px;
 cursor:pointer;
+margin-bottom:6px;
 }
 
 .menu:hover{
-background:#1f2937;
+background:#1e293b;
 }
 
 /* MAIN */
 .main{
-margin-right:260px;
+margin-right:240px;
 padding:25px;
 width:100%;
 }
 
-/* TOPBAR */
+/* TOP */
 .topbar{
 display:flex;
 justify-content:space-between;
-gap:10px;
 flex-wrap:wrap;
+gap:10px;
 }
 
 input{
-padding:12px;
-width:280px;
+padding:10px;
 border-radius:10px;
 border:1px solid #ddd;
+width:260px;
+outline:none;
 }
 
 button{
-padding:10px 14px;
 border:none;
-border-radius:10px;
 cursor:pointer;
+padding:10px 14px;
+border-radius:10px;
 background:#4f46e5;
 color:#fff;
 }
@@ -98,8 +96,8 @@ margin-top:20px;
 .stat{
 background:#fff;
 padding:15px;
-border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
+border-radius:14px;
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
 }
 
 .stat h2{
@@ -109,13 +107,13 @@ color:#4f46e5;
 /* CARD */
 .card{
 background:#fff;
-padding:18px;
+padding:16px;
 border-radius:14px;
-margin-top:15px;
-box-shadow:0 4px 12px rgba(0,0,0,0.05);
+margin-top:12px;
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
 }
 
-.branch-title{
+.title{
 font-size:16px;
 font-weight:bold;
 }
@@ -131,7 +129,13 @@ justify-content:space-between;
 align-items:center;
 }
 
-/* EMPLOYEES */
+/* LINKS */
+a{
+color:#4f46e5;
+text-decoration:none;
+}
+
+/* EMP */
 .emp{
 margin-top:10px;
 padding-top:10px;
@@ -140,13 +144,7 @@ border-top:1px solid #eee;
 
 .emp-item{
 font-size:13px;
-margin-top:6px;
-}
-
-/* LINKS */
-a{
-color:#4f46e5;
-text-decoration:none;
+margin-top:5px;
 }
 
 /* MODAL */
@@ -162,10 +160,28 @@ align-items:center;
 .box{
 background:#fff;
 padding:20px;
-width:400px;
+width:380px;
 border-radius:14px;
 max-height:90vh;
 overflow:auto;
+position:relative;
+}
+
+/* CLOSE BUTTON */
+.close{
+position:absolute;
+top:10px;
+left:10px;
+background:#ef4444;
+color:#fff;
+width:28px;
+height:28px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+font-weight:bold;
 }
 
 .box input{
@@ -188,14 +204,12 @@ border-radius:10px;
 
 <div class="app">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-<div class="logo">☕ FPs PRO</div>
+<div class="logo">☕ FPs System</div>
 <div class="menu">Dashboard</div>
 <div class="menu">Branches</div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <div class="topbar">
@@ -214,8 +228,10 @@ border-radius:10px;
 </div>
 
 <!-- MODAL -->
-<div class="modal" id="modal">
+<div class="modal" id="modal" onclick="backdropClose(event)">
 <div class="box">
+
+<div class="close" onclick="closeModal()">×</div>
 
 <input id="name" placeholder="Branch Name">
 <input id="manager" placeholder="Manager Name">
@@ -226,6 +242,8 @@ border-radius:10px;
 <h4>Employees</h4>
 <div id="empBox"></div>
 <button onclick="addEmp()">+ Add Employee</button>
+
+<br><br>
 
 <button class="save" onclick="save()">Save</button>
 
@@ -255,7 +273,6 @@ let employees=[];
 /* LOAD */
 async function load(){
 const snap=await getDocs(collection(db,"branches"));
-
 branches=[];
 snap.forEach(d=>branches.push({id:d.id,...d.data()}));
 
@@ -277,7 +294,7 @@ box.innerHTML+=`
 
 <div class="row">
 <div>
-<div class="branch-title">${b.name}</div>
+<div class="title">${b.name}</div>
 <div class="small">${b.hours||""}</div>
 </div>
 
@@ -335,6 +352,16 @@ drawEmp();
 document.getElementById("modal").style.display="flex";
 }
 
+/* CLOSE */
+window.closeModal=()=>{
+document.getElementById("modal").style.display="none";
+}
+
+/* BACKDROP CLOSE */
+window.backdropClose=(e)=>{
+if(e.target.id==="modal") closeModal();
+}
+
 /* EMP */
 window.addEmp=()=>{
 employees.push({name:"",phone:""});
@@ -371,7 +398,7 @@ await updateDoc(doc(db,"branches",editId),data);
 await addDoc(collection(db,"branches"),data);
 }
 
-close();
+closeModal();
 load();
 }
 
@@ -397,12 +424,6 @@ window.del=async(id)=>{
 await deleteDoc(doc(db,"branches",id));
 load();
 }
-
-function close(){
-document.getElementById("modal").style.display="none";
-}
-
-window.close=close;
 
 load();
 
