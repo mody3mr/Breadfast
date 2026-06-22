@@ -83,6 +83,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 </div>
 
+<script src="data.js"></script>
+
 <script>
 
 let isArabic = localStorage.getItem("language") === "ar";
@@ -93,128 +95,36 @@ en: {
     name: "Moaaz Mohamed",
     desc: "Senior Manager",
     langBtn: "العربية",
-    search: "Search Location...",
-
-    btns: [
-        "Almaza",
-        "Madinaty",
-        "Madinaty Strip Zone",
-        "Total Zayed",
-        "TOTAL Alex Gates Drive Thru",
-        "New Cairo Drive Thru",
-        "Narges",
-        "City Center Maadi",
-        "Mindhaus",
-        "TOTAL Golden Square Drive-thru",
-        "Adonc Anab",
-        "Chillout El Rehab",
-        "Mobil Kiosk",
-        "Smart",
-        "Mall Of Arabia",
-        "Vodafone",
-        "Amazon Office",
-        "P&G",
-        "Pepsico",
-        "Etisalat",
-        "Ahli United Bank Egypt",
-        "CO-55 Lafarge Building",
-        "Webhelp",
-        "Incorta",
-        "Schneider",
-        "Alex Bank",
-        "Mall of Egypt",
-        "Sokhna Event",
-        "maadi 233",
-        "korba",
-        "smash",
-        "family park",
-        "AIB",
-        "BUE",
-        "WOC",
-        "cairo bank",
-        "Alex bank",
-        "AUC",
-        "ENBD bank",
-        "Nile Tower",
-        "poly park",
-        "East hub",
-        "giza system",
-        "uber",
-        "ryze club",
-        "B.tech",
-        "Full UP Zayed",
-        "Hillbirton",
-        "Campus"
-    ]
+    search: "Search Location..."
 },
 
-
 ar: {
-
     name: "معاذ محمد",
     desc: "مدير أول",
     langBtn: "English",
-    search: "ابحث عن المكان...",
-
-    btns: [
-        "الماظة",
-        "مدينتي",
-        "ستريب زون مدينتي",
-        "توتال زايد",
-        "توتال اليكس",
-        "درايف",
-        "النرجس",
-        "سيتي سنتر المعادي",
-        "مايند هاوس",
-        "توتال جولدن سكوير",
-        "ادنوك بنك",
-        "شيل أوت الرحاب",
-        "موبيل",
-        "سمارت",
-        "مول العرب",
-        "فودافون",
-        "أمازون",
-        "P&G",
-        "بيبسيكو",
-        "اتصالات",
-        "اهلي بنك",
-        "لافارج",
-        "ويب هيلب",
-        "إنكورتا",
-        "شنايدر",
-        "بنك الإسكندرية",
-        "مول مصر",
-        "السخنة ايفينت",
-        "معادي 233",
-        "الكوربة",
-        "سماش",
-        "فاميلي بارك",
-        "AIB",
-        "BUE",
-        "WOC",
-        "البنك الأهلي",
-        "بنك الإسكندرية",
-        "AUC",
-        "ENBD",
-        "نايل تاور",
-        "بولي بارك",
-        "إيست هب",
-        "جيزة سيستم",
-        "أوبر",
-        "رايز كلوب",
-        "بي تك",
-        "فول أب زايد",
-        "هيلبيرتون",
-        "كامبوس"
-    ]
-
+    search: "ابحث عن المكان..."
 }
-
-
 };
 
 
+// 🔥 عرض البيانات
+function renderPage(){
 
+    let lang = isArabic ? "ar" : "en";
+
+    document.querySelector("h1").innerHTML = texts[lang].name;
+    document.querySelector("p").innerHTML = texts[lang].desc;
+    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
+
+    document.getElementById("search").placeholder = texts[lang].search;
+
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+
+    renderBranches(branches);
+}
+
+
+// 🔥 تغيير اللغة
 function changeLang(){
 
     isArabic = !isArabic;
@@ -223,95 +133,54 @@ function changeLang(){
 
     localStorage.setItem("language", lang);
 
-
-    document.querySelector("h1").innerHTML = texts[lang].name;
-
-    document.querySelector("p").innerHTML = texts[lang].desc;
-
-    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
-
-
-    document.getElementById("search").placeholder = texts[lang].search;
-
-
-    document.documentElement.dir = isArabic ? "rtl" : "ltr";
-
-
-    let buttons = document.querySelectorAll(".btn");
-
-
-    buttons.forEach((btn,i)=>{
-
-        btn.innerHTML = texts[lang].btns[i];
-
-    });
-
-
+    renderPage();
 }
 
 
-
+// 🔥 البحث
 function searchLocation(){
 
-    let input = document
-    .getElementById("search")
-    .value
-    .toLowerCase();
+    let input = document.getElementById("search").value.toLowerCase();
 
+    let filtered = branches.filter(b => {
 
-    let buttons = document.querySelectorAll(".btn");
+        let name = (isArabic ? b.nameAr : b.name).toLowerCase();
 
-
-    buttons.forEach(btn=>{
-
-
-        let text = btn.innerHTML.toLowerCase();
-
-
-        if(text.includes(input)){
-
-            btn.style.display="block";
-
-        }else{
-
-            btn.style.display="none";
-
-        }
-
-
+        return name.includes(input);
     });
 
-
+    renderBranches(filtered);
 }
-    
-window.onload = function(){
-    document.getElementById("search").focus();
-};
-
-    window.onload = function(){
-
-    let lang = isArabic ? "ar" : "en";
-
-    document.querySelector("h1").innerHTML = texts[lang].name;
-    document.querySelector("p").innerHTML = texts[lang].desc;
-    document.querySelector(".lang button").innerHTML = texts[lang].langBtn;
-    document.getElementById("search").placeholder = texts[lang].search;
-
-    document.documentElement.dir = isArabic ? "rtl" : "ltr";
 
 
-    let buttons = document.querySelectorAll(".btn");
+// 🔥 رسم الفروع
+function renderBranches(list){
 
-    buttons.forEach((btn,i)=>{
-        btn.innerHTML = texts[lang].btns[i];
+    const container = document.getElementById("branches");
+
+    container.innerHTML = "";
+
+    list.forEach(branch => {
+
+        const a = document.createElement("a");
+        a.className = "btn";
+        a.href = branch.map;
+        a.target = "_blank";
+
+        a.innerText = isArabic ? branch.nameAr : branch.name;
+
+        container.appendChild(a);
     });
+}
 
+
+// 🔥 أول تشغيل
+window.onload = function(){
+
+    renderPage();
 
     document.getElementById("search").focus();
-
 };
-
-    <script src="data.js"></script>
 
 </script>
     
