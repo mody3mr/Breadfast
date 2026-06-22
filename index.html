@@ -2,122 +2,61 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FPs Location Coffee</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="phone">
-
-<div class="lang">
-<button onclick="changeLang()">العربية</button>
-</div>
-
-<img class="avatar" src="breadfastlogo.jpg">
-
-<h1 id="name">Moaaz Mohamed</h1>
-<p id="desc">Senior Manager</p>
-
-<input id="search" placeholder="Search Location..." onkeyup="searchLocation()">
-
-<div id="loading">Loading...</div>
-<div id="branches"></div>
-
-<div class="footer">
-© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
-</div>
-
+    <div class="lang"><button onclick="changeLang()">العربية</button></div>
+    <img class="avatar" src="breadfastlogo.jpg">
+    <h1 id="name">Moaaz Mohamed</h1>
+    <p id="desc">Senior Manager</p>
+    <input id="search" placeholder="Search Location..." onkeyup="searchLocation()">
+    <div id="loading">Loading...</div>
+    <div id="branches" style="width:100%"></div>
+    <div class="footer">© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, onSnapshot }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
-authDomain:"breadfast-coffee.firebaseapp.com",
-projectId:"breadfast-coffee",
-storageBucket:"breadfast-coffee.firebasestorage.app",
-messagingSenderId:"803906042715",
-appId:"1:803906042715:web:1e8977716adc54947b787e"
-};
-
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authDomain:"breadfast-coffee.firebaseapp.com", projectId:"breadfast-coffee", storageBucket:"breadfast-coffee.firebasestorage.app", messagingSenderId:"803906042715", appId:"1:803906042715:web:1e8977716adc54947b787e" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-window.branches = [];
-let currentList = [];
-let isArabic = false; // ENGLISH DEFAULT
-
+window.branches = []; let currentList = []; let isArabic = false;
 onSnapshot(collection(db,"branches"), (snap)=>{
-
-let data = [];
-snap.forEach(d=>{
-data.push({id:d.id,...d.data()});
+    let data = []; snap.forEach(d=>{ data.push({id:d.id,...d.data()}); });
+    window.branches = data; currentList = data;
+    document.getElementById("loading").style.display="none";
+    render(currentList);
 });
-
-window.branches = data;
-currentList = data;
-
-document.getElementById("loading").style.display="none";
-render(currentList);
-});
-
 function render(list){
-let box = document.getElementById("branches");
-box.innerHTML = "";
-
-list.forEach(b=>{
-let a = document.createElement("a");
-a.className = "btn";
-a.innerText = isArabic ? (b.nameAr || b.name) : (b.name || b.nameAr);
-a.href = "branch.html?id=" + b.id;
-box.appendChild(a);
-});
+    let box = document.getElementById("branches"); box.innerHTML = "";
+    list.forEach(b=>{
+        let a = document.createElement("a"); a.className = "btn";
+        a.innerText = isArabic ? (b.nameAr || b.name) : (b.name || b.nameAr);
+        a.href = "branch.html?id=" + b.id; box.appendChild(a);
+    });
 }
-
-/* SEARCH FIX */
 window.searchLocation = function(){
-let val = document.getElementById("search").value.toLowerCase();
-
-let filtered = currentList.filter(b=>{
-let name = isArabic ? (b.nameAr || "") : (b.name || "");
-return name.toLowerCase().includes(val);
-});
-
-render(filtered);
+    let val = document.getElementById("search").value.toLowerCase();
+    let filtered = currentList.filter(b=>{
+        let name = isArabic ? (b.nameAr || "") : (b.name || "");
+        return name.toLowerCase().includes(val);
+    });
+    render(filtered);
 }
-
-/* LANGUAGE FIX */
 window.changeLang = function(){
-
-isArabic = !isArabic;
-
-document.documentElement.dir = isArabic ? "rtl" : "ltr";
-document.documentElement.lang = isArabic ? "ar" : "en";
-
-/* الاسم */
-document.getElementById("name").innerText =
-isArabic ? "معاذ محمد" : "Moaaz Mohamed";
-
-/* الوصف */
-document.getElementById("desc").innerText =
-isArabic ? "مدير أول" : "Senior Manager";
-
-/* البحث */
-document.getElementById("search").placeholder =
-isArabic ? "ابحث عن المكان..." : "Search Location...";
-
-/* زر اللغة */
-document.querySelector(".lang button").innerText =
-isArabic ? "English" : "العربية";
-
-render(currentList);
+    isArabic = !isArabic;
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+    document.documentElement.lang = isArabic ? "ar" : "en";
+    document.getElementById("name").innerText = isArabic ? "معاذ محمد" : "Moaaz Mohamed";
+    document.getElementById("desc").innerText = isArabic ? "مدير أول" : "Senior Manager";
+    document.getElementById("search").placeholder = isArabic ? "ابحث عن المكان..." : "Search Location...";
+    document.querySelector(".lang button").innerText = isArabic ? "English" : "العربية";
+    render(currentList);
 }
-
 </script>
-
 </body>
 </html>
