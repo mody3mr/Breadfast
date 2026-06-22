@@ -13,7 +13,7 @@
         
         <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
             <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
-                <i class="fa-solid mt-1 ml-2 fa-mug-hot text-amber-500"></i> مشروعك الذكي
+                <i class="fa-solid mt-1 ml-2 fa-mug-hot text-amber-500"></i> FPs Coffee
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
@@ -36,7 +36,7 @@
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 flex-shrink-0">
                 <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 w-64">
                     <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
-                    <input type="text" placeholder="بحث سريع..." class="bg-transparent focus:outline-none text-sm w-full">
+                    <input type="text" id="adminSearch" placeholder="بحث سريع في الفروع..." onkeyup="searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full">
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
                     <div class="flex items-center cursor-pointer">
@@ -54,9 +54,9 @@
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-400 font-medium">إجمالي عدد الفروع</p>
-                            <h3 id="firebase-branches-count" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                            <h3 id="firebase-branches-count" class="text-3xl font-bold text-gray-800 mt-1">جاري التحميل...</h3>
                             <span class="text-xs text-blue-500 font-semibold flex items-center mt-2">
-                                <i class="fa-solid fa-circle-check ml-1"></i> محدث من قاعدة البيانات
+                                <i class="fa-solid fa-circle-check ml-1"></i> محدث حياً من Firebase
                             </span>
                         </div>
                         <div class="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 text-2xl">
@@ -66,10 +66,10 @@
 
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-400 font-medium">عدد الزيارات الإجمالي</p>
-                            <h3 id="firebase-visits-count" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                            <p class="text-sm text-gray-400 font-medium">إجمالي عدد الموظفين بالشبكة</p>
+                            <h3 id="total-employees-count" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
                             <span class="text-xs text-green-500 font-semibold flex items-center mt-2">
-                                <i class="fa-solid fa-arrow-trend-up ml-1"></i> قراءة حية ومباشرة
+                                <i class="fa-solid fa-users ml-1"></i> إجمالي قوة العمل بالفروع
                             </span>
                         </div>
                         <div class="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-green-500 text-2xl">
@@ -87,37 +87,269 @@
                     </div>
 
                     <div id="branches-list-container" class="space-y-3">
-                        
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md">
-                            <div class="flex items-center space-x-4 space-x-reverse">
-                                <div class="w-10 h-10 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center text-lg font-bold">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-gray-800 text-base">فرع المعادي (Maadi Branch)</h5>
-                                    <p class="text-xs text-gray-400 mt-0.5">المدير: أ/ أحمد رأفت | هاتف: 01012345678</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
-                                <button class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <i class="fa-solid fa-pen-to-square ml-1.5 text-xs"></i> تعديل
-                                </button>
-                                <button class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <i class="fa-solid fa-trash ml-1.5 text-xs"></i> حذف
-                                </button>
-                            </div>
-                        </div>
+                        <div class="text-center text-gray-400 py-8">جاري جلب الفروع الحالية...</div>
+                    </div>
+                </div>
 
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md">
-                            <div class="flex items-center space-x-4 space-x-reverse">
-                                <div class="w-10 h-10 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center text-lg font-bold">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-gray-800 text-base">فرع التجمع (Tagamoa Branch)</h5>
-                                    <p class="text-xs text-gray-400 mt-0.5">المدير: أ/ كريم ممدوح | هاتف: 01198765432</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
-                                <button class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
-                                    <i class="fa-solid fa-pen-to-
+            </main>
+        </div>
+    </div>
+
+    <div id="branchModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                <h3 id="modalTitle" class="font-bold text-gray-800 text-lg">إضافة فرع جديد</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="branchForm" class="p-6 space-y-4">
+                <input type="hidden" id="branchId">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالعربي)</label>
+                        <input type="text" id="branchNameAr" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالإنجليزي)</label>
+                        <input type="text" id="branchNameEn" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">اسم مدير الفرع</label>
+                        <input type="text" id="managerName" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">رقم هاتف المدير (الفرع)</label>
+                        <input type="text" id="managerPhone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-left" dir="ltr">
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-4 mt-2">
+                    <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-md font-bold mb-3">بيانات الموظف الأول للمكتب</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الموظف</label>
+                            <input type="text" id="employeeName" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">رقم هاتف الموظف</label>
+                            <input type="text" id="employeePhone" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-left" dir="ltr">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 space-x-reverse pt-4 border-t border-gray-100">
+                    <button type="button" onclick="closeModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">إلغاء</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">حفظ البيانات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } 
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // نفس بيانات الاتصال الخاصة بمشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+            authDomain: "breadfast-coffee.firebaseapp.com",
+            projectId: "breadfast-coffee",
+            storageBucket: "breadfast-coffee.firebasestorage.app",
+            messagingSenderId: "803906042715",
+            appId: "1:803906042715:web:1e8977716adc54947b787e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let localBranchesCache = [];
+
+        // 1. الاستماع الحي للبيانات (Realtime Listener)
+        onSnapshot(collection(db, "branches"), (snapshot) => {
+            const data = [];
+            let totalEmployees = 0;
+
+            snapshot.forEach(doc => {
+                const bData = doc.data();
+                data.push({ id: doc.id, ...bData });
+                
+                // حساب عدد الموظفين الإجمالي في الشبكة
+                if(bData.employees && Array.isArray(bData.employees)) {
+                    totalEmployees += bData.employees.length;
+                }
+            });
+
+            localBranchesCache = data;
+            
+            // تحديث كروت الإحصائيات بالبيانات الحقيقية
+            document.getElementById("firebase-branches-count").innerText = data.length + " فروع";
+            document.getElementById("total-employees-count").innerText = totalEmployees + " موظف";
+
+            renderAdminBranches(data);
+        });
+
+        // 2. دالة عرض الفروع في الكروت المستطيلة
+        window.renderAdminBranches = function(list) {
+            const container = document.getElementById("branches-list-container");
+            container.innerHTML = "";
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-400 py-8">لا توجد فروع مطابقة للبحث.</div>`;
+                return;
+            }
+
+            list.forEach(b => {
+                const card = document.createElement("div");
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md";
+                
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg font-bold">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800 text-base">${b.nameAr || b.name} (${b.name || b.nameAr})</h5>
+                            <p class="text-xs text-gray-400 mt-0.5">المدير: ${b.managerName || 'غير معين'} | هاتف: ${b.phone || 'بدون رقم'}</p>
+                            <span class="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md mt-1 inline-block">عدد الموظفين: ${(b.employees || []).length}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
+                        <button onclick='prepareEdit("${b.id}")' class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
+                            <i class="fa-solid fa-pen-to-square ml-1.5 text-xs"></i> تعديل
+                        </button>
+                        <button onclick='deleteBranch("${b.id}")' class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
+                            <i class="fa-solid fa-trash ml-1.5 text-xs"></i> حذف
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        // 3. إضافة أو تعديل فرع في Firebase عند عمل Submit للـ Form
+        document.getElementById("branchForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const bId = document.getElementById("branchId").value;
+            const nameAr = document.getElementById("branchNameAr").value;
+            const nameEn = document.getElementById("branchNameEn").value;
+            const managerName = document.getElementById("managerName").value;
+            const managerPhone = document.getElementById("managerPhone").value;
+            const empName = document.getElementById("employeeName").value;
+            const empPhone = document.getElementById("employeePhone").value;
+
+            // تجهيز مصفوفة الموظفين بناءً على المدخلات
+            let employeesArray = [];
+            if(empName.trim() !== "") {
+                employeesArray.push({
+                    name: empName,
+                    phone: empPhone
+                });
+            }
+
+            const docData = {
+                nameAr: nameAr,
+                name: nameEn,
+                managerName: managerName,
+                phone: managerPhone,
+                workingHours: "من 9 صباحاً إلى 10 مساءً", // قيمة افتراضية متناسقة مع الكود القديم
+                location: "https://maps.google.com",     // قيمة افتراضية للموقع الجغرافي
+                employees: employeesArray
+            };
+
+            try {
+                if (bId === "") {
+                    // عملية إضافة فرع جديد
+                    await addDoc(collection(db, "branches"), docData);
+                    alert("تم إضافة الفرع بنجاح!");
+                } else {
+                    // عملية تعديل فرع موجود
+                    await updateDoc(doc(db, "branches", bId), docData);
+                    alert("تم تحديث بيانات الفرع بنجاح!");
+                }
+                closeModal();
+            } catch (error) {
+                console.error("Error saving document: ", error);
+                alert("حدث خطأ أثناء حفظ البيانات!");
+            }
+        });
+
+        // 4. حذف الفرع من Firebase
+        window.deleteBranch = async function(id) {
+            if (confirm("هل أنت متأكد من رغبتك في حذف هذا الفرع نهائياً؟")) {
+                try {
+                    await deleteDoc(doc(db, "branches", id));
+                    alert("تم حذف الفرع بنجاح!");
+                } catch (error) {
+                    alert("فشل حذف الفرع!");
+                }
+            }
+        };
+
+        // 5. تجهيز البيانات داخل الـ Modal عند الضغط على زر تعديل
+        window.prepareEdit = function(id) {
+            const b = localBranchesCache.find(item => item.id === id);
+            if (!b) return;
+
+            document.getElementById("branchId").value = b.id;
+            document.getElementById("branchNameAr").value = b.nameAr || '';
+            document.getElementById("branchNameEn").value = b.name || '';
+            document.getElementById("managerName").value = b.managerName || '';
+            document.getElementById("managerPhone").value = b.phone || '';
+            
+            // سحب الموظف الأول لو وجد
+            if(b.employees && b.employees.length > 0) {
+                document.getElementById("employeeName").value = b.employees[0].name || b.employees[0];
+                document.getElementById("employeePhone").value = b.employees[0].phone || '';
+            } else {
+                document.getElementById("employeeName").value = '';
+                document.getElementById("employeePhone").value = '';
+            }
+
+            document.getElementById("modalTitle").innerText = "تعديل بيانات الفرع";
+            openModal();
+        };
+
+        // 6. فلترة وفحص البحث السريع داخل الـ Admin
+        window.searchAdminBranches = function() {
+            const query = document.getElementById("adminSearch").value.toLowerCase();
+            const filtered = localBranchesCache.filter(b => {
+                const nameAr = (b.nameAr || "").toLowerCase();
+                const nameEn = (b.name || "").toLowerCase();
+                const mName = (b.managerName || "").toLowerCase();
+                return nameAr.includes(query) || nameEn.includes(query) || mName.includes(query);
+            });
+            renderAdminBranches(filtered);
+        };
+    </script>
+
+    <script>
+        function openModal() {
+            const modal = document.getElementById('branchModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('.transform').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('branchModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // ريست كامل للفورم والعناوين عند القفل
+                document.getElementById("branchForm").reset();
+                document.getElementById("branchId").value = "";
+                document.getElementById("modalTitle").innerText = "إضافة فرع جديد";
+            }, 300);
+        }
+    </script>
+</body>
+</html>
