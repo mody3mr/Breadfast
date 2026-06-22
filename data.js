@@ -17,24 +17,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function loadPublicBranches(){
+// 🔥 تحميل البيانات من Firebase
+async function loadBranches(){
 
     const snapshot = await getDocs(collection(db, "branches"));
 
-    let container = document.getElementById("links");
+    let data = [];
 
-    container.innerHTML = "";
-
-    snapshot.forEach((d)=>{
-
-        let b = d.data();
-
-        container.innerHTML += `
-        <a href="${b.map}" class="btn">
-            ${b.name}
-        </a>
-        `;
+    snapshot.forEach((doc) => {
+        data.push({
+            id: doc.id,
+            ...doc.data()
+        });
     });
+
+    // 🔥 نخزنهم عالميًا عشان index يستخدمهم
+    window.branches = data;
+
+    console.log("Branches loaded:", data);
 }
 
-window.onload = loadPublicBranches;
+// تشغيل أول ما الملف يشتغل
+loadBranches();
