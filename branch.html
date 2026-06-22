@@ -10,7 +10,7 @@
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:linear-gradient(135deg,#111827,#1f2937);
+    background: radial-gradient(circle at top,#111827,#0f172a);
     display:flex;
     justify-content:center;
     align-items:center;
@@ -18,63 +18,91 @@ body{
     padding:20px;
 }
 
-/* الكارت الرئيسي */
+/* CARD */
 .card{
     width:100%;
     max-width:420px;
-    background:white;
-    border-radius:20px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:25px;
     overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    box-shadow:0 25px 80px rgba(0,0,0,0.5);
+    color:white;
 }
 
-/* الهيدر */
+/* HEADER */
 .header{
-    background:linear-gradient(135deg,#7c3aed,#ec4899);
-    color:white;
-    padding:20px;
+    padding:25px;
     text-align:center;
+    background:linear-gradient(135deg,#7c3aed,#ec4899);
 }
 
 .header img{
-    width:90px;
-    height:90px;
+    width:95px;
+    height:95px;
     border-radius:50%;
-    margin-bottom:10px;
     object-fit:cover;
+    border:3px solid white;
 }
 
-/* المحتوى */
+.header h2{
+    margin:10px 0 0;
+    font-size:20px;
+}
+
+/* BODY */
 .content{
     padding:20px;
 }
 
-.title{
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:15px;
-    text-align:center;
+/* info cards */
+.info{
+    display:grid;
+    gap:10px;
 }
 
-/* box info */
 .box{
-    background:#f3f4f6;
+    background:rgba(255,255,255,0.12);
     padding:12px;
-    border-radius:12px;
-    margin-bottom:10px;
+    border-radius:14px;
+    font-size:14px;
+    transition:0.2s;
+}
+
+.box:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,0.18);
+}
+
+/* employees */
+.section{
+    margin-top:15px;
+    padding:12px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.10);
+}
+
+.section h3{
+    margin:0 0 10px;
     font-size:14px;
 }
 
-/* زر */
+/* buttons */
+.actions{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
 .btn{
-    display:block;
-    text-align:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     padding:12px;
     border-radius:12px;
     text-decoration:none;
     color:white;
-    background:linear-gradient(135deg,#7c3aed,#ec4899);
-    margin-top:10px;
     font-weight:bold;
     transition:0.2s;
 }
@@ -83,24 +111,13 @@ body{
     transform:scale(1.03);
 }
 
-/* employees */
-.employees{
-    background:#eef2ff;
-    padding:12px;
-    border-radius:12px;
-    margin-top:10px;
-    font-size:14px;
-}
+.map{background:#3b82f6;}
+.call{background:#22c55e;}
+.whatsapp{background:#25D366;}
 
-/* responsive */
+/* mobile */
 @media(max-width:480px){
-    .card{
-        border-radius:15px;
-    }
-
-    .header{
-        padding:15px;
-    }
+    .card{border-radius:18px;}
 }
 
 </style>
@@ -108,9 +125,7 @@ body{
 
 <body>
 
-<div class="card" id="content">
-Loading...
-</div>
+<div class="card" id="content">Loading...</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -145,21 +160,28 @@ document.getElementById("content").innerHTML = `
 
 <div class="content">
 
-<div class="title">Branch Information</div>
+<div class="info">
 
 <div class="box">👤 Manager: ${b.managerName}</div>
 <div class="box">📞 Phone: ${b.phone}</div>
-<div class="box">💬 WhatsApp: ${b.whatsapp}</div>
 <div class="box">⏰ Working Hours: ${b.workingHours}</div>
 
-<div class="employees">
-<b>👥 Employees</b><br><br>
+</div>
+
+<div class="section">
+<h3>👥 Employees</h3>
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 
-<a class="btn" href="${b.location}" target="_blank">
-Open Location
-</a>
+<div class="actions">
+
+<a class="btn map" href="${b.location}" target="_blank">📍 Open Map</a>
+
+<a class="btn call" href="tel:${b.phone}">📞 Call</a>
+
+<a class="btn whatsapp" href="https://wa.me/${b.whatsapp}" target="_blank">💬 WhatsApp</a>
+
+</div>
 
 </div>
 
