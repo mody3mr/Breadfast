@@ -15,18 +15,20 @@ body{
     background:#f3f4f6;
     display:flex;
     justify-content:center;
+    padding:40px 0;
 }
 
 .phone{
     width:380px;
-    min-height:100vh;
+    min-height:750px;
+    border-radius:25px;
+    padding:20px;
     background:linear-gradient(145deg,#B00A8B,#d946ef,#fb923c);
     color:white;
-    padding:20px;
-    box-sizing:border-box;
     display:flex;
     flex-direction:column;
     align-items:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.25);
 }
 
 .lang{
@@ -36,45 +38,42 @@ body{
 }
 
 .lang button{
+    background:rgba(255,255,255,0.2);
+    border:1px solid rgba(255,255,255,0.4);
+    color:white;
     padding:6px 12px;
     border-radius:20px;
-    border:1px solid white;
-    background:transparent;
-    color:white;
 }
 
 .avatar{
-    width:100px;
-    height:100px;
+    width:110px;
+    height:110px;
     border-radius:50%;
-    margin-top:10px;
 }
 
 #search{
     width:90%;
-    padding:10px;
+    padding:12px;
     border-radius:20px;
     border:none;
-    margin:15px 0;
     text-align:center;
+    margin:10px 0;
 }
 
 .btn{
-    display:block;
     width:100%;
     background:white;
     color:black;
     padding:12px;
-    margin:8px 0;
+    margin-top:10px;
     border-radius:10px;
     text-decoration:none;
     text-align:center;
+    font-weight:bold;
 }
 
-footer{
-    margin-top:auto;
-    font-size:12px;
-    opacity:0.8;
+#loading{
+    margin-top:10px;
 }
 </style>
 
@@ -90,72 +89,125 @@ footer{
 
 <img class="avatar" src="breadfastlogo.jpg">
 
-<h1>Moaaz Mohamed</h1>
-<p>Senior Manager</p>
+<h1></h1>
+<p></p>
 
-<input id="search" placeholder="Search..." onkeyup="searchLocation()">
+<input id="search" onkeyup="searchLocation()" placeholder="">
 
+<div id="loading">Loading...</div>
 <div id="branches"></div>
-
-<footer>
-© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
-</footer>
 
 </div>
 
 <!-- Firebase -->
-<script type="module" src="data.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+  authDomain: "breadfast-coffee.firebaseapp.com",
+  projectId: "breadfast-coffee",
+  storageBucket: "breadfast-coffee.firebasestorage.app",
+  messagingSenderId: "803906042715",
+  appId: "1:803906042715:web:1e8977716adc54947b787e"
+};
 
-let isArabic = localStorage.getItem("lang") === "ar";
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-/* 🔥 أهم سطر */
-window.renderBranches = renderBranches;
+window.branches = [];
 
-/* ================= FIRE EVENT ================= */
-window.addEventListener("branchesReady", () => {
+onSnapshot(collection(db,"branches"), (snap)=>{
+
+    let data = [];
+
+    snap.forEach(d=>{
+        data.push({id:d.id,...d.data()});
+    });
+
+    window.branches = data;
+
+    document.getElementById("loading").style.display="none";
+
     renderBranches(window.branches);
 });
 
-/* ================= RENDER ================= */
+</script>
+
+<script>
+
+let isArabic = localStorage.getItem("lang")==="ar";
+
+const texts = {
+en:{
+    name:"Moaaz Mohamed",
+    desc:"Senior Manager",
+    search:"Search Location...",
+    btn:"العربية"
+},
+ar:{
+    name:"معاذ محمد",
+    desc:"مدير أول",
+    search:"ابحث عن المكان...",
+    btn:"English"
+}
+};
+
+function renderPage(){
+
+    let lang = isArabic ? "ar" : "en";
+
+    document.querySelector("h1").innerText = texts[lang].name;
+    document.querySelector("p").innerText = texts[lang].desc;
+    document.querySelector(".lang button").innerText = texts[lang].btn;
+    document.getElementById("search").placeholder = texts[lang].search;
+}
+
 function renderBranches(list){
 
-    const container = document.getElementById("branches");
-    container.innerHTML = "";
+    let box = document.getElementById("branches");
+    box.innerHTML="";
 
-    list.forEach(b => {
+    list.forEach(b=>{
 
-        const a = document.createElement("a");
-        a.className = "btn";
-        a.href = b.map;
-        a.target = "_blank";
-        a.innerText = b.name;
+        let a=document.createElement("a");
+        a.className="btn";
+        a.href=b.map;
+        a.target="_blank";
+        a.innerText=isArabic?b.nameAr:b.name;
 
-        container.appendChild(a);
+        box.appendChild(a);
     });
 }
 
-/* ================= SEARCH ================= */
 function searchLocation(){
 
-    let value = document.getElementById("search").value.toLowerCase();
+    let val=document.getElementById("search").value.toLowerCase();
 
-    if(!window.branches) return;
-
-    let filtered = window.branches.filter(b =>
-        b.name.toLowerCase().includes(value)
-    );
+    let filtered=window.branches.filter(b=>{
+        let name=(isArabic?b.nameAr:b.name).toLowerCase();
+        return name.includes(val);
+    });
 
     renderBranches(filtered);
 }
 
-/* ================= LANGUAGE ================= */
 function changeLang(){
 
-    isArabic = !isArabic;
-    localStorage.setItem("lang", isArabic ? "ar" : "en");
+    isArabic=!isArabic;
+
+    localStorage.setItem("lang",isArabic?"ar":"en");
+
+    renderPage();
+    renderBranches(window.branches);
 }
+
+window.onload=function(){
+    renderPage();
+    document.getElementById("search").focus();
+};
 
 </script>
 
