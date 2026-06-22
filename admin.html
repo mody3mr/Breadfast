@@ -2,28 +2,84 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
+
 body{
-    font-family: Arial;
+    margin:0;
+    font-family:Arial;
     background:#0f172a;
     color:white;
-    margin:0;
+    display:flex;
 }
 
-.box{
-    width:350px;
-    margin:100px auto;
-    background:#1e293b;
+/* Sidebar */
+.sidebar{
+    width:220px;
+    background:#111827;
+    min-height:100vh;
     padding:20px;
-    border-radius:12px;
+}
+
+.sidebar h2{
+    font-size:18px;
+    margin-bottom:20px;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:10px;
+    margin:5px 0;
+    border-radius:8px;
+    background:#1f2937;
+}
+
+/* Main */
+.main{
+    flex:1;
+    padding:20px;
+}
+
+/* Top bar */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+/* Cards */
+.cards{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.card{
+    flex:1;
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+}
+
+/* Form */
+form{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
 }
 
 input,button{
     width:100%;
     padding:10px;
-    margin:8px 0;
+    margin:5px 0;
     border:none;
     border-radius:8px;
 }
@@ -34,54 +90,79 @@ button{
     cursor:pointer;
 }
 
-.dashboard{
-    display:none;
-    width:90%;
-    margin:40px auto;
-}
-
+/* Table */
 table{
     width:100%;
-    margin-top:20px;
     border-collapse:collapse;
+    background:#1e293b;
+    border-radius:10px;
+    overflow:hidden;
 }
 
-td,th{
+th,td{
     padding:10px;
     border-bottom:1px solid #334155;
+    text-align:left;
 }
+
+.delete{
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div class="box" id="loginBox">
-<h2>Admin Login</h2>
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<!-- Sidebar -->
+<div class="sidebar">
+<h2>⚡ Admin Panel</h2>
+
+<a href="#"><i class="fa fa-home"></i> Dashboard</a>
+<a href="#"><i class="fa fa-map"></i> Branches</a>
+<a href="#"><i class="fa fa-user"></i> Users</a>
+<a href="#"><i class="fa fa-gear"></i> Settings</a>
 </div>
 
-<!-- DASHBOARD -->
-<div class="dashboard" id="dashboard">
+<!-- Main -->
+<div class="main">
 
-<h2>Add Branch</h2>
+<div class="topbar">
+<h2>Dashboard</h2>
+<p>Welcome Admin 👋</p>
+</div>
 
+<!-- Cards -->
+<div class="cards">
+<div class="card">
+<h3 id="count">0</h3>
+<p>Total Branches</p>
+</div>
+</div>
+
+<!-- Form -->
+<form>
 <input id="nameEn" placeholder="Name EN">
 <input id="nameAr" placeholder="Name AR">
 <input id="map" placeholder="Google Map Link">
+<button type="button" onclick="addBranch()">Add Branch</button>
+</form>
 
-<button onclick="addBranch()">Add Branch</button>
-
+<!-- Table -->
 <table>
 <thead>
 <tr>
-<th>EN</th>
-<th>AR</th>
+<th>English</th>
+<th>Arabic</th>
 <th>Action</th>
 </tr>
 </thead>
+
 <tbody id="table"></tbody>
 </table>
 
@@ -96,10 +177,10 @@ collection,
 addDoc,
 getDocs,
 deleteDoc,
-doc
+doc,
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
   authDomain: "breadfast-coffee.firebaseapp.com",
@@ -112,76 +193,58 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let isLogged = false;
+let branches = [];
 
-function showDashboard(){
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-}
+// LIVE DATA
+onSnapshot(collection(db,"branches"), (snap)=>{
 
-// ================= LOGIN =================
-window.login = function(){
+    branches = [];
 
-    let u = document.getElementById("user").value;
-    let p = document.getElementById("pass").value;
-
-    if(u === "admin" && p === "1234"){
-        isLogged = true;
-        showDashboard();
-        loadBranches(); // 🔥 مهم
-    }else{
-        alert("Wrong login");
-    }
-};
-
-// ================= ADD =================
-window.addBranch = async function(){
-
-    await addDoc(collection(db, "branches"), {
-        name: document.getElementById("nameEn").value,
-        nameAr: document.getElementById("nameAr").value,
-        map: document.getElementById("map").value
+    snap.forEach(d=>{
+        branches.push({id:d.id,...d.data()});
     });
 
-    loadBranches();
+    document.getElementById("count").innerText = branches.length;
+
+    render();
+});
+
+// ADD
+window.addBranch = async function(){
+
+    await addDoc(collection(db,"branches"),{
+        name:document.getElementById("nameEn").value,
+        nameAr:document.getElementById("nameAr").value,
+        map:document.getElementById("map").value
+    });
+
 };
 
-// ================= LOAD =================
-window.loadBranches = async function(){
+// DELETE
+window.deleteBranch = async function(id){
 
-    const snapshot = await getDocs(collection(db, "branches"));
+    await deleteDoc(doc(db,"branches",id));
+};
+
+// RENDER
+function render(){
 
     let table = document.getElementById("table");
-    table.innerHTML = "";
+    table.innerHTML="";
 
-    snapshot.forEach((d) => {
-
-        let b = d.data();
+    branches.forEach(b=>{
 
         table.innerHTML += `
         <tr>
             <td>${b.name}</td>
             <td>${b.nameAr}</td>
             <td>
-                <button onclick="deleteBranch('${d.id}')">Delete</button>
+                <button class="delete" onclick="deleteBranch('${b.id}')">Delete</button>
             </td>
         </tr>
         `;
     });
-};
-
-// ================= DELETE =================
-window.deleteBranch = async function(id){
-
-    await deleteDoc(doc(db, "branches", id));
-
-    loadBranches();
-};
-
-// 🔥 تحميل تلقائي بعد ما الصفحة تفتح (لو حد داخل ومش عامل refresh بعد login)
-window.onload = function(){
-    console.log("Admin page ready");
-};
+}
 
 </script>
 
