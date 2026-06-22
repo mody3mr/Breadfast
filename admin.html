@@ -2,141 +2,173 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FPs Dashboard Stable</title>
+<title>FPs System v1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
+/* RESET */
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
 }
 
 body{
-    background:#f6f7fb;
+  background:#f4f6fb;
+  color:#111827;
 }
 
 /* LAYOUT */
 .app{
-    display:flex;
+  display:flex;
 }
 
 /* SIDEBAR */
 .sidebar{
-    width:240px;
-    background:#0f172a;
-    color:#fff;
-    height:100vh;
-    position:fixed;
-    right:0;
-    top:0;
-    padding:20px;
+  width:240px;
+  background:#0f172a;
+  color:#fff;
+  height:100vh;
+  position:fixed;
+  right:0;
+  top:0;
+  padding:20px;
+}
+
+.logo{
+  font-weight:bold;
+  margin-bottom:20px;
 }
 
 .menu{
-    padding:10px;
-    margin-bottom:6px;
-    border-radius:8px;
-    color:#cbd5e1;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:6px;
+  color:#cbd5e1;
+  cursor:pointer;
 }
 
 .menu:hover{
-    background:#1e293b;
+  background:#1e293b;
 }
 
 /* MAIN */
 .main{
-    margin-right:240px;
-    width:100%;
-    padding:25px;
+  margin-right:240px;
+  padding:25px;
+  width:100%;
 }
 
-/* TOP */
-.top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:10px;
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
 }
 
-.search{
-    padding:10px;
-    width:250px;
-    border-radius:8px;
-    border:1px solid #ddd;
+input{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  width:260px;
 }
 
-.add{
-    padding:10px 14px;
-    background:#6366f1;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+button{
+  cursor:pointer;
+  border:none;
 }
 
-/* CARD */
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+  margin-top:15px;
+}
+
 .card{
-    background:#fff;
-    padding:15px;
-    border-radius:12px;
-    margin-top:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  background:#fff;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
 
+.card h2{
+  color:#6366f1;
+}
+
+/* BRANCH */
 .branch{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px;
-    border-radius:10px;
-    background:#fff;
-    margin-top:10px;
+  background:#fff;
+  padding:15px;
+  border-radius:12px;
+  margin-top:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* ROW */
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* BUTTONS */
+.btn{
+  padding:6px 10px;
+  border-radius:6px;
+  font-size:12px;
+}
+
+.edit{background:#3b82f6;color:#fff}
+.del{background:#ef4444;color:#fff}
+
+/* LINKS */
+a{
+  text-decoration:none;
+  color:#2563eb;
 }
 
 /* MODAL */
 .modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.5);
-    justify-content:center;
-    align-items:center;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
 }
 
 .box{
-    background:#fff;
-    padding:20px;
-    width:350px;
-    border-radius:12px;
+  background:#fff;
+  padding:20px;
+  width:380px;
+  border-radius:12px;
+  max-height:90vh;
+  overflow:auto;
 }
 
-input{
-    width:100%;
-    padding:10px;
-    margin-bottom:8px;
-    border:1px solid #ddd;
-    border-radius:8px;
+.box input{
+  width:100%;
+  margin-bottom:8px;
 }
 
 .save{
-    width:100%;
-    padding:10px;
-    background:#6366f1;
-    color:#fff;
-    border:none;
-    border-radius:8px;
+  width:100%;
+  background:#6366f1;
+  color:#fff;
+  padding:10px;
+  border-radius:8px;
 }
 
 .emp input{
-    margin-top:5px;
+  margin-top:5px;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -145,7 +177,7 @@ input{
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-<h3>FPs Admin</h3>
+<div class="logo">☕ FPs System</div>
 <div class="menu">Dashboard</div>
 <div class="menu">Branches</div>
 </div>
@@ -153,15 +185,22 @@ input{
 <!-- MAIN -->
 <div class="main">
 
-<div class="top">
-<input class="search" id="search" placeholder="Search">
-<button class="add" onclick="openModal()">+ Add Branch</button>
+<!-- TOP -->
+<div class="topbar">
+<input id="search" placeholder="Search branches">
+<button onclick="openModal()">+ Add Branch</button>
 </div>
 
+<!-- STATS -->
+<div class="cards">
+<div class="card">Branches <h2 id="bCount">0</h2></div>
+<div class="card">Employees <h2 id="eCount">0</h2></div>
+</div>
+
+<!-- LIST -->
 <div id="list"></div>
 
 </div>
-
 </div>
 
 <!-- MODAL -->
@@ -170,7 +209,8 @@ input{
 
 <input id="name" placeholder="Branch Name">
 <input id="manager" placeholder="Manager Name">
-<input id="phone" placeholder="Phone">
+<input id="managerPhone" placeholder="Manager Phone">
+<input id="location" placeholder="Google Maps Link">
 <input id="hours" placeholder="Working Hours">
 
 <h4>Employees</h4>
@@ -209,6 +249,8 @@ const snap=await getDocs(collection(db,"branches"));
 branches=[];
 snap.forEach(d=>branches.push({id:d.id,...d.data()}));
 
+document.getElementById("bCount").innerText=branches.length;
+
 render();
 }
 
@@ -217,39 +259,66 @@ function render(){
 const box=document.getElementById("list");
 box.innerHTML="";
 
+let totalEmp=0;
+
 branches.forEach(b=>{
+totalEmp += (b.employees?.length||0);
+
 box.innerHTML+=`
 <div class="branch">
+
+<div class="row">
 <div>
 <strong>${b.name}</strong><br>
-<small>${b.manager}</small><br>
-<small>${b.hours || ""}</small>
+<small>${b.hours||""}</small>
 </div>
 
 <div>
-<button onclick="edit('${b.id}')">Edit</button>
-<button onclick="del('${b.id}')">Delete</button>
+<button class="btn edit" onclick="edit('${b.id}')">Edit</button>
+<button class="btn del" onclick="del('${b.id}')">Delete</button>
 </div>
+</div>
+
+<br>
+
+📍 <a href="${b.location}" target="_blank">Open Map</a>
+
+<br><br>
+
+👤 Manager: ${b.manager} <br>
+📞 <a href="tel:${b.managerPhone}">Call</a> |
+💬 <a href="https://wa.me/${b.managerPhone}" target="_blank">WhatsApp</a>
+
+<hr>
+
+<b>Employees</b>
+${(b.employees||[]).map(e=>`
+<div>
+👤 ${e.name} |
+📞 <a href="tel:${e.phone}">Call</a> |
+💬 <a href="https://wa.me/${e.phone}" target="_blank">WhatsApp</a>
+</div>
+`).join("")}
+
 </div>
 `;
 });
+
+document.getElementById("eCount").innerText=totalEmp;
+}
+
+/* SEARCH */
+document.getElementById("search").oninput=(e)=>{
+let v=e.target.value.toLowerCase();
+render(branches.filter(b=>b.name.toLowerCase().includes(v)));
 }
 
 /* OPEN */
 window.openModal=()=>{
 editId=null;
-reset();
-document.getElementById("modal").style.display="flex";
-}
-
-/* RESET */
-function reset(){
-document.getElementById("name").value="";
-document.getElementById("manager").value="";
-document.getElementById("phone").value="";
-document.getElementById("hours").value="";
 employees=[];
 drawEmp();
+document.getElementById("modal").style.display="flex";
 }
 
 /* EMP */
@@ -279,7 +348,8 @@ window.save=async()=>{
 const data={
 name:document.getElementById("name").value,
 manager:document.getElementById("manager").value,
-phone:document.getElementById("phone").value,
+managerPhone:document.getElementById("managerPhone").value,
+location:document.getElementById("location").value,
 hours:document.getElementById("hours").value,
 employees:[...employees]
 };
@@ -299,14 +369,13 @@ window.edit=(id)=>{
 const b=branches.find(x=>x.id===id);
 editId=id;
 
-reset();
-
 document.getElementById("name").value=b.name||"";
 document.getElementById("manager").value=b.manager||"";
-document.getElementById("phone").value=b.phone||"";
+document.getElementById("managerPhone").value=b.managerPhone||"";
+document.getElementById("location").value=b.location||"";
 document.getElementById("hours").value=b.hours||"";
 
-employees = b.employees ? [...b.employees] : [];
+employees=[...(b.employees||[])];
 drawEmp();
 
 document.getElementById("modal").style.display="flex";
