@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Branch Details</title>
+<title>تفاصيل الفرع</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -18,7 +18,7 @@ body{
     padding:20px;
 }
 
-/* CARD */
+/* الكارت */
 .card{
     width:100%;
     max-width:420px;
@@ -29,7 +29,7 @@ body{
     color:white;
 }
 
-/* HEADER */
+/* الهيدر */
 .header{
     padding:25px;
     text-align:center;
@@ -49,12 +49,19 @@ body{
     font-size:20px;
 }
 
-/* CONTENT */
+/* المحتوى */
 .content{
     padding:20px;
 }
 
-/* INFO BOXES */
+/* قسم المدير */
+.section-title{
+    color:#a78bfa;
+    font-size:14px;
+    margin:15px 0 8px;
+    font-weight:bold;
+}
+
 .box{
     background:#1f2937;
     padding:12px;
@@ -63,21 +70,15 @@ body{
     font-size:14px;
 }
 
-/* EMPLOYEES */
+/* الموظفين */
 .section{
-    margin-top:15px;
-    padding:15px;
     background:#0f172a;
+    padding:15px;
     border-radius:12px;
+    margin-top:10px;
 }
 
-.section h3{
-    margin:0 0 10px;
-    font-size:14px;
-    color:#a78bfa;
-}
-
-/* BUTTON */
+/* زر الموقع */
 .btn{
     display:block;
     text-align:center;
@@ -88,7 +89,6 @@ body{
     color:white;
     background:#3b82f6;
     font-weight:bold;
-    transition:0.2s;
 }
 
 .btn:hover{
@@ -135,17 +135,28 @@ document.getElementById("content").innerHTML = `
 
 <div class="content">
 
-<div class="box">👤 Manager: ${b.managerName}</div>
-<div class="box">📞 Phone: ${b.phone}</div>
-<div class="box">⏰ Working Hours: ${b.workingHours}</div>
+<!-- 👤 قسم المدير -->
+<div class="section-title">مدير الفرع</div>
+<div class="box">${b.managerName}</div>
 
+<div class="section-title">رقم مدير الفرع</div>
+<div class="box">${b.phone}</div>
+
+<div class="section-title">واتساب مدير الفرع</div>
+<div class="box">${b.whatsapp}</div>
+
+<!-- ⏰ مواعيد -->
+<div class="section-title">مواعيد العمل</div>
+<div class="box">${b.workingHours}</div>
+
+<!-- 👥 الموظفين -->
 <div class="section">
-<h3>👥 Employees</h3>
+<div class="section-title">الموظفين</div>
 ${(b.employees || []).map(e=>"• "+e).join("<br>")}
 </div>
 
 <a class="btn" href="${b.location}" target="_blank">
-📍 Open Location
+📍 فتح الموقع
 </a>
 
 </div>
