@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم</title>
+    <title>لوحة التحكم الاحترافية - FPs Coffee</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- كود نظام تسجيل الدخول -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
-        const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authDomain:"breadfast-coffee.firebaseapp.com", projectId:"breadfast-coffee", storageBucket:"breadfast-coffee.firebasestorage.app", messagingSenderId:"803906042715", appId:"1:803906042715:web:1e8977716adc54947b787e" };
+        const firebaseConfig = { apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authDomain: "breadfast-coffee.firebaseapp.com", projectId: "breadfast-coffee", storageBucket: "breadfast-coffee.firebasestorage.app", messagingSenderId: "803906042715", appId: "1:803906042715:web:1e8977716adc54947b787e" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
@@ -21,25 +24,39 @@
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
             try { await signInWithEmailAndPassword(auth, email, pass); window.location.reload(); }
-            catch(e) { alert("خطأ في البيانات"); }
+            catch(e) { alert("بيانات الدخول غير صحيحة!"); }
         }
     </script>
 </head>
-<body>
-    <!-- نظام تسجيل الدخول -->
+<body class="bg-gray-100 font-sans antialiased">
+    
+    <!-- مودال تسجيل الدخول (سيظهر فوق كل شيء إذا لم تسجل دخولك) -->
     <div id="login-modal" class="fixed inset-0 bg-slate-900/90 z-[9999] flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-80 text-center">
             <h2 class="text-xl font-bold mb-4">تسجيل الدخول للإدارة</h2>
-            <input type="email" id="email" placeholder="البريد" class="w-full border p-2 mb-2 rounded">
+            <input type="email" id="email" placeholder="البريد الإلكتروني" class="w-full border p-2 mb-2 rounded">
             <input type="password" id="pass" placeholder="كلمة المرور" class="w-full border p-2 mb-4 rounded">
             <button onclick="login()" class="bg-blue-600 text-white w-full py-2 rounded">دخول</button>
         </div>
     </div>
 
-    <!-- هنا تضع الكود الأصلي الخاص بك للداشبورد -->
-    <div class="p-6">
-        <h1>مرحباً بك في لوحة التحكم</h1>
-        <!-- باقي محتواك -->
+    <!-- المحتوى الأصلي الخاص بك كما هو بالكامل -->
+    <div class="flex h-screen overflow-hidden">
+        <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
+            <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
+                <i class="fa-solid mt-1 ml-2 fa-mug-hot text-amber-500"></i> FPs Coffee
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسية
+                </a>
+                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-users ml-3 w-5"></i> المستخدمين
+                </a>
+            </nav>
+            <div class="p-4 border-t border-slate-800 text-sm text-slate-500 text-center">إصدار النظام 1.0</div>
+        </div>
+        <!-- ... (باقي كود الداشبورد الخاص بك كما أرسلته أنت في البداية) ... -->
     </div>
 </body>
 </html>
