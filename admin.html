@@ -6,8 +6,20 @@
     <title>لوحة التحكم الاحترافية - FPs Coffee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* أنيميشن مخصصة لظهور التوست الاحترافي */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast-animate {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans antialiased text-right">
+
+    <div id="toast-container" class="fixed top-5 left-5 z-[200] space-y-3 pointer-events-none max-w-sm w-full"></div>
 
     <div id="login-screen" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-[100] px-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md space-y-6 transform transition-all duration-300">
@@ -16,17 +28,17 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800">تسجيل دخول الإدارة</h2>
-                <p class="text-sm text-gray-400">يرجى إدخال بيانات الاعتماد للوصول للوحة التحكم</p>
+                <p class="text-sm text-gray-400">يرجى إدخال حساب Firebase الـ Auth للوصول للوحة</p>
             </div>
             
             <form id="loginForm" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">اسم المستخدم</label>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">البريد الإلكتروني</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-                            <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="text" id="username" required placeholder="ادخل اسم المستخدم" class="w-full bg-gray-50 border border-gray-200 rounded-lg pr-10 pl-3 py-2.5 text-sm focus:outline-none focus:border-blue-500">
+                        <input type="email" id="email" required placeholder="example@domain.com" class="w-full bg-gray-50 border border-gray-200 rounded-lg pr-10 pl-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-left" dir="ltr">
                     </div>
                 </div>
 
@@ -40,12 +52,8 @@
                     </div>
                 </div>
 
-                <div id="login-error" class="text-xs text-red-500 font-medium hidden flex items-center">
-                    <i class="fa-solid fa-triangle-exclamation ml-1"></i> اسم المستخدم أو كلمة المرور غير صحيحة!
-                </div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-md transition-colors text-sm">
-                    دخول النظام <i class="fa-solid fa-arrow-left-to-bracket mr-1"></i>
+                <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-md transition-colors text-sm flex items-center justify-center gap-2">
+                    <span>دخول النظام</span> <i class="fa-solid fa-arrow-left-to-bracket"></i>
                 </button>
             </form>
         </div>
@@ -88,7 +96,7 @@
                     <div id="userDropdown" class="absolute left-0 top-14 bg-white border border-gray-100 rounded-xl shadow-xl w-48 py-1 z-50 hidden opacity-0 transition-all duration-200 transform scale-95">
                         <div class="px-4 py-2 border-b border-gray-50">
                             <p class="text-xs text-gray-400">مرحباً بك</p>
-                            <p class="text-sm font-bold text-gray-700 mt-0.5">mohamed amr</p>
+                            <p id="userEmailDisplay" class="text-xs font-bold text-gray-700 mt-0.5 truncate">mohamed amr</p>
                         </div>
                         <button onclick="window.handleLogout()" class="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors text-right">
                             <i class="fa-solid fa-arrow-right-from-bracket ml-2.5 w-4 text-center"></i> تسجيل الخروج
@@ -179,137 +187,4 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 mb-1">مواعيد العمل (مثال: من 9 صباحاً إلى 10 مساءً)</label>
-                    <input type="text" id="workingHours" required placeholder="من 9 صباحاً إلى 11 مساءً" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">رابط موقع الفرع على الخريطة (Google Maps URL)</label>
-                    <input type="url" id="branchLocation" placeholder="https://maps.google.com/..." required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-left" dir="ltr">
-                </div>
-
-                <div class="border-t border-gray-100 pt-4 mt-2">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-md font-bold">بيانات الموظفين</span>
-                        <button type="button" onclick="window.addEmployeeField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1 rounded-md font-semibold transition-colors">
-                            <i class="fa-solid fa-plus ml-1"></i> إضافة موظف آخر
-                        </button>
-                    </div>
-
-                    <div id="employees-fields-container" class="space-y-3"></div>
-                </div>
-
-                <div class="flex items-center justify-end space-x-2 space-x-reverse pt-4 border-t border-gray-100 flex-shrink-0">
-                    <button type="button" onclick="window.closeModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">إلغاء</button>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">حفظ البيانات</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } 
-        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
-            authDomain: "breadfast-coffee.firebaseapp.com",
-            projectId: "breadfast-coffee",
-            storageBucket: "breadfast-coffee.firebasestorage.app",
-            messagingSenderId: "803906042715",
-            appId: "1:803906042715:web:1e8977716adc54947b787e"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        let localBranchesCache = [];
-
-        // ------------------ نظام الأمان وتسجيل الدخول ------------------
-        const AUTH_KEY = "fps_admin_logged_in";
-
-        document.getElementById("loginForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const userVal = document.getElementById("username").value.trim();
-            const passVal = document.getElementById("password").value.trim();
-
-            // تحقق من الحساب الافتراضي
-            if (userVal === "admin" && passVal === "123456") {
-                localStorage.setItem(AUTH_KEY, "true");
-                document.getElementById("login-error").classList.add("hidden");
-                checkAuthStatus();
-            } else {
-                document.getElementById("login-error").classList.remove("hidden");
-            }
-        });
-
-        function checkAuthStatus() {
-            const isLoggedIn = localStorage.getItem(AUTH_KEY);
-            if (isLoggedIn === "true") {
-                document.getElementById("login-screen").classList.add("hidden");
-                document.getElementById("dashboard-content").classList.remove("hidden");
-                startRealtimeListener();
-            } else {
-                document.getElementById("login-screen").classList.remove("hidden");
-                document.getElementById("dashboard-content").classList.add("hidden");
-            }
-        }
-
-        window.handleLogout = function() {
-            localStorage.removeItem(AUTH_KEY);
-            window.location.reload();
-        };
-
-        // تشغيل التحقق الفوري عند تحميل الصفحة
-        checkAuthStatus();
-
-        // ------------------ سحب البيانات الحية ------------------
-        function startRealtimeListener() {
-            onSnapshot(collection(db, "branches"), (snapshot) => {
-                const data = [];
-                let totalVisits = 0;
-
-                snapshot.forEach(doc => {
-                    const bData = doc.data();
-                    data.push({ id: doc.id, ...bData });
-                    if(bData.visits) {
-                        totalVisits += Number(bData.visits);
-                    }
-                });
-
-                localBranchesCache = data;
-                document.getElementById("firebase-branches-count").innerText = data.length + " فروع";
-                document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString() + " زيارة";
-
-                renderAdminBranches(data);
-            });
-        }
-
-        // رندرة كروت الفروع
-        function renderAdminBranches(list) {
-            const container = document.getElementById("branches-list-container");
-            container.innerHTML = "";
-
-            if (list.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-400 py-8">لا توجد فروع حالياً.</div>`;
-                return;
-            }
-
-            list.forEach(b => {
-                const card = document.createElement("div");
-                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:shadow-md";
-                const mapUrl = b.location || "https://maps.google.com";
-
-                card.innerHTML = `
-                    <div class="flex items-center space-x-4 space-x-reverse">
-                        <a href="${mapUrl}" target="_blank" title="افتح الموقع على الخريطة" class="w-10 h-10 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg flex items-center justify-center text-lg font-bold flex-shrink-0 transition-colors">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </a>
-                        <div class="text-right">
-                            <h5 class="font-bold text-gray-800 text-base">${b.nameAr || b.name} (${b.name || b.nameAr})</h5>
-                            <p class="text-xs text-gray-400 mt-0.5">المدير: ${b.managerName || 'لا يوجد'} | هاتف: ${b.phone || 'لا يوجد'} | المواعيد: ${b.workingHours || 'غير محددة'}</p>
-                            <span class="text-[11px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md mt-1 inline-block font-medium">عدد الموظفين: ${(b.employees || []).length}</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
-                        <button onclick='window.prepareEdit("${b.id}")' class="text-blue
+                    <input type="text" id="workingHours" required placeholder="من 9 صباحاً إلى 1
