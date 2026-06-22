@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <title>FPs Location Coffee</title>
@@ -16,16 +16,16 @@
 
 <img class="avatar" src="breadfastlogo.jpg">
 
-<h1 id="name">معاذ محمد</h1>
-<p id="desc">مدير أول</p>
+<h1 id="name">Moaaz Mohamed</h1>
+<p id="desc">Senior Manager</p>
 
-<input id="search" placeholder="ابحث عن المكان..." onkeyup="searchLocation()">
+<input id="search" placeholder="Search Location..." onkeyup="searchLocation()">
 
 <div id="loading">Loading...</div>
 <div id="branches"></div>
 
 <div class="footer">
-© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
+© 2026 Created by | Mohamed Amr Ibrahim
 </div>
 
 </div>
@@ -87,10 +87,13 @@ render(filtered);
 }
 
 /* LANGUAGE */
-let isArabic = true;
+let isArabic = false; // 🔥 ENGLISH DEFAULT
 
 window.changeLang=function(){
 isArabic = !isArabic;
+
+document.documentElement.dir = isArabic ? "rtl" : "ltr";
+document.documentElement.lang = isArabic ? "ar" : "en";
 
 document.getElementById("name").innerText =
 isArabic ? "معاذ محمد" : "Moaaz Mohamed";
