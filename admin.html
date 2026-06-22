@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FPs Dashboard Clean Pro</title>
+<title>FPs Clean Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
-/* RESET */
 *{
 margin:0;
 padding:0;
@@ -16,135 +15,52 @@ font-family:Arial;
 }
 
 body{
-background:#f3f6fb;
+background:#f5f6fb;
 }
 
-/* APP */
-.app{
-display:flex;
-}
-
-/* SIDEBAR */
-.sidebar{
-width:240px;
-background:#0f172a;
-color:#fff;
-height:100vh;
-position:fixed;
-right:0;
-top:0;
-padding:20px;
-}
-
-.logo{
-font-weight:bold;
-margin-bottom:20px;
-}
-
-.menu{
-padding:10px;
-border-radius:10px;
-color:#cbd5e1;
-cursor:pointer;
-margin-bottom:6px;
-}
-
-.menu:hover{
-background:#1e293b;
-}
-
-/* MAIN */
+/* LAYOUT */
 .main{
-margin-right:240px;
 padding:25px;
-width:100%;
 }
 
 /* TOP */
 .topbar{
 display:flex;
 justify-content:space-between;
-flex-wrap:wrap;
 gap:10px;
+flex-wrap:wrap;
 }
 
 input{
 padding:10px;
 border-radius:10px;
 border:1px solid #ddd;
-width:260px;
-outline:none;
+width:250px;
 }
 
 button{
-border:none;
-cursor:pointer;
 padding:10px 14px;
+border:none;
 border-radius:10px;
 background:#4f46e5;
 color:#fff;
+cursor:pointer;
 }
 
-/* STATS */
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-margin-top:20px;
-}
-
-.stat{
-background:#fff;
-padding:15px;
-border-radius:14px;
-box-shadow:0 3px 10px rgba(0,0,0,0.05);
-}
-
-.stat h2{
-color:#4f46e5;
-}
-
-/* CARD */
+/* CARD (ONLY NAME) */
 .card{
 background:#fff;
-padding:16px;
-border-radius:14px;
-margin-top:12px;
+padding:15px;
+border-radius:12px;
+margin-top:10px;
 box-shadow:0 3px 10px rgba(0,0,0,0.05);
-}
-
-.title{
-font-size:16px;
-font-weight:bold;
-}
-
-.small{
-font-size:13px;
-color:#6b7280;
-}
-
-.row{
 display:flex;
 justify-content:space-between;
 align-items:center;
 }
 
-/* LINKS */
-a{
-color:#4f46e5;
-text-decoration:none;
-}
-
-/* EMP */
-.emp{
-margin-top:10px;
-padding-top:10px;
-border-top:1px solid #eee;
-}
-
-.emp-item{
-font-size:13px;
-margin-top:5px;
+.name{
+font-weight:bold;
 }
 
 /* MODAL */
@@ -160,41 +76,44 @@ align-items:center;
 .box{
 background:#fff;
 padding:20px;
-width:380px;
-border-radius:14px;
-max-height:90vh;
-overflow:auto;
+width:360px;
+border-radius:12px;
 position:relative;
 }
 
-/* CLOSE BUTTON */
+/* EMP */
+.emp-item{
+display:flex;
+gap:6px;
+margin-top:6px;
+}
+
+.emp-item input{
+flex:1;
+padding:8px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+/* CLOSE */
 .close{
 position:absolute;
 top:10px;
 left:10px;
-background:#ef4444;
+background:red;
 color:#fff;
-width:28px;
-height:28px;
+width:25px;
+height:25px;
 border-radius:50%;
 display:flex;
-justify-content:center;
 align-items:center;
+justify-content:center;
 cursor:pointer;
-font-weight:bold;
-}
-
-.box input{
-width:100%;
-margin-bottom:8px;
 }
 
 .save{
 width:100%;
-background:#4f46e5;
-color:#fff;
-padding:12px;
-border-radius:10px;
+margin-top:10px;
 }
 
 </style>
@@ -202,48 +121,30 @@ border-radius:10px;
 
 <body>
 
-<div class="app">
-
-<div class="sidebar">
-<div class="logo">☕ FPs System</div>
-<div class="menu">Dashboard</div>
-<div class="menu">Branches</div>
-</div>
-
 <div class="main">
 
 <div class="topbar">
-<input id="search" placeholder="Search branches">
+<input id="search" placeholder="Search branch">
 <button onclick="openModal()">+ Add Branch</button>
-</div>
-
-<div class="stats">
-<div class="stat">Branches <h2 id="bCount">0</h2></div>
-<div class="stat">Employees <h2 id="eCount">0</h2></div>
 </div>
 
 <div id="list"></div>
 
 </div>
-</div>
 
 <!-- MODAL -->
-<div class="modal" id="modal" onclick="backdropClose(event)">
+<div class="modal" id="modal" onclick="backdrop(event)">
 <div class="box">
 
 <div class="close" onclick="closeModal()">×</div>
 
 <input id="name" placeholder="Branch Name">
-<input id="manager" placeholder="Manager Name">
-<input id="managerPhone" placeholder="Manager Phone">
-<input id="location" placeholder="Google Maps Link">
-<input id="hours" placeholder="Working Hours">
 
-<h4>Employees</h4>
+<h4 style="margin-top:10px;">Employees</h4>
+
 <div id="empBox"></div>
-<button onclick="addEmp()">+ Add Employee</button>
 
-<br><br>
+<button onclick="addEmp()">+ Add Employee</button>
 
 <button class="save" onclick="save()">Save</button>
 
@@ -266,130 +167,92 @@ projectId:"breadfast-coffee"
 
 const db = getFirestore(app);
 
-let branches=[];
-let editId=null;
-let employees=[];
+let branches = [];
+let editId = null;
+
+/* IMPORTANT: state per modal (FIX BUG) */
+let modalEmployees = [];
 
 /* LOAD */
 async function load(){
-const snap=await getDocs(collection(db,"branches"));
-branches=[];
-snap.forEach(d=>branches.push({id:d.id,...d.data()}));
+const snap = await getDocs(collection(db,"branches"));
+
+branches = [];
+snap.forEach(d => branches.push({id:d.id, ...d.data()}));
 
 render();
 }
 
-/* RENDER */
+/* RENDER ONLY NAME */
 function render(){
-const box=document.getElementById("list");
-box.innerHTML="";
-
-let totalEmp=0;
+const box = document.getElementById("list");
+box.innerHTML = "";
 
 branches.forEach(b=>{
-totalEmp += (b.employees?.length||0);
-
-box.innerHTML+=`
+box.innerHTML += `
 <div class="card">
-
-<div class="row">
-<div>
-<div class="title">${b.name}</div>
-<div class="small">${b.hours||""}</div>
-</div>
+<div class="name">${b.name}</div>
 
 <div>
 <button onclick="edit('${b.id}')">Edit</button>
 <button onclick="del('${b.id}')">Delete</button>
 </div>
 </div>
-
-<br>
-
-<div class="small">
-📍 <a href="${b.location}" target="_blank">Open Map</a>
-</div>
-
-<div class="small">
-👤 ${b.manager} |
-📞 <a href="tel:${b.managerPhone}">Call</a> |
-💬 <a href="https://wa.me/${b.managerPhone}" target="_blank">WhatsApp</a>
-</div>
-
-<div class="emp">
-
-<b>Employees</b>
-
-${(b.employees||[]).map(e=>`
-<div class="emp-item">
-👤 ${e.name} |
-📞 <a href="tel:${e.phone}">Call</a> |
-💬 <a href="https://wa.me/${e.phone}" target="_blank">WhatsApp</a>
-</div>
-`).join("")}
-
-</div>
-
-</div>
 `;
 });
-
-document.getElementById("bCount").innerText=branches.length;
-document.getElementById("eCount").innerText=totalEmp;
 }
 
 /* SEARCH */
-document.getElementById("search").oninput=(e)=>{
-let v=e.target.value.toLowerCase();
+document.getElementById("search").oninput = (e)=>{
+let v = e.target.value.toLowerCase();
 render(branches.filter(b=>b.name.toLowerCase().includes(v)));
 }
 
 /* OPEN */
-window.openModal=()=>{
-editId=null;
-employees=[];
+window.openModal = ()=>{
+editId = null;
+modalEmployees = [];
 drawEmp();
 document.getElementById("modal").style.display="flex";
 }
 
 /* CLOSE */
-window.closeModal=()=>{
+window.closeModal = ()=>{
 document.getElementById("modal").style.display="none";
 }
 
-/* BACKDROP CLOSE */
-window.backdropClose=(e)=>{
+/* BACKDROP */
+window.backdrop = (e)=>{
 if(e.target.id==="modal") closeModal();
 }
 
-/* EMP */
-window.addEmp=()=>{
-employees.push({name:"",phone:""});
+/* EMP FIXED */
+window.addEmp = ()=>{
+modalEmployees.push({name:""});
 drawEmp();
 }
 
 function drawEmp(){
-const box=document.getElementById("empBox");
-box.innerHTML="";
+const box = document.getElementById("empBox");
+box.innerHTML = "";
 
-employees.forEach((e,i)=>{
-box.innerHTML+=`
-<input placeholder="Employee Name" oninput="employees[${i}].name=this.value">
-<input placeholder="Employee Phone" oninput="employees[${i}].phone=this.value">
+modalEmployees.forEach((e,i)=>{
+box.innerHTML += `
+<div class="emp-item">
+<input placeholder="Employee Name"
+value="${e.name}"
+oninput="modalEmployees[${i}].name=this.value">
+</div>
 `;
 });
 }
 
 /* SAVE */
-window.save=async()=>{
+window.save = async ()=>{
 
-const data={
-name:document.getElementById("name").value,
-manager:document.getElementById("manager").value,
-managerPhone:document.getElementById("managerPhone").value,
-location:document.getElementById("location").value,
-hours:document.getElementById("hours").value,
-employees:[...employees]
+const data = {
+name: document.getElementById("name").value,
+employees: modalEmployees
 };
 
 if(editId){
@@ -402,25 +265,23 @@ closeModal();
 load();
 }
 
-/* EDIT */
-window.edit=(id)=>{
-const b=branches.find(x=>x.id===id);
-editId=id;
+/* EDIT FIXED */
+window.edit = (id)=>{
+const b = branches.find(x=>x.id===id);
+editId = id;
 
-document.getElementById("name").value=b.name||"";
-document.getElementById("manager").value=b.manager||"";
-document.getElementById("managerPhone").value=b.managerPhone||"";
-document.getElementById("location").value=b.location||"";
-document.getElementById("hours").value=b.hours||"";
+document.getElementById("name").value = b.name || "";
 
-employees=[...(b.employees||[])];
+/* IMPORTANT FIX */
+modalEmployees = structuredClone(b.employees || []);
+
 drawEmp();
 
 document.getElementById("modal").style.display="flex";
 }
 
 /* DELETE */
-window.del=async(id)=>{
+window.del = async(id)=>{
 await deleteDoc(doc(db,"branches",id));
 load();
 }
