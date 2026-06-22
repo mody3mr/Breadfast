@@ -2,32 +2,45 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FPs Dashboard</title>
+<title>Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
-body{
+/* RESET */
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
     font-family:Arial,sans-serif;
-    background:#f6f7fb;
+}
+
+body{
+    background:#f4f6fb;
+}
+
+/* WRAPPER */
+.app{
     display:flex;
+    min-height:100vh;
 }
 
 /* SIDEBAR */
 .sidebar{
-    width:230px;
-    height:100vh;
+    width:240px;
     background:#111827;
     color:white;
     padding:20px;
     position:fixed;
+    right:0;
+    top:0;
+    bottom:0;
 }
 
 .logo{
-    font-size:18px;
     font-weight:bold;
     margin-bottom:25px;
+    font-size:18px;
 }
 
 .menu{
@@ -45,21 +58,23 @@ body{
 
 /* MAIN */
 .main{
-    margin-left:230px;
-    width:100%;
-    padding:30px;
+    flex:1;
+    margin-right:240px; /* 👈 أهم سطر يمنع التداخل */
+    padding:25px;
 }
 
 /* HEADER */
+.header{
+    margin-bottom:20px;
+}
+
 .header h1{
-    margin:0;
     font-size:22px;
     color:#111827;
 }
 
-.sub{
+.header p{
     color:#6b7280;
-    margin-top:5px;
 }
 
 /* CARDS */
@@ -67,34 +82,33 @@ body{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
     gap:15px;
-    margin-top:20px;
 }
 
 .card{
     background:white;
-    border-radius:12px;
     padding:18px;
+    border-radius:12px;
     box-shadow:0 5px 15px rgba(0,0,0,0.06);
 }
 
 .card h2{
-    margin:10px 0 0;
+    margin-top:10px;
     color:#7c3aed;
 }
 
 /* LIST */
 .section{
-    margin-top:30px;
+    margin-top:25px;
 }
 
 .branch{
     background:white;
     padding:14px;
     border-radius:10px;
+    margin-bottom:10px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:10px;
     box-shadow:0 3px 10px rgba(0,0,0,0.05);
 }
 
@@ -109,21 +123,23 @@ body{
     cursor:pointer;
 }
 
-.delete{
-    background:#ef4444;
-    color:white;
-}
-
 .edit{
     background:#3b82f6;
     color:white;
-    margin-right:5px;
+    margin-left:5px;
+}
+
+.delete{
+    background:#ef4444;
+    color:white;
 }
 
 </style>
 </head>
 
 <body>
+
+<div class="app">
 
 <!-- SIDEBAR -->
 <div class="sidebar">
@@ -141,7 +157,7 @@ body{
 
 <div class="header">
 <h1>Dashboard</h1>
-<div class="sub">Manage your branches & data</div>
+<p>Overview of system data</p>
 </div>
 
 <!-- CARDS -->
@@ -164,10 +180,12 @@ Visits
 
 </div>
 
-<!-- LIST -->
+<!-- BRANCHES -->
 <div class="section">
 <h3>Branches</h3>
 <div id="branchesList"></div>
+</div>
+
 </div>
 
 </div>
