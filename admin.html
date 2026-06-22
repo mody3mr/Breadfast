@@ -6,38 +6,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FPs Admin Dashboard</title>
+<title>FPs Admin Panel</title>
+
 
 <style>
 
+
 *{
 box-sizing:border-box;
-font-family:Arial, sans-serif;
+font-family:"Segoe UI",Arial,sans-serif;
 }
+
 
 body{
 
 margin:0;
-background:#f8fafc;
+
+background:#f1f5f9;
 
 }
 
 
 /* ================= LOGIN ================= */
 
-.login{
+
+.login-page{
 
 height:100vh;
 
 display:flex;
 
-justify-content:center;
-
 align-items:center;
 
-background:linear-gradient(135deg,#7c3aed,#ec4899);
+justify-content:center;
+
+background:
+linear-gradient(135deg,#7c3aed,#ec4899);
 
 }
+
 
 
 .login-card{
@@ -50,7 +57,7 @@ padding:35px;
 
 border-radius:25px;
 
-box-shadow:0 25px 60px #0004;
+box-shadow:0 25px 70px #0005;
 
 text-align:center;
 
@@ -92,7 +99,7 @@ width:100%;
 
 padding:14px;
 
-border:none;
+border:0;
 
 border-radius:12px;
 
@@ -117,7 +124,6 @@ transform:translateY(-3px);
 
 
 
-
 /* ================= DASHBOARD ================= */
 
 
@@ -129,6 +135,9 @@ display:none;
 
 
 
+/* SIDEBAR */
+
+
 .sidebar{
 
 position:fixed;
@@ -137,9 +146,9 @@ right:0;
 
 top:0;
 
-height:100vh;
+width:260px;
 
-width:250px;
+height:100vh;
 
 background:#111827;
 
@@ -153,52 +162,94 @@ padding:25px;
 
 .logo{
 
-font-size:22px;
+font-size:24px;
 
 font-weight:bold;
 
-margin-bottom:35px;
+margin-bottom:40px;
 
 }
 
 
 
-.menu{
+.nav{
 
 padding:14px;
 
-border-radius:12px;
+margin-bottom:12px;
+
+border-radius:15px;
 
 cursor:pointer;
 
-margin-bottom:10px;
+display:flex;
+
+gap:12px;
+
+align-items:center;
+
+color:#cbd5e1;
 
 transition:.3s;
 
 }
 
 
-.menu:hover{
 
-background:#374151;
+.nav:hover{
+
+background:#1f2937;
+
+color:white;
+
+}
+
+
+
+.nav.active{
+
+background:linear-gradient(135deg,#7c3aed,#ec4899);
+
+color:white;
 
 }
 
 
 
 
-.main{
 
-margin-right:250px;
+.logout{
 
-padding:30px;
+position:absolute;
+
+bottom:30px;
+
+width:210px;
+
+background:#ef4444;
+
+color:white;
 
 }
 
 
 
 
-.top{
+/* CONTENT */
+
+
+.content{
+
+margin-right:260px;
+
+padding:35px;
+
+}
+
+
+
+
+.header{
 
 display:flex;
 
@@ -206,13 +257,11 @@ justify-content:space-between;
 
 align-items:center;
 
-margin-bottom:30px;
-
 }
 
 
 
-.admin{
+.admin-box{
 
 background:white;
 
@@ -237,6 +286,8 @@ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 
 gap:20px;
 
+margin-top:30px;
+
 }
 
 
@@ -251,24 +302,24 @@ border-radius:20px;
 
 box-shadow:0 15px 35px #0001;
 
-animation:up .5s;
+animation:show .5s;
 
 }
 
 
 .card h2{
 
-font-size:35px;
-
-margin:10px 0;
+font-size:40px;
 
 color:#7c3aed;
+
+margin:10px 0;
 
 }
 
 
 
-@keyframes up{
+@keyframes show{
 
 from{
 
@@ -303,15 +354,39 @@ right:30px;
 
 padding:15px 25px;
 
-border-radius:15px;
-
 background:#111827;
 
 color:white;
 
+border-radius:15px;
+
 display:none;
 
-z-index:99;
+z-index:999;
+
+animation:toast .3s;
+
+}
+
+
+
+@keyframes toast{
+
+from{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
 
 }
 
@@ -319,8 +394,8 @@ z-index:99;
 
 </style>
 
-
 </head>
+
 
 
 <body>
@@ -330,14 +405,14 @@ z-index:99;
 <!-- LOGIN -->
 
 
-<div class="login" id="loginBox">
+<div class="login-page" id="loginPage">
 
 
-<div class="login-card">
+<form class="login-card" onsubmit="event.preventDefault();login();">
 
 
 <h1>
-FPs Admin
+☕ FPs Admin
 </h1>
 
 
@@ -347,7 +422,8 @@ id="email"
 placeholder="Email">
 
 
-<input 
+
+<input
 class="input"
 id="password"
 type="password"
@@ -355,20 +431,17 @@ placeholder="Password">
 
 
 
-<button 
-class="login-btn"
-onclick="login()">
+<button class="login-btn">
 
 Login
 
 </button>
 
 
-</div>
+</form>
 
 
 </div>
-
 
 
 
@@ -392,35 +465,40 @@ Login
 </div>
 
 
-<div class="menu">
+
+<div class="nav active">
 
 🏠 Dashboard
 
 </div>
 
 
-<div class="menu">
+
+<div class="nav">
 
 📍 Branches
 
 </div>
 
 
-<div class="menu">
+
+<div class="nav">
 
 👥 Users
 
 </div>
 
 
-<div class="menu">
+
+<div class="nav">
 
 ⚙ Settings
 
 </div>
 
 
-<div class="menu" onclick="logout()">
+
+<div class="nav logout" onclick="logout()">
 
 🚪 Logout
 
@@ -434,11 +512,10 @@ Login
 
 
 
+<div class="content">
 
-<div class="main">
 
-
-<div class="top">
+<div class="header">
 
 
 <h1>
@@ -446,10 +523,9 @@ Welcome Admin 👋
 </h1>
 
 
+<div class="admin-box">
 
-<div class="admin">
-
-Admin Account
+Admin
 
 </div>
 
@@ -463,12 +539,14 @@ Admin Account
 <div class="cards">
 
 
-
 <div class="card">
 
-<p>Total Branches</p>
+<p>
+Total Branches
+</p>
 
-<h2 id="count">
+
+<h2 id="branchesCount">
 0
 </h2>
 
@@ -479,12 +557,13 @@ Admin Account
 
 <div class="card">
 
-<p>Total Visits</p>
+<p>
+Total Visits
+</p>
+
 
 <h2>
-
 0
-
 </h2>
 
 
@@ -492,27 +571,26 @@ Admin Account
 
 
 
-
 <div class="card">
 
-<p>Active Admins</p>
+<p>
+Active Users
+</p>
+
 
 <h2>
-
 1
-
 </h2>
 
 
 </div>
 
 
-
 </div>
 
 
-
 </div>
+
 
 
 </div>
@@ -529,12 +607,22 @@ Admin Account
 
 
 
+
+
 <script type="module">
 
 
-import {initializeApp}
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+
+initializeApp
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 
 import {
@@ -547,7 +635,10 @@ signOut
 
 }
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+from
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 
 import {
@@ -560,7 +651,9 @@ getDocs
 
 }
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+from
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
@@ -568,26 +661,28 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 
+apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
 
-apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+authDomain: "breadfast-coffee.firebaseapp.com",
 
-authDomain:"breadfast-coffee.firebaseapp.com",
+projectId: "breadfast-coffee",
 
-projectId:"breadfast-coffee",
+storageBucket: "breadfast-coffee.firebasestorage.app",
 
-storageBucket:"breadfast-coffee.firebasestorage.app",
+messagingSenderId: "803906042715",
 
-messagingSenderId:"803906042715",
-
-appId:"1:803906042715:web:1e8977716adc54947b787e"
+appId: "1:803906042715:web:1e8977716adc54947b787e"
 
 };
 
 
 
-const app=initializeApp(firebaseConfig);
+
+const app = initializeApp(firebaseConfig);
+
 
 const auth=getAuth(app);
+
 
 const db=getFirestore(app);
 
@@ -596,11 +691,14 @@ const db=getFirestore(app);
 
 
 
-function toast(msg){
+function showToast(message){
+
 
 let t=document.getElementById("toast");
 
-t.innerHTML=msg;
+
+t.innerHTML=message;
+
 
 t.style.display="block";
 
@@ -619,19 +717,21 @@ t.style.display="none";
 
 
 
-
 window.login=async function(){
+
 
 
 let email=document.getElementById("email").value.trim();
 
-let pass=document.getElementById("password").value.trim();
+
+let password=document.getElementById("password").value.trim();
+
 
 
 
 if(!email){
 
-toast("⚠️ اكتب البريد الإلكتروني");
+showToast("⚠️ من فضلك اكتب البريد الإلكتروني");
 
 return;
 
@@ -639,28 +739,33 @@ return;
 
 
 
-if(!pass){
+if(!password){
 
-toast("⚠️ اكتب كلمة المرور");
+showToast("⚠️ من فضلك اكتب كلمة المرور");
 
 return;
 
 }
+
 
 
 
 try{
 
 
-await signInWithEmailAndPassword(auth,email,pass);
+await signInWithEmailAndPassword(auth,email,password);
 
 
-toast("✅ تم تسجيل الدخول");
+
+showToast("✅ تم تسجيل الدخول بنجاح");
 
 
-loginBox.style.display="none";
 
-dashboard.style.display="block";
+document.getElementById("loginPage").style.display="none";
+
+
+document.getElementById("dashboard").style.display="block";
+
 
 
 loadBranches();
@@ -669,24 +774,26 @@ loadBranches();
 }
 
 
-catch(e){
+
+catch(error){
 
 
-if(e.code=="auth/user-not-found"){
 
-toast("❌ البريد غير موجود");
+if(error.code==="auth/user-not-found"){
+
+showToast("❌ البريد غير مسجل في النظام");
 
 }
 
-else if(e.code=="auth/wrong-password"){
+else if(error.code==="auth/wrong-password"){
 
-toast("❌ كلمة المرور غير صحيحة");
+showToast("❌ كلمة المرور غير صحيحة");
 
 }
 
 else{
 
-toast("❌ بيانات الدخول غير صحيحة");
+showToast("❌ بيانات الدخول غير صحيحة");
 
 }
 
@@ -694,8 +801,8 @@ toast("❌ بيانات الدخول غير صحيحة");
 }
 
 
-
 }
+
 
 
 
@@ -707,7 +814,7 @@ async function loadBranches(){
 let snap=await getDocs(collection(db,"branches"));
 
 
-document.getElementById("count").innerHTML=snap.size;
+document.getElementById("branchesCount").innerHTML=snap.size;
 
 
 }
@@ -715,11 +822,16 @@ document.getElementById("count").innerHTML=snap.size;
 
 
 
+
+
 window.logout=function(){
+
 
 signOut(auth);
 
+
 location.reload();
+
 
 }
 
