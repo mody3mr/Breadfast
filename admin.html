@@ -2,286 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FPs Clean Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:#f5f6fb;
-}
-
-/* LAYOUT */
-.main{
-padding:25px;
-}
-
-/* TOP */
-.topbar{
-display:flex;
-justify-content:space-between;
-gap:10px;
-flex-wrap:wrap;
-}
-
-input{
-padding:10px;
-border-radius:10px;
-border:1px solid #ddd;
-width:250px;
-}
-
-button{
-padding:10px 14px;
-border:none;
-border-radius:10px;
-background:#4f46e5;
-color:#fff;
-cursor:pointer;
-}
-
-/* CARD (ONLY NAME) */
-.card{
-background:#fff;
-padding:15px;
-border-radius:12px;
-margin-top:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.05);
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.name{
-font-weight:bold;
-}
-
-/* MODAL */
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.5);
-justify-content:center;
-align-items:center;
-}
-
-.box{
-background:#fff;
-padding:20px;
-width:360px;
-border-radius:12px;
-position:relative;
-}
-
-/* EMP */
-.emp-item{
-display:flex;
-gap:6px;
-margin-top:6px;
-}
-
-.emp-item input{
-flex:1;
-padding:8px;
-border:1px solid #ddd;
-border-radius:8px;
-}
-
-/* CLOSE */
-.close{
-position:absolute;
-top:10px;
-left:10px;
-background:red;
-color:#fff;
-width:25px;
-height:25px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-}
-
-.save{
-width:100%;
-margin-top:10px;
-}
-
+body{font-family:Arial;background:#f5f6fb;margin:0;padding:20px}
+.card{background:#fff;padding:15px;border-radius:10px;margin:10px 0;
+display:flex;justify-content:space-between;align-items:center}
+button{margin-left:5px;padding:6px 10px;border:none;border-radius:6px;cursor:pointer}
+.edit{background:#3b82f6;color:#fff}
+.del{background:#ef4444;color:#fff}
+.open{background:#10b981;color:#fff}
 </style>
 </head>
 
 <body>
 
-<div class="main">
-
-<div class="topbar">
-<input id="search" placeholder="Search branch">
-<button onclick="openModal()">+ Add Branch</button>
-</div>
-
+<h2>Branches</h2>
 <div id="list"></div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal" onclick="backdrop(event)">
-<div class="box">
-
-<div class="close" onclick="closeModal()">×</div>
-
-<input id="name" placeholder="Branch Name">
-
-<h4 style="margin-top:10px;">Employees</h4>
-
-<div id="empBox"></div>
-
-<button onclick="addEmp()">+ Add Employee</button>
-
-<button class="save" onclick="save()">Save</button>
-
-</div>
-</div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-getFirestore, collection, getDocs,
-addDoc, updateDoc, deleteDoc, doc
+getFirestore, collection, getDocs, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp({
-apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
+apiKey:"AIzaSy...",
 authDomain:"breadfast-coffee.firebaseapp.com",
 projectId:"breadfast-coffee"
 });
 
 const db = getFirestore(app);
 
-let branches = [];
-let editId = null;
+let branches=[];
 
-/* IMPORTANT: state per modal (FIX BUG) */
-let modalEmployees = [];
-
-/* LOAD */
 async function load(){
 const snap = await getDocs(collection(db,"branches"));
-
-branches = [];
-snap.forEach(d => branches.push({id:d.id, ...d.data()}));
-
+branches=[];
+snap.forEach(d=>branches.push({id:d.id,...d.data()}));
 render();
 }
 
-/* RENDER ONLY NAME */
 function render(){
-const box = document.getElementById("list");
-box.innerHTML = "";
+let box=document.getElementById("list");
+box.innerHTML="";
 
 branches.forEach(b=>{
-box.innerHTML += `
+box.innerHTML+=`
 <div class="card">
-<div class="name">${b.name}</div>
+<div>${b.name}</div>
 
 <div>
-<button onclick="edit('${b.id}')">Edit</button>
-<button onclick="del('${b.id}')">Delete</button>
+<button class="open" onclick="openPage('${b.id}')">Open</button>
+<button class="edit">Edit</button>
+<button class="del" onclick="del('${b.id}')">Delete</button>
 </div>
 </div>
 `;
 });
 }
 
-/* SEARCH */
-document.getElementById("search").oninput = (e)=>{
-let v = e.target.value.toLowerCase();
-render(branches.filter(b=>b.name.toLowerCase().includes(v)));
+window.openPage=(id)=>{
+location.href="branch.html?id="+id;
 }
 
-/* OPEN */
-window.openModal = ()=>{
-editId = null;
-modalEmployees = [];
-drawEmp();
-document.getElementById("modal").style.display="flex";
-}
-
-/* CLOSE */
-window.closeModal = ()=>{
-document.getElementById("modal").style.display="none";
-}
-
-/* BACKDROP */
-window.backdrop = (e)=>{
-if(e.target.id==="modal") closeModal();
-}
-
-/* EMP FIXED */
-window.addEmp = ()=>{
-modalEmployees.push({name:""});
-drawEmp();
-}
-
-function drawEmp(){
-const box = document.getElementById("empBox");
-box.innerHTML = "";
-
-modalEmployees.forEach((e,i)=>{
-box.innerHTML += `
-<div class="emp-item">
-<input placeholder="Employee Name"
-value="${e.name}"
-oninput="modalEmployees[${i}].name=this.value">
-</div>
-`;
-});
-}
-
-/* SAVE */
-window.save = async ()=>{
-
-const data = {
-name: document.getElementById("name").value,
-employees: modalEmployees
-};
-
-if(editId){
-await updateDoc(doc(db,"branches",editId),data);
-}else{
-await addDoc(collection(db,"branches"),data);
-}
-
-closeModal();
-load();
-}
-
-/* EDIT FIXED */
-window.edit = (id)=>{
-const b = branches.find(x=>x.id===id);
-editId = id;
-
-document.getElementById("name").value = b.name || "";
-
-/* IMPORTANT FIX */
-modalEmployees = structuredClone(b.employees || []);
-
-drawEmp();
-
-document.getElementById("modal").style.display="flex";
-}
-
-/* DELETE */
-window.del = async(id)=>{
+window.del=async(id)=>{
 await deleteDoc(doc(db,"branches",id));
 load();
 }
