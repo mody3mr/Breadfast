@@ -87,7 +87,6 @@ td,th{
 
 </div>
 
-<!-- FIREBASE MODULAR SDK -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -100,7 +99,7 @@ deleteDoc,
 doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ================= YOUR FIREBASE CONFIG =================
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
   authDomain: "breadfast-coffee.firebaseapp.com",
@@ -110,9 +109,15 @@ const firebaseConfig = {
   appId: "1:803906042715:web:1e8977716adc54947b787e"
 };
 
-// INIT
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+let isLogged = false;
+
+function showDashboard(){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+}
 
 // ================= LOGIN =================
 window.login = function(){
@@ -121,9 +126,9 @@ window.login = function(){
     let p = document.getElementById("pass").value;
 
     if(u === "admin" && p === "1234"){
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-        loadBranches();
+        isLogged = true;
+        showDashboard();
+        loadBranches(); // 🔥 مهم
     }else{
         alert("Wrong login");
     }
@@ -171,6 +176,11 @@ window.deleteBranch = async function(id){
     await deleteDoc(doc(db, "branches", id));
 
     loadBranches();
+};
+
+// 🔥 تحميل تلقائي بعد ما الصفحة تفتح (لو حد داخل ومش عامل refresh بعد login)
+window.onload = function(){
+    console.log("Admin page ready");
 };
 
 </script>
