@@ -1,80 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard</title>
-
-<style>
-body{font-family:Arial;background:#f5f6fb;margin:0;padding:20px}
-.card{background:#fff;padding:15px;border-radius:10px;margin:10px 0;
-display:flex;justify-content:space-between;align-items:center}
-button{margin-left:5px;padding:6px 10px;border:none;border-radius:6px;cursor:pointer}
-.edit{background:#3b82f6;color:#fff}
-.del{background:#ef4444;color:#fff}
-.open{background:#10b981;color:#fff}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم الاحترافية</title>
+    <!-- تضمين Tailwind CSS للمظهر العصري -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تضمين مكتبة Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- تضمين مكتبة الرسوم البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+<body class="bg-gray-100 font-sans antialiased">
 
-<body>
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- 1. القائمة الجانبية (Sidebar) -->
+        <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
+            <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
+                <i class="fa-solid mt-1 ml-2 fa-chart-line text-blue-500"></i> مشروعك الذكي
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسة
+                </a>
+                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-users ml-3 w-5"></i> المستخدمين
+                </a>
+                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-boxes-stacked ml-3 w-5"></i> المنتجات
+                </a>
+                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-file-invoice-dollar ml-3 w-5"></i> التقارير
+                </a>
+                <a href="#" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                    <i class="fa-solid fa-gear ml-3 w-5"></i> الإعدادات
+                </a>
+            </nav>
+            <div class="p-4 border-t border-slate-800 text-sm text-slate-500 text-center">
+                إصدار النظام 1.0
+            </div>
+        </div>
 
-<h2>Branches</h2>
-<div id="list"></div>
+        <!-- الجزء الرئيسي (Main Content Area) -->
+        <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
+            
+            <!-- 2. الشريط العلوي (Header) -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 flex-shrink-0">
+                <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 w-64">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
+                    <input type="text" placeholder="بحث سريع..." class="bg-transparent focus:outline-none text-sm w-full">
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <button class="text-gray-500 hover:text-gray-700 relative p-1.5 rounded-full hover:bg-gray-100">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="h-8 w-px bg-gray-200"></div>
+                    <div class="flex items-center cursor-pointer">
+                        <span class="text-sm font-medium text-gray-700 ml-2">مدير النظام</span>
+                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                            M
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-<script type="module">
+            <!-- 3. محتوى الصفحة الرئيسي (Dashboard Content) -->
+            <main class="p-6 space-y-6 flex-1">
+                
+                <!-- كروت الإحصائيات (KPIs Cards) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- كارت 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-400 font-medium">إجمالي المبيعات</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">12,450 ج.م</h3>
+                            <span class="text-xs text-green-500 font-semibold flex items-center mt-2">
+                                <i class="fa-solid fa-arrow-trend-up ml-1"></i> +12% الأسبوع الحالي
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center text-green-500 text-xl">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <!-- كارت 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-400 font-medium">المستخدمين النشطين</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">1,240</h3>
+                            <span class="text-xs text-green-500 font-semibold flex items-center mt-2">
+                                <i class="fa-solid fa-arrow-trend-up ml-1"></i> +4.3% منذ أمس
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 text-xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <!-- كارت 3 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-400 font-medium">الطلبات الجديدة</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">85 طلب</h3>
+                            <span class="text-xs text-red-500 font-semibold flex items-center mt-2">
+                                <i class="fa-solid fa-arrow-trend-down ml-1"></i> -2% مقارنة بالشهر الماضي
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center text-orange-500 text-xl">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                    </div>
+                    <!-- كارت 4 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-400 font-medium">معدل التحويل</p>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">4.8%</h3>
+                            <span class="text-xs text-green-500 font-semibold flex items-center mt-2">
+                                <i class="fa-solid fa-arrow-trend-up ml-1"></i> استقرار ملحوظ
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 text-xl">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-getFirestore, collection, getDocs, deleteDoc, doc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+                <!-- قسم الرسم البياني والجدول -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- 4. الرسم البياني -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-md font-bold text-gray-800">مؤشر الأداء والنمو</h4>
+                            <span class="text-xs text-gray-400">آخر 6 أشهر</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="analyticsChart"></canvas>
+                        </div>
+                    </div>
 
-const app = initializeApp({
-apiKey:"AIzaSy...",
-authDomain:"breadfast-coffee.firebaseapp.com",
-projectId:"breadfast-coffee"
-});
+                    <!-- 5. جدول آخر العمليات -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-1 flex flex-col">
+                        <h4 class="text-md font-bold text-gray-800 mb-4">أحدث العمليات</h4>
+                        <div class="flex-1 overflow-x-auto">
+                            <table class="w-full text-right text-sm">
+                                <thead>
+                                    <tr class="text-gray-400 border-b border-gray-100">
+                                        <th class="pb-3 font-medium">العميل</th>
+                                        <th class="pb-3 font-medium">الحالة</th>
+                                        <th class="pb-3 font-medium">المبلغ</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-600 divide-y divide-gray-50">
+                                    <tr>
+                                        <td class="py-3 font-medium">أحمد محمد</td>
+                                        <td class="py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">مكتمل</span></td>
+                                        <td class="py-3 text-gray-900 font-semibold">1,500 ج.م</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 font-medium">سارة علي</td>
+                                        <td class="py-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">معلق</span></td>
+                                        <td class="py-3 text-gray-900 font-semibold">450 ج.م</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 font-medium">محمود حسن</td>
+                                        <td class="py-3"><span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">ملغي</span></td>
+                                        <td class="py-3 text-gray-900 font-semibold">300 ج.م</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-const db = getFirestore(app);
+                </div>
 
-let branches=[];
+            </main>
+        </div>
+    </div>
 
-async function load(){
-const snap = await getDocs(collection(db,"branches"));
-branches=[];
-snap.forEach(d=>branches.push({id:d.id,...d.data()}));
-render();
-}
-
-function render(){
-let box=document.getElementById("list");
-box.innerHTML="";
-
-branches.forEach(b=>{
-box.innerHTML+=`
-<div class="card">
-<div>${b.name}</div>
-
-<div>
-<button class="open" onclick="openPage('${b.id}')">Open</button>
-<button class="edit">Edit</button>
-<button class="del" onclick="del('${b.id}')">Delete</button>
-</div>
-</div>
-`;
-});
-}
-
-window.openPage=(id)=>{
-location.href="branch.html?id="+id;
-}
-
-window.del=async(id)=>{
-await deleteDoc(doc(db,"branches",id));
-load();
-}
-
-load();
-
-</script>
-
+    <!-- كود تشغيل الرسم البياني -->
+    <script>
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                datasets: [{
+                    label: 'الأرباح (بالألف)',
+                    data: [12, 19, 3, 5, 22, 30],
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
