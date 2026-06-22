@@ -1,3 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>FPs Location Coffee</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="phone">
+
+<div class="lang">
+<button onclick="changeLang()">العربية</button>
+</div>
+
+<img class="avatar" src="breadfastlogo.jpg">
+
+<h1 id="name">Moaaz Mohamed</h1>
+<p id="desc">Senior Manager</p>
+
+<input id="search" placeholder="Search Location..." onkeyup="searchLocation()">
+
+<div id="loading">Loading...</div>
+<div id="branches"></div>
+
+<div class="footer">
+© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
+</div>
+
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, onSnapshot }
@@ -16,10 +48,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.branches = [];
-
-let isArabic = false; // ENGLISH DEFAULT
-
 let currentList = [];
+let isArabic = false; // ENGLISH DEFAULT
 
 onSnapshot(collection(db,"branches"), (snap)=>{
 
@@ -36,21 +66,21 @@ render(currentList);
 });
 
 function render(list){
-let box=document.getElementById("branches");
-box.innerHTML="";
+let box = document.getElementById("branches");
+box.innerHTML = "";
 
 list.forEach(b=>{
-let a=document.createElement("a");
-a.className="btn";
+let a = document.createElement("a");
+a.className = "btn";
 a.innerText = isArabic ? (b.nameAr || b.name) : (b.name || b.nameAr);
-a.href="branch.html?id="+b.id;
+a.href = "branch.html?id=" + b.id;
 box.appendChild(a);
 });
 }
 
-/* 🔥 SEARCH FIXED */
-window.searchLocation=function(){
-let val=document.getElementById("search").value.toLowerCase();
+/* SEARCH FIX */
+window.searchLocation = function(){
+let val = document.getElementById("search").value.toLowerCase();
 
 let filtered = currentList.filter(b=>{
 let name = isArabic ? (b.nameAr || "") : (b.name || "");
@@ -60,8 +90,9 @@ return name.toLowerCase().includes(val);
 render(filtered);
 }
 
-/* LANGUAGE FIXED */
-window.changeLang=function(){
+/* LANGUAGE FIX */
+window.changeLang = function(){
+
 isArabic = !isArabic;
 
 document.documentElement.dir = isArabic ? "rtl" : "ltr";
@@ -75,7 +106,7 @@ isArabic ? "معاذ محمد" : "Moaaz Mohamed";
 document.getElementById("desc").innerText =
 isArabic ? "مدير أول" : "Senior Manager";
 
-/* search placeholder */
+/* البحث */
 document.getElementById("search").placeholder =
 isArabic ? "ابحث عن المكان..." : "Search Location...";
 
@@ -83,7 +114,10 @@ isArabic ? "ابحث عن المكان..." : "Search Location...";
 document.querySelector(".lang button").innerText =
 isArabic ? "English" : "العربية";
 
-/* إعادة render صح */
 render(currentList);
 }
+
 </script>
+
+</body>
+</html>
