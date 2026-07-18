@@ -7,14 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* إضافة خط عربي مميز واحترافي */
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
         body { font-family: 'Tajawal', sans-serif; }
+        /* Custom scrollbar for better look */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="bg-gray-50 overflow-hidden">
 
-<!-- شاشة التحميل الافتتاحية (Splash Screen) -->
+<!-- شاشة التحميل الافتتاحية -->
 <div id="initialLoader" class="fixed inset-0 bg-slate-900 z-[999999] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative w-24 h-24 flex items-center justify-center mb-4">
         <div class="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
@@ -25,9 +29,8 @@
     <p class="text-slate-400 text-sm mt-2">جاري تهيئة مساحة العمل...</p>
 </div>
 
-<!-- شاشة تسجيل الدخول بتصميم زجاجي (Glassmorphism) -->
+<!-- شاشة تسجيل الدخول -->
 <div id="loginPage" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 flex items-center justify-center z-[9999] hidden opacity-0 transition-opacity duration-700">
-    <!-- خلفيات دائرية مضيئة للزينة -->
     <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
 
@@ -57,7 +60,7 @@
     </div>
 </div>
 
-<!-- المحتوى الرئيسي (الداش بورد) -->
+<!-- المحتوى الرئيسي -->
 <div id="dashboardWrapper" class="flex h-screen overflow-hidden opacity-0 scale-95 transition-all duration-700 pointer-events-none">
     
     <!-- الشريط الجانبي -->
@@ -65,7 +68,7 @@
         <div class="h-20 flex items-center justify-center bg-slate-950 font-bold text-2xl tracking-wide border-b border-slate-800">
             <i class="fa-solid mt-1 ml-3 fa-mug-hot text-amber-500"></i> FPs Coffee
         </div>
-        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
             <a href="#" class="flex items-center px-4 py-3 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-colors">
                 <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسية
             </a>
@@ -87,12 +90,12 @@
             </div>
         </nav>
         <div class="p-4 border-t border-slate-800 bg-slate-950 text-xs text-slate-500 text-center font-medium">
-            إصدار النظام 1.3 | لوحة الإدارة
+            إصدار النظام 1.4 | لوحة الإدارة
         </div>
     </div>
 
     <!-- مساحة العمل -->
-    <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden relative bg-slate-50/50">
+    <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden relative bg-slate-50/50 custom-scrollbar">
         <!-- شريط علوي -->
         <header class="h-20 bg-white/80 backdrop-blur-md shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] flex items-center justify-between px-8 z-30 flex-shrink-0 sticky top-0">
             <div class="flex items-center bg-slate-100 border border-transparent focus-within:border-blue-300 focus-within:bg-white focus-within:shadow-sm rounded-xl px-4 py-2.5 w-64 md:w-96 transition-all duration-300">
@@ -100,7 +103,6 @@
                 <input type="text" id="adminSearch" placeholder="ابحث في الفروع، المديرين..." onkeyup="window.searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full font-medium text-slate-700">
             </div>
             
-            <!-- زر الحساب الاحترافي -->
             <div class="relative">
                 <button id="userMenuBtn" class="flex items-center space-x-3 space-x-reverse cursor-pointer hover:bg-slate-50 p-1.5 pr-4 rounded-2xl transition-all border border-transparent hover:border-slate-200 group">
                     <div class="flex flex-col text-right hidden sm:flex">
@@ -113,7 +115,6 @@
                     <i id="userMenuArrow" class="fa-solid fa-chevron-down text-slate-400 text-[10px] mr-1 transition-transform duration-300"></i>
                 </button>
                 
-                <!-- القائمة المنسدلة (Dropdown) -->
                 <div id="userDropdown" class="hidden absolute left-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 z-50 overflow-hidden transition-all origin-top-left">
                     <div class="p-5 border-b border-slate-50 bg-slate-50/50">
                         <p class="text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">تم تسجيل الدخول كـ</p>
@@ -130,35 +131,42 @@
         </header>
 
         <main class="p-8 space-y-8 flex-1">
-            <!-- الإحصائيات -->
+            <!-- الإحصائيات مع الفلترة بالضغط -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 text-2xl order-last shadow-inner">
+                <!-- إجمالي الفروع (لعرض الكل) -->
+                <div id="card-all" onclick="window.filterBranches('all')" class="stat-card ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-50 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all cursor-pointer hover:-translate-y-1 group">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 group-hover:bg-blue-100 transition-colors flex items-center justify-center text-blue-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-store"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-slate-400 font-bold tracking-wide">إجمالي الفروع</p>
+                        <p class="text-xs text-slate-500 font-bold tracking-wide">إجمالي الفروع (الكل)</p>
                         <h3 id="firebase-branches-count" class="text-3xl font-black text-slate-800 mt-1">-</h3>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
-                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 text-2xl order-last shadow-inner">
+                
+                <!-- الفروع النشطة -->
+                <div id="card-active" onclick="window.filterBranches('active')" class="stat-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all cursor-pointer hover:-translate-y-1 hover:border-emerald-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 group-hover:bg-emerald-100 transition-colors flex items-center justify-center text-emerald-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-slate-400 font-bold tracking-wide">Фروع نشطة</p>
+                        <p class="text-xs text-slate-500 font-bold tracking-wide">فروع نشطة</p>
                         <h3 id="active-branches-count" class="text-3xl font-black text-slate-800 mt-1">-</h3>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
-                    <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 text-2xl order-last shadow-inner">
+
+                <!-- الفروع المخفية (الغير نشطة) -->
+                <div id="card-inactive" onclick="window.filterBranches('inactive')" class="stat-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all cursor-pointer hover:-translate-y-1 hover:border-rose-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 group-hover:bg-rose-100 transition-colors flex items-center justify-center text-rose-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-slate-400 font-bold tracking-wide">Фروع مخفية</p>
+                        <p class="text-xs text-slate-500 font-bold tracking-wide">فروع مخفية</p>
                         <h3 id="inactive-branches-count" class="text-3xl font-black text-slate-800 mt-1">-</h3>
                     </div>
                 </div>
+
+                <!-- الزيارات (غير قابلة للفلترة، مجرد إحصائية) -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
                     <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-eye"></i>
@@ -174,7 +182,10 @@
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50/30">
                     <div>
-                        <h4 class="text-xl font-bold text-slate-800">إدارة الفروع</h4>
+                        <h4 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            إدارة الفروع 
+                            <span id="currentFilterLabel" class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg">عرض الكل</span>
+                        </h4>
                         <p class="text-xs text-slate-400 mt-1">عرض وتحكم كامل في جميع فروع الموقع</p>
                     </div>
                     <div class="flex space-x-3 space-x-reverse">
@@ -198,7 +209,7 @@
     </div>
 </div>
 
-<!-- (نفس موديل إضافة الفروع ونقل الموظفين بدون تغيير في الهيكلة، فقط تحسينات ألوان خفيفة جداً ليتماشى مع الثيم) -->
+<!-- موديل إضافة/تعديل الفروع -->
 <div id="branchModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
         <div class="px-8 py-5 bg-slate-50 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
@@ -269,6 +280,7 @@
     </div>
 </div>
 
+<!-- موديل النقل الوظيفي -->
 <div id="transferModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
         <div class="px-6 py-5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
@@ -322,63 +334,50 @@
 
     let localBranchesCache = [];
     let isMaintenanceActive = false;
+    let currentFilter = 'all'; // متغير لحفظ الفلتر الحالي (all, active, inactive)
 
-    // عناصر واجهة المستخدم للأنيميشن
+    // عناصر الأنيميشن
     const initialLoader = document.getElementById("initialLoader");
     const loginPage = document.getElementById("loginPage");
     const loginBox = document.getElementById("loginBox");
     const dashboardWrapper = document.getElementById("dashboardWrapper");
 
-    // التحقق من حالة الدخول مع أنيميشن احترافي
+    // التحقق من حالة الدخول
     onAuthStateChanged(auth, (user) => {
-        // إخفاء الـ Splash screen بشكل ناعم
         setTimeout(() => {
             initialLoader.classList.add("opacity-0");
             setTimeout(() => initialLoader.classList.add("hidden"), 700);
         }, 1000);
 
         if (user) {
-            // الشخص مسجل دخول -> نقفل شاشة الدخول بنعومة ونفتح الداش بورد
             loginPage.classList.add("opacity-0");
             loginBox.classList.add("translate-y-8");
-            
             setTimeout(() => {
                 loginPage.classList.add("hidden");
                 document.body.classList.remove("overflow-hidden");
-                
-                // إظهار الداش بورد
                 dashboardWrapper.classList.remove("opacity-0", "scale-95", "pointer-events-none");
             }, 700);
-
             if (document.getElementById("adminEmail")) document.getElementById("adminEmail").textContent = user.email;
             if (document.getElementById("dropdownEmail")) document.getElementById("dropdownEmail").textContent = user.email;
         } else {
-            // الشخص مش مسجل دخول -> نقفل الداش بورد ونفتح شاشة الدخول
             dashboardWrapper.classList.add("opacity-0", "scale-95", "pointer-events-none");
-            
             setTimeout(() => {
                 loginPage.classList.remove("hidden");
                 document.body.classList.add("overflow-hidden");
-                
-                // Trigger Reflow للأنيميشن
                 void loginPage.offsetWidth; 
-                
                 loginPage.classList.remove("opacity-0");
                 loginBox.classList.remove("translate-y-8");
             }, 300);
         }
     });
 
-    // تسجيل الدخول مع تأثير التحميل للزرار
     document.getElementById("loginForm").addEventListener("submit", async (e)=>{
         e.preventDefault();
-        
         const submitBtn = document.getElementById("loginSubmitBtn");
         const btnText = document.getElementById("loginBtnText");
         const spinner = document.getElementById("loginSpinner");
         const errorMsg = document.getElementById("loginError");
 
-        // تفعيل حالة التحميل
         submitBtn.disabled = true;
         submitBtn.classList.add("opacity-80", "cursor-not-allowed");
         btnText.textContent = "جاري التحقق...";
@@ -388,9 +387,7 @@
         try{
             await setPersistence(auth, browserSessionPersistence);
             await signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value);
-            // لو نجح الـ onAuthStateChanged هيتكفل بنقل الشاشات
             setTimeout(() => {
-                // إرجاع الزر لحالته في الخلفية عشان لو عمل تسجيل خروج بعدين
                 submitBtn.disabled = false;
                 submitBtn.classList.remove("opacity-80", "cursor-not-allowed");
                 btnText.textContent = "دخول للوحة التحكم";
@@ -406,7 +403,6 @@
         }
     });
 
-    // تسجيل الخروج الاحترافي (زرار بيعمل Loading قبل ما يخرج)
     window.performLogout = async () => {
         const logoutBtn = document.getElementById("logoutBtn");
         const logoutText = document.getElementById("logoutText");
@@ -417,11 +413,8 @@
         logoutText.textContent = "جاري تأمين خروجك...";
         logoutIcon.className = "fa-solid fa-circle-notch fa-spin ml-3";
         
-        // ديلاي اصطناعي نص ثانية عشان يدي انطباع بمعالجة البيانات أمنياً
         setTimeout(async () => {
             await signOut(auth);
-            
-            // إرجاع القائمة لحالتها
             logoutBtn.disabled = false;
             logoutText.textContent = "تسجيل الخروج أمنياً";
             logoutIcon.className = "fa-solid fa-arrow-right-from-bracket ml-3";
@@ -429,7 +422,7 @@
         }, 800);
     };
 
-    // أكواد القائمة المنسدلة
+    // القائمة المنسدلة
     const menuBtn = document.getElementById("userMenuBtn");
     const dropdown = document.getElementById("userDropdown");
     const menuArrow = document.getElementById("userMenuArrow");
@@ -448,7 +441,7 @@
         }
     });
 
-    // الاستماع لحالة الصيانة
+    // حالة الصيانة
     onSnapshot(doc(db, "settings", "general"), (docSnap) => {
         if (docSnap.exists()) {
             isMaintenanceActive = docSnap.data().isMaintenance || false;
@@ -482,7 +475,7 @@
         }
     };
 
-    // الاستماع المباشر للفروع ورندرتها بتصميم جديد
+    // جلب الفروع
     onSnapshot(collection(db, "branches"), (snapshot) => {
         const data = [];
         let totalVisits = 0, activeCount = 0, inactiveCount = 0;
@@ -495,13 +488,77 @@
         });
 
         localBranchesCache = data;
+        
+        // تحديث الأرقام في البطاقات
         document.getElementById("firebase-branches-count").innerText = data.length;
         document.getElementById("active-branches-count").innerText = activeCount;
         document.getElementById("inactive-branches-count").innerText = inactiveCount;
         document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString();
 
-        renderAdminBranches(data);
+        // تطبيق الفلتر الحالي عند أي تحديث في الداتا
+        applyFilters();
     });
+
+    // -------- دوال الفلترة والبحث -------- //
+    
+    // دالة تتنفذ عند الضغط على البطاقات
+    window.filterBranches = function(status) {
+        currentFilter = status;
+        
+        // إزالة التأثير من كل البطاقات
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500', 'ring-emerald-500', 'ring-rose-500', 'ring-offset-slate-50');
+        });
+
+        // إضافة التأثير للبطاقة المحددة وتحديث الـ Label
+        const label = document.getElementById("currentFilterLabel");
+        
+        if(status === 'all') {
+            document.getElementById('card-all').classList.add('ring-2', 'ring-blue-500', 'ring-offset-2', 'ring-offset-slate-50');
+            label.className = "text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg font-bold";
+            label.innerText = "عرض الكل";
+        } else if(status === 'active') {
+            document.getElementById('card-active').classList.add('ring-2', 'ring-emerald-500', 'ring-offset-2', 'ring-offset-slate-50');
+            label.className = "text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg font-bold";
+            label.innerText = "عرض النشط فقط";
+        } else if(status === 'inactive') {
+            document.getElementById('card-inactive').classList.add('ring-2', 'ring-rose-500', 'ring-offset-2', 'ring-offset-slate-50');
+            label.className = "text-[10px] bg-rose-100 text-rose-700 px-2 py-1 rounded-lg font-bold";
+            label.innerText = "عرض المخفي فقط";
+        }
+
+        applyFilters();
+    };
+
+    // دالة تتنفذ عند الكتابة في مربع البحث
+    window.searchAdminBranches = function() {
+        applyFilters();
+    };
+
+    // الدالة المسؤولة عن تصفية الداتا ودمج (البحث + الفلتر) مع بعض
+    function applyFilters() {
+        const query = document.getElementById("adminSearch").value.toLowerCase();
+        
+        const filtered = localBranchesCache.filter(b => {
+            // 1. هل يطابق البحث النصي؟
+            const matchesSearch = (b.nameAr || "").toLowerCase().includes(query) || 
+                                  (b.name || "").toLowerCase().includes(query) || 
+                                  (b.managerName || "").toLowerCase().includes(query);
+            
+            // 2. هل يطابق الفلتر (البطاقة المحددة)؟
+            let matchesStatus = true;
+            if (currentFilter === 'active') {
+                matchesStatus = b.isActive !== false;
+            } else if (currentFilter === 'inactive') {
+                matchesStatus = b.isActive === false;
+            }
+
+            return matchesSearch && matchesStatus;
+        });
+
+        renderAdminBranches(filtered);
+    }
+    // ------------------------------------ //
 
     function formatDate(isoString) {
         if(!isoString) return 'تاريخ التسجيل غير متاح';
@@ -512,13 +569,16 @@
     function renderAdminBranches(list) {
         const container = document.getElementById("branches-list-container");
         container.innerHTML = "";
-        if (list.length === 0) { container.innerHTML = `<div class="text-center text-slate-400 py-12 font-medium bg-slate-50 rounded-2xl border border-dashed border-slate-200">لا توجد بيانات متاحة حالياً.</div>`; return; }
+        
+        if (list.length === 0) { 
+            container.innerHTML = `<div class="text-center text-slate-400 py-12 font-medium bg-slate-50 rounded-2xl border border-dashed border-slate-200"><i class="fa-solid fa-folder-open text-3xl mb-3 block text-slate-300"></i>لا توجد فروع تطابق بحثك أو الفلتر الحالي.</div>`; 
+            return; 
+        }
 
         list.forEach(b => {
             const card = document.createElement("div");
             card.className = `bg-white p-5 rounded-2xl border ${b.isActive === false ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'} flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:shadow-md transition-shadow group relative overflow-hidden`;
             
-            // خط جانبي للديكور
             const sideColor = b.isActive === false ? 'bg-rose-400' : 'bg-emerald-400';
             card.innerHTML = `
                 <div class="absolute right-0 top-0 bottom-0 w-1 ${sideColor}"></div>
@@ -555,7 +615,7 @@
         });
     }
 
-    // حفظ الفروع
+    // حفظ الفروع والتعديل والنقل والموديل
     document.getElementById("branchForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const bId = document.getElementById("branchId").value;
@@ -588,9 +648,7 @@
                 showToast("تم تحديث السجلات");
             }
             window.closeModal();
-        } catch (error) {
-            showToast("حدث خطأ تقني","error");
-        }
+        } catch (error) { showToast("حدث خطأ تقني","error"); }
     });
 
     window.prepareEdit = function(id) {
@@ -609,9 +667,7 @@
         container.innerHTML = "";
         if(b.employees && b.employees.length > 0) {
             b.employees.forEach(emp => window.addEmployeeField(emp.name || emp, emp.phone || ''));
-        } else {
-            window.addEmployeeField();
-        }
+        } else { window.addEmployeeField(); }
         document.getElementById("modalTitle").innerText = "تعديل بيانات فرع حالي";
         window.openModal();
     };
@@ -621,12 +677,6 @@
             try { await deleteDoc(doc(db, "branches", id)); showToast("تم مسح الفرع"); } 
             catch (error) { showToast("تعذر مسح الفرع","error"); }
         }
-    };
-
-    window.searchAdminBranches = function() {
-        const query = document.getElementById("adminSearch").value.toLowerCase();
-        const filtered = localBranchesCache.filter(b => (b.nameAr || "").toLowerCase().includes(query) || (b.name || "").toLowerCase().includes(query) || (b.managerName || "").toLowerCase().includes(query));
-        renderAdminBranches(filtered);
     };
 
     window.addEmployeeField = function(name = '', phone = '') {
@@ -654,7 +704,6 @@
         setTimeout(() => { document.getElementById('branchModal').classList.add('hidden'); document.getElementById("branchForm").reset(); document.getElementById("branchId").value = ""; document.getElementById("employees-fields-container").innerHTML = ""; document.getElementById("modalTitle").innerText = "إضافة فرع جديد"; }, 300);
     };
 
-    // ----- نظام النقل (Transfer) -----
     window.openTransferModal = function() {
         populateTransferDropdowns();
         document.getElementById('transferModal').classList.remove('hidden');
@@ -730,9 +779,7 @@
             }
             showToast("تم تنفيذ النقل بنجاح");
             window.closeTransferModal();
-        } catch(err) {
-            showToast("فشل النقل، تحقق من الاتصال", "error");
-        }
+        } catch(err) { showToast("فشل النقل، تحقق من الاتصال", "error"); }
     });
 
     window.exportBackup = async () => {
@@ -768,7 +815,6 @@
     };
 </script>
 
-<!-- إشعار التوست بتصميم متوافق -->
 <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[999999] hidden">
   <div id="toastContent" class="bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex items-center gap-4 min-w-[320px] border border-slate-700">
     <div id="toastIconBg" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
