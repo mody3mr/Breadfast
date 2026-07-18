@@ -5,8 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FPs Location Coffee</title>
 <link rel="stylesheet" href="style.css">
+<style>
+    /* تنسيق صفحة الصيانة */
+    #maintenanceOverlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: #1e293b; color: white; display: none;
+        flex-direction: column; align-items: center; justify-content: center;
+        z-index: 99999; text-align: center; padding: 20px;
+    }
+    #maintenanceOverlay h1 { font-size: 2rem; margin-bottom: 10px; color: #f59e0b; }
+    #maintenanceOverlay p { font-size: 1.2rem; color: #cbd5e1; }
+</style>
 </head>
 <body>
+
+<!-- شاشة الصيانة -->
+<div id="maintenanceOverlay">
+    <h1>We'll be back soon! / سنعود قريباً</h1>
+    <p>The site is currently under maintenance. Please check back later.<br>الموقع يخضع للصيانة حالياً، نرجو زيارتنا لاحقاً.</p>
+</div>
+
 <div class="phone">
     <div class="lang"><button onclick="changeLang()">العربية</button></div>
     <img class="avatar" src="breadfastlogo.jpg">
@@ -20,17 +38,37 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authDomain:"breadfast-coffee.firebaseapp.com", projectId:"breadfast-coffee", storageBucket:"breadfast-coffee.firebasestorage.app", messagingSenderId:"803906042715", appId:"1:803906042715:web:1e8977716adc54947b787e" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// مراقبة حالة الصيانة
+onSnapshot(doc(db, "settings", "general"), (docSnap) => {
+    if (docSnap.exists() && docSnap.data().isMaintenance) {
+        document.getElementById("maintenanceOverlay").style.display = "flex";
+    } else {
+        document.getElementById("maintenanceOverlay").style.display = "none";
+    }
+});
+
 window.branches = []; let currentList = []; let isArabic = false;
+
 onSnapshot(collection(db,"branches"), (snap)=>{
-    let data = []; snap.forEach(d=>{ data.push({id:d.id,...d.data()}); });
+    let data = []; 
+    snap.forEach(d=>{ 
+        let branchData = {id:d.id,...d.data()};
+        // إخفاء الفروع غير النشطة (إذا لم تكن الخاصية موجودة نعتبره نشط افتراضياً)
+        if(branchData.isActive !== false) {
+            data.push(branchData); 
+        }
+    });
     window.branches = data; currentList = data;
     document.getElementById("loading").style.display="none";
     render(currentList);
 });
+
 function render(list){
     let box = document.getElementById("branches"); box.innerHTML = "";
     list.forEach(b=>{
@@ -39,6 +77,7 @@ function render(list){
         a.href = "branch.html?id=" + b.id; box.appendChild(a);
     });
 }
+
 window.searchLocation = function(){
     let val = document.getElementById("search").value.toLowerCase();
     let filtered = currentList.filter(b=>{
@@ -47,6 +86,7 @@ window.searchLocation = function(){
     });
     render(filtered);
 }
+
 window.changeLang = function(){
     isArabic = !isArabic;
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
