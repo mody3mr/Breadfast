@@ -6,257 +6,297 @@
     <title>FPs Coffee - الإدارة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* إضافة خط عربي مميز واحترافي */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased opacity-0 transition-opacity duration-300">
+<body class="bg-gray-50 overflow-hidden">
 
-<!-- شاشة تسجيل الدخول -->
-<div id="loginPage" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-[9999]">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md mx-4">
-        <div class="text-center mb-6">
-            <i class="fa-solid fa-mug-hot text-5xl text-amber-500"></i>
-            <h2 class="text-2xl font-bold mt-3">تسجيل دخول الإدارة</h2>
-            <p class="text-gray-500 text-sm mt-1">يتم إنهاء الجلسة تلقائياً عند إغلاق المتصفح</p>
+<!-- شاشة التحميل الافتتاحية (Splash Screen) -->
+<div id="initialLoader" class="fixed inset-0 bg-slate-900 z-[999999] flex flex-col items-center justify-center transition-opacity duration-700">
+    <div class="relative w-24 h-24 flex items-center justify-center mb-4">
+        <div class="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
+        <i class="fa-solid fa-mug-hot text-3xl text-amber-500"></i>
+    </div>
+    <h1 class="text-white text-xl font-bold tracking-wide">FPs Coffee</h1>
+    <p class="text-slate-400 text-sm mt-2">جاري تهيئة مساحة العمل...</p>
+</div>
+
+<!-- شاشة تسجيل الدخول بتصميم زجاجي (Glassmorphism) -->
+<div id="loginPage" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 flex items-center justify-center z-[9999] hidden opacity-0 transition-opacity duration-700">
+    <!-- خلفيات دائرية مضيئة للزينة -->
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
+
+    <div id="loginBox" class="bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-[2rem] shadow-2xl w-full max-w-md mx-4 transform translate-y-8 transition-all duration-700">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-white/20 shadow-inner rotate-3 hover:rotate-0 transition-transform">
+                <i class="fa-solid fa-mug-hot text-4xl text-amber-400"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-white tracking-wide">أهلاً بك مجدداً</h2>
+            <p class="text-blue-200 text-sm mt-2 opacity-80">يتم إنهاء الجلسة تلقائياً عند إغلاق المتصفح</p>
         </div>
-        <form id="loginForm" class="space-y-4">
-            <input id="email" type="email" placeholder="البريد الإلكتروني" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500">
-            <input id="password" type="password" placeholder="كلمة المرور" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500">
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold transition-colors">تسجيل الدخول</button>
-            <p id="loginError" class="text-center text-red-500 text-sm font-medium"></p>
+        <form id="loginForm" class="space-y-5">
+            <div class="relative">
+                <i class="fa-solid fa-envelope absolute right-4 top-1/2 -translate-y-1/2 text-white/50"></i>
+                <input id="email" type="email" placeholder="البريد الإلكتروني" required class="w-full bg-white/5 border border-white/10 text-white placeholder-white/50 rounded-xl px-12 py-3.5 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all shadow-inner" dir="ltr">
+            </div>
+            <div class="relative">
+                <i class="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-white/50"></i>
+                <input id="password" type="password" placeholder="كلمة المرور" required class="w-full bg-white/5 border border-white/10 text-white placeholder-white/50 rounded-xl px-12 py-3.5 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all shadow-inner" dir="ltr">
+            </div>
+            <button type="submit" id="loginSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] flex items-center justify-center gap-3 mt-2">
+                <span id="loginBtnText">دخول للوحة التحكم</span>
+                <i id="loginSpinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+            </button>
+            <p id="loginError" class="text-center text-red-400 text-sm font-medium h-4"></p>
         </form>
     </div>
 </div>
 
-<div class="flex h-screen overflow-hidden">
+<!-- المحتوى الرئيسي (الداش بورد) -->
+<div id="dashboardWrapper" class="flex h-screen overflow-hidden opacity-0 scale-95 transition-all duration-700 pointer-events-none">
+    
     <!-- الشريط الجانبي -->
-    <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
-        <div class="h-16 flex items-center justify-center bg-slate-950 font-bold text-xl tracking-wide border-b border-slate-800">
-            <i class="fa-solid mt-1 ml-2 fa-mug-hot text-amber-500"></i> FPs Coffee
+    <div class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex z-20 shadow-2xl relative">
+        <div class="h-20 flex items-center justify-center bg-slate-950 font-bold text-2xl tracking-wide border-b border-slate-800">
+            <i class="fa-solid mt-1 ml-3 fa-mug-hot text-amber-500"></i> FPs Coffee
         </div>
         <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            <a href="#" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg transition-colors">
+            <a href="#" class="flex items-center px-4 py-3 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-colors">
                 <i class="fa-solid fa-house ml-3 w-5"></i> الرئيسية
             </a>
             
-            <button id="maintenanceBtn" onclick="window.toggleMaintenance()" class="w-full flex items-center px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors mt-4">
-                <i class="fa-solid fa-power-off ml-3 w-5 text-gray-400" id="maintenanceIcon"></i> 
-                <span id="maintenanceText">وضع الصيانة: معطل</span>
+            <button id="maintenanceBtn" onclick="window.toggleMaintenance()" class="w-full flex items-center px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-colors mt-6">
+                <i class="fa-solid fa-power-off ml-3 w-5 text-slate-400 transition-colors" id="maintenanceIcon"></i> 
+                <span id="maintenanceText" class="font-medium">وضع الصيانة: معطل</span>
             </button>
             
-            <div class="pt-4 mt-4 border-t border-slate-800 space-y-2">
-                <p class="text-xs text-gray-400 mb-2 px-2">قاعدة البيانات</p>
-                <button onclick="window.exportBackup()" class="w-full flex items-center px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm transition-colors">
-                    <i class="fa-solid fa-download ml-3 text-green-400"></i> نسخ احتياطي
+            <div class="pt-6 mt-6 border-t border-slate-800/50 space-y-3">
+                <p class="text-xs text-slate-500 mb-3 px-2 font-bold tracking-wider">إدارة البيانات</p>
+                <button onclick="window.exportBackup()" class="w-full flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700 text-white rounded-xl text-sm transition-colors border border-transparent hover:border-slate-600">
+                    <i class="fa-solid fa-cloud-arrow-down ml-3 text-green-400"></i> أخذ نسخة احتياطية
                 </button>
                 <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="window.handleRestore(event)">
-                <button onclick="document.getElementById('restoreFile').click()" class="w-full flex items-center px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm transition-colors">
-                    <i class="fa-solid fa-upload ml-3 text-amber-400"></i> استرداد بيانات
+                <button onclick="document.getElementById('restoreFile').click()" class="w-full flex items-center px-4 py-2.5 bg-slate-800/50 hover:bg-slate-700 text-white rounded-xl text-sm transition-colors border border-transparent hover:border-slate-600">
+                    <i class="fa-solid fa-cloud-arrow-up ml-3 text-amber-400"></i> استرداد نسخة
                 </button>
             </div>
         </nav>
-        <div class="p-4 border-t border-slate-800 text-sm text-slate-500 text-center">
-            إصدار النظام 1.2
+        <div class="p-4 border-t border-slate-800 bg-slate-950 text-xs text-slate-500 text-center font-medium">
+            إصدار النظام 1.3 | لوحة الإدارة
         </div>
     </div>
 
-    <!-- المحتوى الرئيسي -->
-    <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
-        <header class="h-20 bg-white shadow-sm flex items-center justify-between px-8 z-10 flex-shrink-0">
-            <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 w-64 md:w-80 transition-colors focus-within:border-blue-400 focus-within:bg-white">
-                <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
-                <input type="text" id="adminSearch" placeholder="بحث سريع في الفروع..." onkeyup="window.searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full">
+    <!-- مساحة العمل -->
+    <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden relative bg-slate-50/50">
+        <!-- شريط علوي -->
+        <header class="h-20 bg-white/80 backdrop-blur-md shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] flex items-center justify-between px-8 z-30 flex-shrink-0 sticky top-0">
+            <div class="flex items-center bg-slate-100 border border-transparent focus-within:border-blue-300 focus-within:bg-white focus-within:shadow-sm rounded-xl px-4 py-2.5 w-64 md:w-96 transition-all duration-300">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 ml-3"></i>
+                <input type="text" id="adminSearch" placeholder="ابحث في الفروع، المديرين..." onkeyup="window.searchAdminBranches()" class="bg-transparent focus:outline-none text-sm w-full font-medium text-slate-700">
             </div>
             
             <!-- زر الحساب الاحترافي -->
             <div class="relative">
-                <button id="userMenuBtn" class="flex items-center space-x-3 space-x-reverse cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-all border border-transparent hover:border-gray-200">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold shadow-sm">
-                        <i class="fa-solid fa-user-tie text-lg"></i>
-                    </div>
+                <button id="userMenuBtn" class="flex items-center space-x-3 space-x-reverse cursor-pointer hover:bg-slate-50 p-1.5 pr-4 rounded-2xl transition-all border border-transparent hover:border-slate-200 group">
                     <div class="flex flex-col text-right hidden sm:flex">
-                        <span class="text-sm font-bold text-gray-800">مدير النظام</span>
-                        <span id="adminEmail" class="text-[10px] text-gray-500 font-medium">جاري التحميل...</span>
+                        <span class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors">مدير النظام</span>
+                        <span id="adminEmail" class="text-[10px] text-slate-500 font-medium">جاري التحميل...</span>
                     </div>
-                    <i id="userMenuArrow" class="fa-solid fa-chevron-down text-gray-400 text-xs transition-transform duration-300"></i>
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20">
+                        <i class="fa-solid fa-user-shield text-lg"></i>
+                    </div>
+                    <i id="userMenuArrow" class="fa-solid fa-chevron-down text-slate-400 text-[10px] mr-1 transition-transform duration-300"></i>
                 </button>
                 
                 <!-- القائمة المنسدلة (Dropdown) -->
-                <div id="userDropdown" class="hidden absolute left-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden transition-all origin-top-left">
-                    <div class="p-4 border-b border-gray-50 bg-gray-50">
-                        <p class="text-xs text-gray-500 mb-1">تم تسجيل الدخول بحساب</p>
-                        <p id="dropdownEmail" class="text-sm font-bold text-gray-800 truncate" dir="ltr" style="text-align: right;">-</p>
+                <div id="userDropdown" class="hidden absolute left-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 z-50 overflow-hidden transition-all origin-top-left">
+                    <div class="p-5 border-b border-slate-50 bg-slate-50/50">
+                        <p class="text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">تم تسجيل الدخول كـ</p>
+                        <p id="dropdownEmail" class="text-sm font-bold text-slate-800 truncate" dir="ltr" style="text-align: right;">-</p>
                     </div>
                     <div class="p-2">
-                        <button onclick="window.logout()" class="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-colors">
-                            <i class="fa-solid fa-arrow-right-from-bracket ml-3"></i> تسجيل الخروج
+                        <button id="logoutBtn" onclick="window.performLogout()" class="w-full flex items-center px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl transition-colors">
+                            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket ml-3"></i> 
+                            <span id="logoutText">تسجيل الخروج أمنياً</span>
                         </button>
                     </div>
                 </div>
             </div>
         </header>
 
-        <main class="p-6 space-y-6 flex-1">
+        <main class="p-8 space-y-8 flex-1">
             <!-- الإحصائيات -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 text-xl order-last">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-store"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-gray-400 font-medium">إجمالي الفروع</p>
-                        <h3 id="firebase-branches-count" class="text-2xl font-bold text-gray-800 mt-1">-</h3>
+                        <p class="text-xs text-slate-400 font-bold tracking-wide">إجمالي الفروع</p>
+                        <h3 id="firebase-branches-count" class="text-3xl font-black text-slate-800 mt-1">-</h3>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-500 text-xl order-last">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-gray-400 font-medium">الفروع النشطة</p>
-                        <h3 id="active-branches-count" class="text-2xl font-bold text-gray-800 mt-1">-</h3>
+                        <p class="text-xs text-slate-400 font-bold tracking-wide">Фروع نشطة</p>
+                        <h3 id="active-branches-count" class="text-3xl font-black text-slate-800 mt-1">-</h3>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-500 text-xl order-last">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-gray-400 font-medium">الفروع غير النشطة</p>
-                        <h3 id="inactive-branches-count" class="text-2xl font-bold text-gray-800 mt-1">-</h3>
+                        <p class="text-xs text-slate-400 font-bold tracking-wide">Фروع مخفية</p>
+                        <h3 id="inactive-branches-count" class="text-3xl font-black text-slate-800 mt-1">-</h3>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500 text-xl order-last">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-eye"></i>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-gray-400 font-medium">إجمالي الزيارات</p>
-                        <h3 id="total-visits-count" class="text-2xl font-bold text-gray-800 mt-1">0</h3>
+                        <p class="text-xs text-slate-400 font-bold tracking-wide">إجمالي الزيارات</p>
+                        <h3 id="total-visits-count" class="text-3xl font-black text-slate-800 mt-1">0</h3>
                     </div>
                 </div>
             </div>
 
             <!-- قائمة الفروع والأزرار -->
-            <div class="space-y-4">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <h4 class="text-lg font-bold text-gray-800">قائمة الفروع الحالية</h4>
-                    <div class="flex space-x-2 space-x-reverse">
-                        <button onclick="window.openTransferModal()" class="flex items-center bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">
-                            <i class="fa-solid fa-right-left ml-2"></i> نقل موظف/مدير
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50/30">
+                    <div>
+                        <h4 class="text-xl font-bold text-slate-800">إدارة الفروع</h4>
+                        <p class="text-xs text-slate-400 mt-1">عرض وتحكم كامل في جميع فروع الموقع</p>
+                    </div>
+                    <div class="flex space-x-3 space-x-reverse">
+                        <button onclick="window.openTransferModal()" class="flex items-center bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            <i class="fa-solid fa-right-left ml-2"></i> حركة موظفين
                         </button>
-                        <button onclick="window.openModal()" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">
-                            <i class="fa-solid fa-plus ml-2"></i> إضافة فرع جديد
+                        <button onclick="window.openModal()" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 transition-all hover:shadow-blue-600/40">
+                            <i class="fa-solid fa-plus ml-2"></i> فرع جديد
                         </button>
                     </div>
                 </div>
 
-                <div id="branches-list-container" class="space-y-3">
-                    <div class="text-center text-gray-400 py-8">جاري جلب الفروع الحالية...</div>
+                <div id="branches-list-container" class="p-6 space-y-4">
+                    <div class="text-center text-slate-400 py-12 font-medium flex flex-col items-center">
+                        <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-blue-500"></i>
+                        جاري جلب البيانات من الخوادم...
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 </div>
 
-<!-- مودال إضافة / تعديل الفرع -->
-<div id="branchModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
-            <h3 id="modalTitle" class="font-bold text-gray-800 text-lg">إضافة فرع جديد</h3>
-            <button type="button" onclick="window.closeModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+<!-- (نفس موديل إضافة الفروع ونقل الموظفين بدون تغيير في الهيكلة، فقط تحسينات ألوان خفيفة جداً ليتماشى مع الثيم) -->
+<div id="branchModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
+        <div class="px-8 py-5 bg-slate-50 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+            <h3 id="modalTitle" class="font-bold text-slate-800 text-xl">إضافة فرع جديد</h3>
+            <button type="button" onclick="window.closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 text-slate-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
         </div>
         
-        <form id="branchForm" class="p-6 space-y-4 overflow-y-auto flex-1">
+        <form id="branchForm" class="p-8 space-y-5 overflow-y-auto flex-1 custom-scrollbar">
             <input type="hidden" id="branchId">
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">حالة الفرع (الظهور في الموقع)</label>
-                    <select id="branchStatus" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                        <option value="true">🟢 نشط (يظهر في الموقع)</option>
-                        <option value="false">🔴 غير نشط (مخفي)</option>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="md:col-span-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <label class="block text-xs font-bold text-slate-500 mb-2">حالة الظهور للمستخدمين</label>
+                    <select id="branchStatus" class="w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 font-medium">
+                        <option value="true">🟢 مرئي ونشط (يظهر في الموقع)</option>
+                        <option value="false">🔴 مخفي (لأغراض الصيانة أو الإغلاق)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالعربي)</label>
-                    <input type="text" id="branchNameAr" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    <label class="block text-xs font-bold text-slate-500 mb-2">اسم الفرع (بالعربي)</label>
+                    <input type="text" id="branchNameAr" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">اسم الفرع (بالإنجليزي)</label>
-                    <input type="text" id="branchNameEn" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">اسم مدير الفرع</label>
-                    <input type="text" id="managerName" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-500 mb-1">رقم هاتف المدير</label>
-                    <input type="text" id="managerPhone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-left focus:outline-none focus:border-blue-500" dir="ltr">
+                    <label class="block text-xs font-bold text-slate-500 mb-2">اسم الفرع (بالإنجليزي)</label>
+                    <input type="text" id="branchNameEn" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">مواعيد العمل</label>
-                <input type="text" id="workingHours" required placeholder="من 9 صباحاً إلى 11 مساءً" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">مدير الفرع</label>
+                    <input type="text" id="managerName" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">هاتف المدير</label>
+                    <input type="text" id="managerPhone" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-left focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all font-mono" dir="ltr">
+                </div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">رابط موقع الفرع على الخريطة</label>
-                <input type="url" id="branchLocation" placeholder="https://maps.app.goo.gl/..." required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-left focus:outline-none focus:border-blue-500" dir="ltr">
+                <label class="block text-xs font-bold text-slate-500 mb-2">مواعيد العمل</label>
+                <input type="text" id="workingHours" required placeholder="مثال: من 9 صباحاً إلى 11 مساءً" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
             </div>
 
-            <div class="border-t border-gray-100 pt-4 mt-2">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-md font-bold">بيانات الموظفين</span>
-                    <button type="button" onclick="window.addEmployeeField()" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1 rounded-md font-semibold transition-colors">
-                        <i class="fa-solid fa-plus ml-1"></i> إضافة موظف آخر
+            <div>
+                <label class="block text-xs font-bold text-slate-500 mb-2">رابط خريطة جوجل (Google Maps)</label>
+                <input type="url" id="branchLocation" placeholder="https://maps.app.goo.gl/..." required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-left focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all font-mono" dir="ltr">
+            </div>
+
+            <div class="border-t border-slate-100 pt-6 mt-4">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="inline-block bg-indigo-50 text-indigo-700 text-xs px-3 py-1.5 rounded-lg font-bold border border-indigo-100">طاقم العمل (الموظفين)</span>
+                    <button type="button" onclick="window.addEmployeeField()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg font-bold transition-colors flex items-center shadow-sm">
+                        <i class="fa-solid fa-plus ml-1.5"></i> إضافة موظف
                     </button>
                 </div>
                 <div id="employees-fields-container" class="space-y-3"></div>
             </div>
 
-            <div class="flex items-center justify-end space-x-2 space-x-reverse pt-4 border-t border-gray-100 flex-shrink-0">
-                <button type="button" onclick="window.closeModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">إلغاء</button>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors">حفظ البيانات</button>
+            <div class="flex items-center justify-end space-x-3 space-x-reverse pt-6 border-t border-slate-100 flex-shrink-0">
+                <button type="button" onclick="window.closeModal()" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 px-6 py-2.5 rounded-xl text-sm font-bold transition-colors">إلغاء</button>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 transition-all hover:shadow-blue-600/40">حفظ فرع</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- مودال نقل الموظفين / المديرين -->
-<div id="transferModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
-            <h3 class="font-bold text-gray-800 text-lg">نقل موظف أو مدير</h3>
-            <button type="button" onclick="window.closeTransferModal()" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+<div id="transferModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
+        <div class="px-6 py-5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 text-lg">حركة النقل الوظيفي</h3>
+            <button type="button" onclick="window.closeTransferModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 text-slate-500 transition-colors"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <form id="transferForm" class="p-6 space-y-4">
+        <form id="transferForm" class="p-6 space-y-5">
             <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">الصفة الوظيفية</label>
-                <select id="transferRole" onchange="window.handleTransferRoleChange()" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
-                    <option value="employee">موظف</option>
-                    <option value="manager">مدير</option>
+                <label class="block text-xs font-bold text-slate-500 mb-2">الدور الوظيفي للنقل</label>
+                <select id="transferRole" onchange="window.handleTransferRoleChange()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 font-medium">
+                    <option value="employee">نقل موظف</option>
+                    <option value="manager">نقل مدير فرع</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">من فرع (الفرع الحالي)</label>
-                <select id="transferSource" onchange="window.handleTransferSourceChange()" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
+                <label class="block text-xs font-bold text-slate-500 mb-2">المصدر (الفرع الحالي)</label>
+                <select id="transferSource" onchange="window.handleTransferSourceChange()" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500"></select>
+            </div>
+            <div id="personContainer" class="transition-all">
+                <label class="block text-xs font-bold text-slate-500 mb-2">الشخص المراد نقله</label>
+                <select id="transferPerson" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500"></select>
             </div>
             <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">اختر الشخص</label>
-                <select id="transferPerson" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
+                <label class="block text-xs font-bold text-slate-500 mb-2">الوجهة (الفرع الجديد)</label>
+                <select id="transferDest" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500"></select>
             </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">إلى فرع (الوجهة الجديدة)</label>
-                <select id="transferDest" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
-            </div>
-            <div class="flex justify-end pt-4 border-t border-gray-100">
-                <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors w-full">تنفيذ النقل</button>
+            <div class="flex justify-end pt-5 border-t border-slate-100">
+                <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl text-sm font-bold shadow-lg shadow-amber-500/20 transition-all w-full">تأكيد النقل</button>
             </div>
         </form>
     </div>
@@ -264,12 +304,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc } 
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    
-    // تم إضافة setPersistence و browserSessionPersistence لغلق الحساب عند قفل المتصفح
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } 
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8",
@@ -287,40 +323,113 @@
     let localBranchesCache = [];
     let isMaintenanceActive = false;
 
-    // حالة التسجيل
+    // عناصر واجهة المستخدم للأنيميشن
+    const initialLoader = document.getElementById("initialLoader");
+    const loginPage = document.getElementById("loginPage");
+    const loginBox = document.getElementById("loginBox");
+    const dashboardWrapper = document.getElementById("dashboardWrapper");
+
+    // التحقق من حالة الدخول مع أنيميشن احترافي
     onAuthStateChanged(auth, (user) => {
-        document.body.classList.remove("opacity-0");
+        // إخفاء الـ Splash screen بشكل ناعم
+        setTimeout(() => {
+            initialLoader.classList.add("opacity-0");
+            setTimeout(() => initialLoader.classList.add("hidden"), 700);
+        }, 1000);
+
         if (user) {
-            document.getElementById('loginPage').classList.add("hidden");
-            // تحديث الإيميل في القائمة المنسدلة والزرار
-            if (document.getElementById("adminEmail")) {
-                document.getElementById("adminEmail").textContent = user.email;
-            }
-            if (document.getElementById("dropdownEmail")) {
-                document.getElementById("dropdownEmail").textContent = user.email;
-            }
+            // الشخص مسجل دخول -> نقفل شاشة الدخول بنعومة ونفتح الداش بورد
+            loginPage.classList.add("opacity-0");
+            loginBox.classList.add("translate-y-8");
+            
+            setTimeout(() => {
+                loginPage.classList.add("hidden");
+                document.body.classList.remove("overflow-hidden");
+                
+                // إظهار الداش بورد
+                dashboardWrapper.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+            }, 700);
+
+            if (document.getElementById("adminEmail")) document.getElementById("adminEmail").textContent = user.email;
+            if (document.getElementById("dropdownEmail")) document.getElementById("dropdownEmail").textContent = user.email;
         } else {
-            document.getElementById('loginPage').classList.remove("hidden");
+            // الشخص مش مسجل دخول -> نقفل الداش بورد ونفتح شاشة الدخول
+            dashboardWrapper.classList.add("opacity-0", "scale-95", "pointer-events-none");
+            
+            setTimeout(() => {
+                loginPage.classList.remove("hidden");
+                document.body.classList.add("overflow-hidden");
+                
+                // Trigger Reflow للأنيميشن
+                void loginPage.offsetWidth; 
+                
+                loginPage.classList.remove("opacity-0");
+                loginBox.classList.remove("translate-y-8");
+            }, 300);
         }
     });
 
-    // تسجيل الدخول مع ضبط الـ Session Persistence
+    // تسجيل الدخول مع تأثير التحميل للزرار
     document.getElementById("loginForm").addEventListener("submit", async (e)=>{
         e.preventDefault();
+        
+        const submitBtn = document.getElementById("loginSubmitBtn");
+        const btnText = document.getElementById("loginBtnText");
+        const spinner = document.getElementById("loginSpinner");
+        const errorMsg = document.getElementById("loginError");
+
+        // تفعيل حالة التحميل
+        submitBtn.disabled = true;
+        submitBtn.classList.add("opacity-80", "cursor-not-allowed");
+        btnText.textContent = "جاري التحقق...";
+        spinner.classList.remove("hidden");
+        errorMsg.textContent = "";
+
         try{
-            // هذا السطر هو المسؤول عن إلغاء تسجيل الدخول بمجرد إغلاق المتصفح أو التاب
             await setPersistence(auth, browserSessionPersistence);
-            
             await signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value);
-            document.getElementById("loginError").textContent = "";
+            // لو نجح الـ onAuthStateChanged هيتكفل بنقل الشاشات
+            setTimeout(() => {
+                // إرجاع الزر لحالته في الخلفية عشان لو عمل تسجيل خروج بعدين
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("opacity-80", "cursor-not-allowed");
+                btnText.textContent = "دخول للوحة التحكم";
+                spinner.classList.add("hidden");
+                document.getElementById("loginForm").reset();
+            }, 1000);
         }catch(err){
-            document.getElementById("loginError").textContent = "الإيميل أو كلمة المرور غير صحيحة";
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-80", "cursor-not-allowed");
+            btnText.textContent = "دخول للوحة التحكم";
+            spinner.classList.add("hidden");
+            errorMsg.textContent = "بيانات الاعتماد غير صحيحة، حاول مجدداً";
         }
     });
 
-    window.logout = async () => await signOut(auth);
+    // تسجيل الخروج الاحترافي (زرار بيعمل Loading قبل ما يخرج)
+    window.performLogout = async () => {
+        const logoutBtn = document.getElementById("logoutBtn");
+        const logoutText = document.getElementById("logoutText");
+        const logoutIcon = document.getElementById("logoutIcon");
+        const dropdown = document.getElementById("userDropdown");
 
-    // أكواد القائمة المنسدلة الاحترافية (حركة السهم والإظهار/الإخفاء)
+        logoutBtn.disabled = true;
+        logoutText.textContent = "جاري تأمين خروجك...";
+        logoutIcon.className = "fa-solid fa-circle-notch fa-spin ml-3";
+        
+        // ديلاي اصطناعي نص ثانية عشان يدي انطباع بمعالجة البيانات أمنياً
+        setTimeout(async () => {
+            await signOut(auth);
+            
+            // إرجاع القائمة لحالتها
+            logoutBtn.disabled = false;
+            logoutText.textContent = "تسجيل الخروج أمنياً";
+            logoutIcon.className = "fa-solid fa-arrow-right-from-bracket ml-3";
+            dropdown.classList.add("hidden");
+        }, 800);
+    };
+
+    // أكواد القائمة المنسدلة
     const menuBtn = document.getElementById("userMenuBtn");
     const dropdown = document.getElementById("userDropdown");
     const menuArrow = document.getElementById("userMenuArrow");
@@ -329,13 +438,13 @@
         menuBtn.addEventListener("click", (e)=>{ 
             e.stopPropagation(); 
             dropdown.classList.toggle("hidden"); 
-            menuArrow.classList.toggle("rotate-180"); // لفة السهم
+            menuArrow.classList.toggle("rotate-180");
         });
     }
     document.addEventListener("click", ()=>{ 
         if(dropdown && !dropdown.classList.contains("hidden")) {
             dropdown.classList.add("hidden"); 
-            menuArrow.classList.remove("rotate-180"); // إرجاع السهم
+            menuArrow.classList.remove("rotate-180");
         }
     });
 
@@ -352,14 +461,14 @@
         const icon = document.getElementById("maintenanceIcon");
         const text = document.getElementById("maintenanceText");
         if (isMaintenanceActive) {
-            btn.classList.add("bg-amber-600", "hover:bg-amber-700");
-            btn.classList.remove("bg-gray-800", "hover:bg-gray-700");
-            icon.classList.add("text-white"); icon.classList.remove("text-gray-400");
-            text.innerText = "وضع الصيانة: مفعل";
+            btn.classList.add("bg-amber-100", "text-amber-800", "border", "border-amber-300");
+            btn.classList.remove("bg-slate-800", "hover:bg-slate-700", "text-white");
+            icon.classList.add("text-amber-600"); icon.classList.remove("text-slate-400");
+            text.innerText = "وضع الصيانة: مُفعّل 🔴";
         } else {
-            btn.classList.remove("bg-amber-600", "hover:bg-amber-700");
-            btn.classList.add("bg-gray-800", "hover:bg-gray-700");
-            icon.classList.remove("text-white"); icon.classList.add("text-gray-400");
+            btn.classList.remove("bg-amber-100", "text-amber-800", "border", "border-amber-300");
+            btn.classList.add("bg-slate-800", "hover:bg-slate-700", "text-white");
+            icon.classList.remove("text-amber-600"); icon.classList.add("text-slate-400");
             text.innerText = "وضع الصيانة: معطل";
         }
     }
@@ -367,13 +476,13 @@
     window.toggleMaintenance = async function() {
         try {
             await setDoc(doc(db, "settings", "general"), { isMaintenance: !isMaintenanceActive }, { merge: true });
-            showToast(!isMaintenanceActive ? "تم تفعيل وضع الصيانة" : "تم إلغاء وضع الصيانة");
+            showToast(!isMaintenanceActive ? "تم تفعيل الصيانة بنجاح" : "تم إعادة الموقع للعمل");
         } catch(e) {
-            showToast("حدث خطأ", "error");
+            showToast("حدث خطأ في الصلاحيات", "error");
         }
     };
 
-    // الاستماع المباشر للفروع والإحصائيات
+    // الاستماع المباشر للفروع ورندرتها بتصميم جديد
     onSnapshot(collection(db, "branches"), (snapshot) => {
         const data = [];
         let totalVisits = 0, activeCount = 0, inactiveCount = 0;
@@ -395,42 +504,50 @@
     });
 
     function formatDate(isoString) {
-        if(!isoString) return 'تاريخ غير محدد';
+        if(!isoString) return 'تاريخ التسجيل غير متاح';
         const d = new Date(isoString);
-        return d.toLocaleDateString('ar-EG');
+        return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
     function renderAdminBranches(list) {
         const container = document.getElementById("branches-list-container");
         container.innerHTML = "";
-        if (list.length === 0) { container.innerHTML = `<div class="text-center text-gray-400 py-8">لا توجد فروع حالياً.</div>`; return; }
+        if (list.length === 0) { container.innerHTML = `<div class="text-center text-slate-400 py-12 font-medium bg-slate-50 rounded-2xl border border-dashed border-slate-200">لا توجد بيانات متاحة حالياً.</div>`; return; }
 
         list.forEach(b => {
             const card = document.createElement("div");
-            card.className = `bg-white p-4 rounded-xl shadow-sm border ${b.isActive === false ? 'border-red-200 bg-red-50' : 'border-gray-100'} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all`;
+            card.className = `bg-white p-5 rounded-2xl border ${b.isActive === false ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'} flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:shadow-md transition-shadow group relative overflow-hidden`;
             
-            const statusBadge = b.isActive === false 
-                ? `<span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold ml-2 border border-red-200">🔴 غير نشط</span>`
-                : `<span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold ml-2 border border-green-200">🟢 نشط</span>`;
-
+            // خط جانبي للديكور
+            const sideColor = b.isActive === false ? 'bg-rose-400' : 'bg-emerald-400';
             card.innerHTML = `
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <a href="${b.location || '#'}" target="_blank" class="w-10 h-10 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg flex items-center justify-center text-lg font-bold flex-shrink-0 transition-colors">
-                        <i class="fa-solid fa-location-dot"></i>
+                <div class="absolute right-0 top-0 bottom-0 w-1 ${sideColor}"></div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse w-full md:w-auto">
+                    <a href="${b.location || '#'}" target="_blank" class="w-12 h-12 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold flex-shrink-0 transition-colors border border-slate-100">
+                        <i class="fa-solid fa-location-arrow"></i>
                     </a>
-                    <div class="text-right">
-                        <h5 class="font-bold text-gray-800 text-base">${b.nameAr || b.name} ${statusBadge}</h5>
-                        <p class="text-xs text-gray-500 mt-1">
-                            المدير: ${b.managerName || 'لا يوجد'} | الموظفين: ${(b.employees || []).length} | الإضافة: ${formatDate(b.createdAt)}
-                        </p>
+                    <div class="text-right flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h5 class="font-bold text-slate-800 text-lg">${b.nameAr || b.name}</h5>
+                            ${b.isActive === false 
+                                ? `<span class="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md font-bold border border-rose-200 uppercase tracking-wider">مخفي</span>`
+                                : `<span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md font-bold border border-emerald-200 uppercase tracking-wider">نشط</span>`}
+                        </div>
+                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 font-medium">
+                            <span><i class="fa-regular fa-user mr-1 text-slate-400"></i> م: ${b.managerName || 'لا يوجد'}</span>
+                            <span><i class="fa-solid fa-users mr-1 text-slate-400"></i> ${b.employees ? b.employees.length : 0} موظف</span>
+                            <span><i class="fa-regular fa-calendar mr-1 text-slate-400"></i> ${formatDate(b.createdAt)}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2 space-x-reverse self-end sm:self-center">
-                    <button onclick='window.prepareEdit("${b.id}")' class="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
-                        <i class="fa-solid fa-pen-to-square"></i> تعديل
+                
+                <div class="flex items-center space-x-2 space-x-reverse self-end md:self-center w-full md:w-auto justify-end border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 mt-2 md:mt-0">
+                    <button onclick='window.prepareEdit("${b.id}")' class="text-slate-500 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center border border-slate-200 hover:border-blue-200">
+                        <i class="fa-solid fa-pen-nib ml-2"></i> تعديل
                     </button>
-                    <button onclick='window.deleteBranch("${b.id}")' class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
-                        <i class="fa-solid fa-trash"></i> حذف
+                    <button onclick='window.deleteBranch("${b.id}")' class="text-slate-500 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center border border-slate-200 hover:border-rose-200">
+                        <i class="fa-solid fa-trash-can ml-2"></i> حذف
                     </button>
                 </div>
             `;
@@ -438,7 +555,7 @@
         });
     }
 
-    // حفظ وإضافة وتعديل الفروع
+    // حفظ الفروع
     document.getElementById("branchForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const bId = document.getElementById("branchId").value;
@@ -465,18 +582,17 @@
                 docData.visits = 0;
                 docData.createdAt = new Date().toISOString(); 
                 await addDoc(collection(db, "branches"), docData);
-                showToast("تم إضافة الفرع بنجاح");
+                showToast("تم إنشاء الفرع بنجاح");
             } else {
                 await updateDoc(doc(db, "branches", bId), docData);
-                showToast("تم تحديث البيانات بنجاح");
+                showToast("تم تحديث السجلات");
             }
             window.closeModal();
         } catch (error) {
-            showToast("حدث خطأ أثناء الحفظ","error");
+            showToast("حدث خطأ تقني","error");
         }
     });
 
-    // تجهيز الداتا للتعديل
     window.prepareEdit = function(id) {
         const b = localBranchesCache.find(item => item.id === id);
         if (!b) return;
@@ -496,20 +612,20 @@
         } else {
             window.addEmployeeField();
         }
-        document.getElementById("modalTitle").innerText = "تعديل بيانات الفرع";
+        document.getElementById("modalTitle").innerText = "تعديل بيانات فرع حالي";
         window.openModal();
     };
 
     window.deleteBranch = async function(id) {
-        if (confirm("هل أنت متأكد من الحذف؟")) {
-            try { await deleteDoc(doc(db, "branches", id)); showToast("تم الحذف بنجاح"); } 
-            catch (error) { showToast("فشل الحذف","error"); }
+        if (confirm("تحذير: سيتم حذف هذا الفرع نهائياً من قاعدة البيانات. هل أنت متأكد؟")) {
+            try { await deleteDoc(doc(db, "branches", id)); showToast("تم مسح الفرع"); } 
+            catch (error) { showToast("تعذر مسح الفرع","error"); }
         }
     };
 
     window.searchAdminBranches = function() {
         const query = document.getElementById("adminSearch").value.toLowerCase();
-        const filtered = localBranchesCache.filter(b => (b.nameAr || "").toLowerCase().includes(query) || (b.name || "").toLowerCase().includes(query));
+        const filtered = localBranchesCache.filter(b => (b.nameAr || "").toLowerCase().includes(query) || (b.name || "").toLowerCase().includes(query) || (b.managerName || "").toLowerCase().includes(query));
         renderAdminBranches(filtered);
     };
 
@@ -518,11 +634,11 @@
         const rowId = 'emp_' + Date.now();
         const row = document.createElement("div");
         row.id = rowId;
-        row.className = "employee-row grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-3 rounded-lg border border-gray-100 relative";
+        row.className = "employee-row grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-4 rounded-xl border border-slate-200 relative group";
         row.innerHTML = `
-            <div><input type="text" value="${name}" placeholder="الاسم" class="emp-name-input w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500"></div>
-            <div><input type="text" value="${phone}" placeholder="الهاتف" class="emp-phone-input w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-left focus:outline-none focus:border-blue-500" dir="ltr"></div>
-            <button type="button" onclick="window.removeEmployeeField('${rowId}')" class="absolute top-1 left-2 text-red-400 hover:text-red-600 transition-colors"><i class="fa-solid fa-circle-xmark"></i></button>
+            <div><input type="text" value="${name}" placeholder="الاسم ثلاثي" class="emp-name-input w-full border-b-2 border-slate-100 bg-transparent px-2 py-1.5 text-sm focus:outline-none focus:border-blue-500 font-bold text-slate-700 transition-colors"></div>
+            <div><input type="text" value="${phone}" placeholder="رقم الهاتف" class="emp-phone-input w-full border-b-2 border-slate-100 bg-transparent px-2 py-1.5 text-sm text-left focus:outline-none focus:border-blue-500 font-mono transition-colors" dir="ltr"></div>
+            <button type="button" onclick="window.removeEmployeeField('${rowId}')" class="absolute -top-2 -left-2 w-6 h-6 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"><i class="fa-solid fa-xmark text-xs"></i></button>
         `;
         container.appendChild(row);
     };
@@ -538,13 +654,12 @@
         setTimeout(() => { document.getElementById('branchModal').classList.add('hidden'); document.getElementById("branchForm").reset(); document.getElementById("branchId").value = ""; document.getElementById("employees-fields-container").innerHTML = ""; document.getElementById("modalTitle").innerText = "إضافة فرع جديد"; }, 300);
     };
 
-    // ----- نظام النقل (Transfer System) -----
+    // ----- نظام النقل (Transfer) -----
     window.openTransferModal = function() {
         populateTransferDropdowns();
         document.getElementById('transferModal').classList.remove('hidden');
         setTimeout(() => { document.getElementById('transferModal').classList.remove('opacity-0'); document.getElementById('transferModal').querySelector('.transform').classList.remove('scale-95'); }, 10);
     };
-
     window.closeTransferModal = function() {
         document.getElementById('transferModal').classList.add('opacity-0');
         setTimeout(() => { document.getElementById('transferModal').classList.add('hidden'); document.getElementById('transferForm').reset(); }, 300);
@@ -553,8 +668,8 @@
     function populateTransferDropdowns() {
         const sourceSelect = document.getElementById("transferSource");
         const destSelect = document.getElementById("transferDest");
-        sourceSelect.innerHTML = '<option value="">-- اختر الفرع --</option>';
-        destSelect.innerHTML = '<option value="">-- اختر الفرع --</option>';
+        sourceSelect.innerHTML = '<option value="">-- حدد الفرع --</option>';
+        destSelect.innerHTML = '<option value="">-- حدد الوجهة --</option>';
         localBranchesCache.forEach(b => {
             const opt = `<option value="${b.id}">${b.nameAr || b.name}</option>`;
             sourceSelect.innerHTML += opt;
@@ -563,12 +678,11 @@
     }
 
     window.handleTransferRoleChange = () => window.handleTransferSourceChange();
-
     window.handleTransferSourceChange = function() {
         const role = document.getElementById("transferRole").value;
         const sourceId = document.getElementById("transferSource").value;
         const personSelect = document.getElementById("transferPerson");
-        personSelect.innerHTML = '<option value="">-- اختر الشخص --</option>';
+        personSelect.innerHTML = '<option value="">-- حدد الموظف --</option>';
         
         if(!sourceId) return;
         const branch = localBranchesCache.find(b => b.id === sourceId);
@@ -589,8 +703,8 @@
         const personVal = document.getElementById("transferPerson").value;
         const destId = document.getElementById("transferDest").value;
 
-        if(!sourceId || !personVal || !destId) { showToast("يرجى إكمال البيانات", "error"); return; }
-        if(sourceId === destId) { showToast("لا يمكن النقل لنفس الفرع", "error"); return; }
+        if(!sourceId || !personVal || !destId) { showToast("البيانات غير مكتملة", "error"); return; }
+        if(sourceId === destId) { showToast("خطأ: المصدر هو نفس الوجهة", "error"); return; }
 
         const sourceBranch = localBranchesCache.find(b => b.id === sourceId);
         const destBranch = localBranchesCache.find(b => b.id === destId);
@@ -614,14 +728,13 @@
                 await updateDoc(doc(db, "branches", sourceId), { employees: newSourceEmployees });
                 await updateDoc(doc(db, "branches", destId), { employees: newDestEmployees });
             }
-            showToast("تم النقل بنجاح!");
+            showToast("تم تنفيذ النقل بنجاح");
             window.closeTransferModal();
         } catch(err) {
-            showToast("حدث خطأ أثناء النقل", "error");
+            showToast("فشل النقل، تحقق من الاتصال", "error");
         }
     });
 
-    // ----- النسخ الاحتياطي والاسترداد -----
     window.exportBackup = async () => {
         try {
             const snapshot = await getDocs(collection(db, "branches"));
@@ -632,8 +745,8 @@
             a.href = url;
             a.download = `FPs_Backup_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
-            showToast("تم تحميل النسخة الاحتياطية");
-        } catch(e) { showToast("فشل النسخ الاحتياطي", "error"); }
+            showToast("جاري تحميل النسخة...");
+        } catch(e) { showToast("فشل تصدير البيانات", "error"); }
     };
 
     window.handleRestore = async (event) => {
@@ -647,37 +760,56 @@
                     const {id, ...rest} = item;
                     await setDoc(doc(db, "branches", id), rest);
                 }
-                showToast("تم استرداد البيانات بنجاح");
+                showToast("تم استعادة قاعدة البيانات");
                 document.getElementById('restoreFile').value = '';
-            } catch(err) {
-                showToast("ملف غير صالح أو فشل الاسترداد", "error");
-            }
+            } catch(err) { showToast("الملف تالف أو غير مدعوم", "error"); }
         };
         reader.readAsText(file);
     };
-
 </script>
 
-<!-- توست الإشعارات -->
-<div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[99999] hidden">
-  <div id="toastContent" class="bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-[280px]">
-    <i id="toastIcon" class="fa-solid fa-circle-check text-green-400"></i>
-    <span id="toastText">تمت العملية بنجاح</span>
+<!-- إشعار التوست بتصميم متوافق -->
+<div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[999999] hidden">
+  <div id="toastContent" class="bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex items-center gap-4 min-w-[320px] border border-slate-700">
+    <div id="toastIconBg" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+        <i id="toastIcon" class="fa-solid fa-check"></i>
+    </div>
+    <span id="toastText" class="font-bold text-sm tracking-wide">العملية تمت بنجاح</span>
   </div>
 </div>
 
 <script>
-window.showToast = function(message,type='success'){
- const toast=document.getElementById('toast');
- const text=document.getElementById('toastText');
- const icon=document.getElementById('toastIcon');
- text.textContent=message;
- if(type==='error'){ icon.className='fa-solid fa-circle-xmark text-red-400'; }
- else{ icon.className='fa-solid fa-circle-check text-green-400'; }
+window.showToast = function(message, type='success'){
+ const toast = document.getElementById('toast');
+ const text = document.getElementById('toastText');
+ const icon = document.getElementById('toastIcon');
+ const iconBg = document.getElementById('toastIconBg');
+ 
+ text.textContent = message;
+
+ if(type === 'error'){
+   iconBg.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-rose-500/20 text-rose-400';
+   icon.className = 'fa-solid fa-xmark';
+ }else{
+   iconBg.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-emerald-500/20 text-emerald-400';
+   icon.className = 'fa-solid fa-check';
+ }
+
  toast.classList.remove('hidden');
- toast.animate([ {transform:'translate(-50%,-20px)',opacity:0}, {transform:'translate(-50%,0)',opacity:1} ],{duration:250,fill:'forwards'});
+ toast.animate([
+   {transform:'translate(-50%, 20px)', opacity:0},
+   {transform:'translate(-50%, 0)', opacity:1}
+ ], {duration:400, easing:'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill:'forwards'});
+
  clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=> toast.classList.add('hidden'), 3000);
+ window.toastTimer = setTimeout(()=>{
+   const animation = toast.animate([
+     {transform:'translate(-50%, 0)', opacity:1},
+     {transform:'translate(-50%, 20px)', opacity:0}
+   ], {duration:300, fill:'forwards'});
+   
+   animation.onfinish = () => toast.classList.add('hidden');
+ }, 4000);
 }
 </script>
 </body>
