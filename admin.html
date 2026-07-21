@@ -315,7 +315,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -470,18 +470,8 @@
         }
     };
 
-    // جلب الفروع مع التوافق التام مع الفروع القديمة (التي لا تحتوي على حقل order)
-    const branchesQuery = query(collection(db, "branches"), orderBy("order", "asc"));
-    onSnapshot(branchesQuery, (snapshot) => {
-        processSnapshotData(snapshot);
-    }, (error) => {
-        // Fallback لو حقل الـ order غير موجود أو لم يتم إنشاء الـ Index بعد في الفايرستور
-        getDocs(collection(db, "branches")).then((fallbackSnapshot) => {
-            processSnapshotData(fallbackSnapshot);
-        });
-    });
-
-    function processSnapshotData(snapshot) {
+    // جلب الفروع بدون شروط تعجيزية (سحب مباشر وآمن تماماً)
+    onSnapshot(collection(db, "branches"), (snapshot) => {
         const data = [];
         let totalVisits = 0, activeCount = 0, inactiveCount = 0;
 
@@ -496,7 +486,7 @@
             if(bData.isActive === false) inactiveCount++; else activeCount++;
         });
 
-        // ترتيب محلي للتأكيد وضمان عدم اختفاء أي فرع
+        // ترتيب الفروع محلياً بناءً على حقل الـ order بدون مشاكل مع الفايرستور
         data.sort((a, b) => a.order - b.order);
 
         localBranchesCache = data;
@@ -507,7 +497,7 @@
         document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString();
 
         applyFilters();
-    }
+    });
 
     window.filterBranches = function(status) {
         currentFilter = status;
@@ -630,8 +620,8 @@
         const currentBranch = localBranchesCache[index];
         const targetBranch = localBranchesCache[targetIndex];
 
-        const currentOrder = currentBranch.order !== undefined ? currentBranch.order : index;
-        const targetOrder = targetBranch.order !== undefined ? targetBranch.order : targetIndex;
+        const currentOrder = currentBranch.order !== undefined && currentBranch.order !== 999 ? currentBranch.order : index;
+        const targetOrder = targetBranch.order !== undefined && targetBranch.order !== 999 ? targetBranch.order : targetIndex;
 
         try {
             await updateDoc(doc(db, "branches", currentBranch.id), { order: targetOrder });
