@@ -58,13 +58,20 @@ window.branches = []; let currentList = []; let isArabic = false;
 onSnapshot(collection(db,"branches"), (snap)=>{
     let data = []; 
     snap.forEach(d=>{ 
-        let branchData = {id:d.id,...d.data()};
+        let branchData = {id:d.id, ...d.data()};
         // إخفاء الفروع غير النشطة (إذا لم تكن الخاصية موجودة نعتبره نشط افتراضياً)
         if(branchData.isActive !== false) {
+            // تعيين قيمة افتراضية للترتيب لو غير موجودة
+            branchData.order = branchData.order !== undefined ? branchData.order : 999;
             data.push(branchData); 
         }
     });
-    window.branches = data; currentList = data;
+
+    // ترتيب الفروع محلياً بناءً على حقل الـ order ليتطابق تماماً مع لوحة التحكم
+    data.sort((a, b) => a.order - b.order);
+
+    window.branches = data; 
+    currentList = data;
     document.getElementById("loading").style.display="none";
     render(currentList);
 });
