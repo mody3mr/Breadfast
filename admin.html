@@ -470,7 +470,7 @@
         }
     };
 
-    // جلب الفروع بدون شروط تعجيزية (سحب مباشر وآمن تماماً)
+    // جلب الفروع وسحبها بشكل آمن وترتيبها محلياً
     onSnapshot(collection(db, "branches"), (snapshot) => {
         const data = [];
         let totalVisits = 0, activeCount = 0, inactiveCount = 0;
@@ -486,9 +486,7 @@
             if(bData.isActive === false) inactiveCount++; else activeCount++;
         });
 
-        // ترتيب الفروع محلياً بناءً على حقل الـ order بدون مشاكل مع الفايرستور
         data.sort((a, b) => a.order - b.order);
-
         localBranchesCache = data;
         
         document.getElementById("firebase-branches-count").innerText = data.length;
@@ -609,25 +607,31 @@
         });
     }
 
-    // دالة تحريك وترتيب الفروع
+    // دالة الترتيب المطورة والآمنة 100% (تعيد ترقيم القائمة بالكامل وتمنع تعليق الفروع)
     window.moveBranchOrder = async function(branchId, direction) {
-        const index = localBranchesCache.findIndex(b => b.id === branchId);
+        const currentList = [...localBranchesCache];
+        const index = currentList.findIndex(b => b.id === branchId);
         if (index === -1) return;
 
         const targetIndex = direction === 'up' ? index - 1 : index + 1;
-        if (targetIndex < 0 || targetIndex >= localBranchesCache.length) return;
+        if (targetIndex < 0 || targetIndex >= currentList.length) return;
 
-        const currentBranch = localBranchesCache[index];
-        const targetBranch = localBranchesCache[targetIndex];
-
-        const currentOrder = currentBranch.order !== undefined && currentBranch.order !== 999 ? currentBranch.order : index;
-        const targetOrder = targetBranch.order !== undefined && targetBranch.order !== 999 ? targetBranch.order : targetIndex;
+        // تبديل الأماكن محلياً لتحديث الترتيب بدقة
+        const temp = currentList[index];
+        currentList[index] = currentList[targetIndex];
+        currentList[targetIndex] = temp;
 
         try {
-            await updateDoc(doc(db, "branches", currentBranch.id), { order: targetOrder });
-            await updateDoc(doc(db, "branches", targetBranch.id), { order: currentOrder });
+            // تحديث قيم الـ order تسلسلياً لجميع الفروع في قاعدة البيانات
+            const updatePromises = currentList.map((branch, newIdx) => {
+                const branchRef = doc(db, "branches", branch.id);
+                return updateDoc(branchRef, { order: newIdx });
+            });
+
+            await Promise.all(updatePromises);
             showToast("تم تحديث الترتيب بنجاح");
         } catch (error) {
+            console.error("خطأ في الترتيب:", error);
             showToast("فشل تحديث الترتيب", "error");
         }
     };
