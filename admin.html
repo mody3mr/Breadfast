@@ -9,7 +9,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
         body { font-family: 'Tajawal', sans-serif; }
-        /* Custom scrollbar for better look */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -166,7 +165,7 @@
                     </div>
                 </div>
 
-                <!-- الزيارات (غير قابلة للفلترة، مجرد إحصائية) -->
+                <!-- الزيارات -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
                     <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 text-2xl order-last shadow-inner">
                         <i class="fa-solid fa-eye"></i>
@@ -186,7 +185,7 @@
                             إدارة الفروع 
                             <span id="currentFilterLabel" class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg">عرض الكل</span>
                         </h4>
-                        <p class="text-xs text-slate-400 mt-1">عرض وتحكم كامل في جميع فروع الموقع</p>
+                        <p class="text-xs text-slate-400 mt-1">عرض وتحكم كامل في جميع فروع الموقع وترتيب ظهورها</p>
                     </div>
                     <div class="flex space-x-3 space-x-reverse">
                         <button onclick="window.openTransferModal()" class="flex items-center bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl text-sm font-bold transition-colors">
@@ -316,7 +315,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -334,15 +333,13 @@
 
     let localBranchesCache = [];
     let isMaintenanceActive = false;
-    let currentFilter = 'all'; // متغير لحفظ الفلتر الحالي (all, active, inactive)
+    let currentFilter = 'all';
 
-    // عناصر الأنيميشن
     const initialLoader = document.getElementById("initialLoader");
     const loginPage = document.getElementById("loginPage");
     const loginBox = document.getElementById("loginBox");
     const dashboardWrapper = document.getElementById("dashboardWrapper");
 
-    // التحقق من حالة الدخول
     onAuthStateChanged(auth, (user) => {
         setTimeout(() => {
             initialLoader.classList.add("opacity-0");
@@ -422,7 +419,6 @@
         }, 800);
     };
 
-    // القائمة المنسدلة
     const menuBtn = document.getElementById("userMenuBtn");
     const dropdown = document.getElementById("userDropdown");
     const menuArrow = document.getElementById("userMenuArrow");
@@ -441,7 +437,6 @@
         }
     });
 
-    // حالة الصيانة
     onSnapshot(doc(db, "settings", "general"), (docSnap) => {
         if (docSnap.exists()) {
             isMaintenanceActive = docSnap.data().isMaintenance || false;
@@ -475,44 +470,36 @@
         }
     };
 
-    // جلب الفروع
-    onSnapshot(collection(db, "branches"), (snapshot) => {
+    // جلب الفروع مرتبة بناءً على حقل الـ order
+    const branchesQuery = query(collection(db, "branches"), orderBy("order", "asc"));
+    onSnapshot(branchesQuery, (snapshot) => {
         const data = [];
         let totalVisits = 0, activeCount = 0, inactiveCount = 0;
 
-        snapshot.forEach(doc => {
-            const bData = doc.data();
-            data.push({ id: doc.id, ...bData });
+        snapshot.forEach(docSnap => {
+            const bData = docSnap.data();
+            data.push({ id: docSnap.id, ...bData });
             if(bData.visits) totalVisits += Number(bData.visits);
             if(bData.isActive === false) inactiveCount++; else activeCount++;
         });
 
         localBranchesCache = data;
         
-        // تحديث الأرقام في البطاقات
         document.getElementById("firebase-branches-count").innerText = data.length;
         document.getElementById("active-branches-count").innerText = activeCount;
         document.getElementById("inactive-branches-count").innerText = inactiveCount;
         document.getElementById("total-visits-count").innerText = totalVisits.toLocaleString();
 
-        // تطبيق الفلتر الحالي عند أي تحديث في الداتا
         applyFilters();
     });
 
-    // -------- دوال الفلترة والبحث -------- //
-    
-    // دالة تتنفذ عند الضغط على البطاقات
     window.filterBranches = function(status) {
         currentFilter = status;
-        
-        // إزالة التأثير من كل البطاقات
         document.querySelectorAll('.stat-card').forEach(card => {
             card.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500', 'ring-emerald-500', 'ring-rose-500', 'ring-offset-slate-50');
         });
 
-        // إضافة التأثير للبطاقة المحددة وتحديث الـ Label
         const label = document.getElementById("currentFilterLabel");
-        
         if(status === 'all') {
             document.getElementById('card-all').classList.add('ring-2', 'ring-blue-500', 'ring-offset-2', 'ring-offset-slate-50');
             label.className = "text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg font-bold";
@@ -526,39 +513,30 @@
             label.className = "text-[10px] bg-rose-100 text-rose-700 px-2 py-1 rounded-lg font-bold";
             label.innerText = "عرض المخفي فقط";
         }
-
         applyFilters();
     };
 
-    // دالة تتنفذ عند الكتابة في مربع البحث
     window.searchAdminBranches = function() {
         applyFilters();
     };
 
-    // الدالة المسؤولة عن تصفية الداتا ودمج (البحث + الفلتر) مع بعض
     function applyFilters() {
-        const query = document.getElementById("adminSearch").value.toLowerCase();
-        
+        const queryText = document.getElementById("adminSearch").value.toLowerCase();
         const filtered = localBranchesCache.filter(b => {
-            // 1. هل يطابق البحث النصي؟
-            const matchesSearch = (b.nameAr || "").toLowerCase().includes(query) || 
-                                  (b.name || "").toLowerCase().includes(query) || 
-                                  (b.managerName || "").toLowerCase().includes(query);
+            const matchesSearch = (b.nameAr || "").toLowerCase().includes(queryText) || 
+                                  (b.name || "").toLowerCase().includes(queryText) || 
+                                  (b.managerName || "").toLowerCase().includes(queryText);
             
-            // 2. هل يطابق الفلتر (البطاقة المحددة)؟
             let matchesStatus = true;
             if (currentFilter === 'active') {
                 matchesStatus = b.isActive !== false;
             } else if (currentFilter === 'inactive') {
                 matchesStatus = b.isActive === false;
             }
-
             return matchesSearch && matchesStatus;
         });
-
         renderAdminBranches(filtered);
     }
-    // ------------------------------------ //
 
     function formatDate(isoString) {
         if(!isoString) return 'تاريخ التسجيل غير متاح';
@@ -575,7 +553,7 @@
             return; 
         }
 
-        list.forEach(b => {
+        list.forEach((b, index) => {
             const card = document.createElement("div");
             card.className = `bg-white p-5 rounded-2xl border ${b.isActive === false ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'} flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:shadow-md transition-shadow group relative overflow-hidden`;
             
@@ -603,6 +581,16 @@
                 </div>
                 
                 <div class="flex items-center space-x-2 space-x-reverse self-end md:self-center w-full md:w-auto justify-end border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 mt-2 md:mt-0">
+                    <!-- أزرار الترتيب (صعود وهبوط) -->
+                    <div class="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
+                        <button onclick="window.moveBranchOrder('${b.id}', 'up')" title="تحريك لأعلى" class="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-white hover:text-blue-600 rounded-lg transition-all shadow-sm">
+                            <i class="fa-solid fa-arrow-up text-xs"></i>
+                        </button>
+                        <button onclick="window.moveBranchOrder('${b.id}', 'down')" title="تحريك لاسفل" class="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-white hover:text-blue-600 rounded-lg transition-all shadow-sm">
+                            <i class="fa-solid fa-arrow-down text-xs"></i>
+                        </button>
+                    </div>
+
                     <button onclick='window.prepareEdit("${b.id}")' class="text-slate-500 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center border border-slate-200 hover:border-blue-200">
                         <i class="fa-solid fa-pen-nib ml-2"></i> تعديل
                     </button>
@@ -615,7 +603,29 @@
         });
     }
 
-    // حفظ الفروع والتعديل والنقل والموديل
+    // دالة تحريك وترتيب الفروع
+    window.moveBranchOrder = async function(branchId, direction) {
+        const index = localBranchesCache.findIndex(b => b.id === branchId);
+        if (index === -1) return;
+
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= localBranchesCache.length) return;
+
+        const currentBranch = localBranchesCache[index];
+        const targetBranch = localBranchesCache[targetIndex];
+
+        const currentOrder = currentBranch.order !== undefined ? currentBranch.order : index;
+        const targetOrder = targetBranch.order !== undefined ? targetBranch.order : targetIndex;
+
+        try {
+            await updateDoc(doc(db, "branches", currentBranch.id), { order: targetOrder });
+            await updateDoc(doc(db, "branches", targetBranch.id), { order: currentOrder });
+            showToast("تم تحديث الترتيب بنجاح");
+        } catch (error) {
+            showToast("فشل تحديث الترتيب", "error");
+        }
+    };
+
     document.getElementById("branchForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const bId = document.getElementById("branchId").value;
@@ -641,6 +651,8 @@
             if (bId === "") {
                 docData.visits = 0;
                 docData.createdAt = new Date().toISOString(); 
+                // إعطاء الفرع الجديد ترتيباً في النهاية بناءً على عدد الفروع الحالي
+                docData.order = localBranchesCache.length;
                 await addDoc(collection(db, "branches"), docData);
                 showToast("تم إنشاء الفرع بنجاح");
             } else {
@@ -785,7 +797,7 @@
     window.exportBackup = async () => {
         try {
             const snapshot = await getDocs(collection(db, "branches"));
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
