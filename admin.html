@@ -13,6 +13,20 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* تأثيرات السحب والإفلات */
+        .branch-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .branch-card.dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+            border: 2px dashed #3b82f6 !important;
+        }
+        .branch-card.drag-over {
+            border-top: 3px solid #3b82f6 !important;
+            background-color: #f8fafc !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50 overflow-hidden">
@@ -185,7 +199,7 @@
                             إدارة الفروع 
                             <span id="currentFilterLabel" class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg">عرض الكل</span>
                         </h4>
-                        <p class="text-xs text-slate-400 mt-1">عرض وتحكم كامل في جميع فروع الموقع وترتيب ظهورها</p>
+                        <p class="text-xs text-slate-400 mt-1">اسحب الفرع من المقبض (<i class="fa-solid fa-grip-vertical"></i>) لترتيبه فوراً أو اضغط تحريك</p>
                     </div>
                     <div class="flex space-x-3 space-x-reverse">
                         <button onclick="window.openTransferModal()" class="flex items-center bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl text-sm font-bold transition-colors">
@@ -470,7 +484,6 @@
         }
     };
 
-    // جلب الفروع وسحبها بشكل آمن وترتيبها محلياً
     onSnapshot(collection(db, "branches"), (snapshot) => {
         const data = [];
         let totalVisits = 0, activeCount = 0, inactiveCount = 0;
@@ -559,13 +572,29 @@
 
         list.forEach((b) => {
             const card = document.createElement("div");
-            card.className = `bg-white p-5 rounded-2xl border ${b.isActive === false ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'} flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:shadow-md transition-shadow group relative overflow-hidden`;
+            card.className = `branch-card bg-white p-5 rounded-2xl border ${b.isActive === false ? 'border-rose-200 bg-rose-50/30' : 'border-slate-100'} flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:shadow-md transition-all group relative overflow-hidden`;
+            
+            // خصائص السحب والإفلات
+            card.setAttribute("draggable", "true");
+            card.setAttribute("data-id", b.id);
+
+            // تفعيل أحداث السحب والإفلات بالماوس
+            card.addEventListener("dragstart", handleDragStart);
+            card.addEventListener("dragover", handleDragOver);
+            card.addEventListener("dragleave", handleDragLeave);
+            card.addEventListener("drop", handleDrop);
+            card.addEventListener("dragend", handleDragEnd);
             
             const sideColor = b.isActive === false ? 'bg-rose-400' : 'bg-emerald-400';
             card.innerHTML = `
                 <div class="absolute right-0 top-0 bottom-0 w-1 ${sideColor}"></div>
                 
                 <div class="flex items-center space-x-4 space-x-reverse w-full md:w-auto">
+                    <!-- مقبض السحب بالماوس -->
+                    <div class="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 px-1 text-lg" title="اسحب للترتيب">
+                        <i class="fa-solid fa-grip-vertical"></i>
+                    </div>
+
                     <a href="${b.location || '#'}" target="_blank" class="w-12 h-12 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold flex-shrink-0 transition-colors border border-slate-100">
                         <i class="fa-solid fa-location-arrow"></i>
                     </a>
@@ -585,7 +614,7 @@
                 </div>
                 
                 <div class="flex items-center space-x-2 space-x-reverse self-end md:self-center w-full md:w-auto justify-end border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 mt-2 md:mt-0">
-                    <!-- أزرار الترتيب (صعود وهبوط) -->
+                    <!-- أزرار الترتيب (صعود وهبوط) كدعم إضافي -->
                     <div class="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
                         <button onclick="window.moveBranchOrder('${b.id}', 'up')" title="تحريك لأعلى" class="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-white hover:text-blue-600 rounded-lg transition-all shadow-sm">
                             <i class="fa-solid fa-arrow-up text-xs"></i>
@@ -607,7 +636,63 @@
         });
     }
 
-    // دالة الترتيب المطورة والآمنة 100% (تعيد ترقيم القائمة بالكامل وتمنع تعليق الفروع)
+    // دوال السحب والإفلات (Drag and Drop Handlers)
+    let draggedCardId = null;
+
+    function handleDragStart(e) {
+        draggedCardId = this.getAttribute("data-id");
+        this.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        this.classList.add("drag-over");
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove("drag-over");
+    }
+
+    async function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove("drag-over");
+        const targetCardId = this.getAttribute("data-id");
+
+        if (!draggedCardId || draggedCardId === targetCardId) return;
+
+        const currentList = [...localBranchesCache];
+        const draggedIndex = currentList.findIndex(b => b.id === draggedCardId);
+        const targetIndex = currentList.findIndex(b => b.id === targetCardId);
+
+        if (draggedIndex === -1 || targetIndex === -1) return;
+
+        // إعادة ترتيب العناصر في المصفوفة محلياً
+        const [movedItem] = currentList.splice(draggedIndex, 1);
+        currentList.splice(targetIndex, 0, movedItem);
+
+        try {
+            // تحديث الترتيب تسلسلياً في قاعدة البيانات
+            const updatePromises = currentList.map((branch, newIdx) => {
+                const branchRef = doc(db, "branches", branch.id);
+                return updateDoc(branchRef, { order: newIdx });
+            });
+
+            await Promise.all(updatePromises);
+            showToast("تم تحديث الترتيب بنجاح");
+        } catch (error) {
+            console.error("خطأ في السحب والإفلات:", error);
+            showToast("فشل تحديث الترتيب", "error");
+        }
+    }
+
+    function handleDragEnd(e) {
+        this.classList.remove("dragging");
+        document.querySelectorAll(".branch-card").forEach(card => card.classList.remove("drag-over"));
+    }
+
+    // دالة التحريك الاحتياطية بالأسهم
     window.moveBranchOrder = async function(branchId, direction) {
         const currentList = [...localBranchesCache];
         const index = currentList.findIndex(b => b.id === branchId);
@@ -616,13 +701,11 @@
         const targetIndex = direction === 'up' ? index - 1 : index + 1;
         if (targetIndex < 0 || targetIndex >= currentList.length) return;
 
-        // تبديل الأماكن محلياً لتحديث الترتيب بدقة
         const temp = currentList[index];
         currentList[index] = currentList[targetIndex];
         currentList[targetIndex] = temp;
 
         try {
-            // تحديث قيم الـ order تسلسلياً لجميع الفروع في قاعدة البيانات
             const updatePromises = currentList.map((branch, newIdx) => {
                 const branchRef = doc(db, "branches", branch.id);
                 return updateDoc(branchRef, { order: newIdx });
