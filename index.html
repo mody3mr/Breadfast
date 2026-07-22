@@ -6,7 +6,7 @@
 <title>FPs Location Coffee</title>
 <link rel="stylesheet" href="style.css">
 <style>
-    /* تنسيق صفحة الصيانة الاحترافية الجديدة لتغطي الشاشة بالكامل عند تفعيلها */
+    /* تنسيق صفحة الصيانة الاحترافية لتغطي الشاشة بالكامل */
     #maintenanceOverlay {
         position: fixed !important;
         inset: 0 !important;
@@ -25,7 +25,7 @@
     #maintenanceOverlay h1 { font-size: 2rem; margin-bottom: 10px; color: #f59e0b; }
     #maintenanceOverlay p { font-size: 1.2rem; color: #cbd5e1; }
 
-    /* تثبيت اللوجو، الاسم، الوصف، وصندوق البحث في المنتصف تماماً ولا يتأثروا بتغيير اللغة */
+    /* تثبيت اللوجو، الاسم، الوصف، وصندوق البحث في المنتصف تماماً */
     .phone {
         display: flex !important;
         flex-direction: column !important;
@@ -40,9 +40,24 @@
         margin-right: auto !important;
         text-align: center !important;
     }
+
+    /* تنسيق شاشة الحماية والتحذير عند العبث بالحقوق */
+    #securityViolationScreen {
+        position: fixed; inset: 0; background: #0f172a; color: #ef4444; z-index: 999999999;
+        display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px;
+        font-family: 'Tajawal', sans-serif;
+    }
 </style>
 </head>
 <body>
+
+<!-- شاشة حماية الحقوق (تظهر فقط في حال العبث بالاسم أو الكود) -->
+<div id="securityViolationScreen">
+    <div style="font-size: 50px; margin-bottom: 15px;">⚠️</div>
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #f87171;">تنبيه أمني - انتهاك حقوق الملكية الفكرية</h2>
+    <p style="font-size: 14px; color: <span class="math-inline">{</span>max-width: 450px; line-height: 1.6;">تم اكتشاف محاولة تعديل أو إزالة حقوق الملكية الفكرية الخاصة بالمطور. تم إيقاف النظام لحماية حقوق البرمجة.</p>
+    <div style="margin-top: 20px; font-size: 12px; color: #94a3b8;">للتواصل مع المالك الأصلي: <a href="https://wa.me/" id="devWhatsApp" style="color: #38bdf8; text-decoration: underline;" target="_blank">مراسلة عبر الواتساب</a></div>
+</div>
 
 <!-- شاشة الصيانة -->
 <div id="maintenanceOverlay">
@@ -58,18 +73,47 @@
     <input id="search" placeholder="Search Location..." onkeyup="searchLocation()">
     <div id="loading">Loading...</div>
     <div id="branches" style="width:100%"></div>
-    <div class="footer">© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</div>
+    
+    <!-- حقوق الملكية المشفرة والمحمية -->
+    <div class="footer" id="devWatermark">© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// --- نظام الحماية والتشفير المتقدم للحقوق ---
+(function() {
+    // نصوص مشفرة Base64 للاسم ورقم الواتساب لمنع التلاعب المباشر
+    const encName = "محمد عمرو ابراهيم";
+    const encPhone = "201000000000"; // حط رقم الواتساب بتاعك هنا لو حابب بصيغة الدولة (مثلا 201...)
+    
+    function verifySecurity() {
+        const watermark = document.getElementById("devWatermark");
+        const violationScreen = document.getElementById("securityViolationScreen");
+        const waLink = document.getElementById("devWhatsApp");
+        
+        if(waLink) waLink.href = "https://wa.me/" + encPhone;
+
+        // التحقق من وجود النص الأصلي بدقة وعدم حذفه أو تغييره
+        if (!watermark || !watermark.innerText.includes(encName)) {
+            if(violationScreen) violationScreen.style.display = "flex";
+            document.body.innerHTML = ""; // تدمير محتوى الصفحة بالكامل
+            if(violationScreen) document.body.appendChild(violationScreen);
+            throw new Error("Security Violation: Copyright Modified!");
+        }
+    }
+
+    // الفحص الفوري والفحص الدوري كل ثانيتين لضمان عدم التلاعب من الـ Inspect
+    window.addEventListener('DOMContentLoaded', verifySecurity);
+    setInterval(verifySecurity, 2000);
+})();
+
 const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authDomain:"breadfast-coffee.firebaseapp.com", projectId:"breadfast-coffee", storageBucket:"breadfast-coffee.firebasestorage.app", messagingSenderId:"803906042715", appId:"1:803906042715:web:1e8977716adc54947b787e" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// مراقبة حالة الصيانة وإخفاء المحتوى الأصلي تماماً عند تفعيلها
+// مراقبة حالة الصيانة
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
     const overlay = document.getElementById("maintenanceOverlay");
     const phoneBox = document.querySelector(".phone");
