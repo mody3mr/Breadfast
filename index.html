@@ -3,23 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FPs Location Coffee</title>
-<!-- استدعاء Tailwind CSS للتصميم العصري -->
+<title>FPs Location Coffee - Home</title>
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- استدعاء FontAwesome للأيقونات -->
+<!-- FontAwesome Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- استدعاء خط Tajawal الاحترافي -->
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" encoding="utf-8" rel="stylesheet">
+<!-- Tajawal Font -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
     body { font-family: 'Tajawal', sans-serif; }
     
-    /* مخصص لتحسين مظهر الـ Scrollbar داخل قائمة الفروع */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.4); }
 
-    /* شاشة الصيانة الفخمة بملء الشاشة */
     #maintenanceOverlay {
         position: fixed !important;
         inset: 0 !important;
@@ -34,71 +32,69 @@
     }
 </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden pb-24">
 
-    <!-- خلفيات إضاءة متحركة وعصرية (Glow Blobs) -->
-    <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-amber-500/15 rounded-full blur-[140px] pointer-events-none"></div>
+    <!-- خلفيات إضاءة متحركة وعصرية -->
+    <div class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[150px] pointer-events-none"></div>
 
     <!-- شاشة الصيانة الفخمة -->
     <div id="maintenanceOverlay">
-        <div class="max-w-md w-full bg-slate-900/80 backdrop-blur-2xl border border-slate-800/80 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] p-8 text-center relative z-10">
+        <div class="max-w-md w-full bg-slate-900/90 backdrop-blur-2xl border border-slate-800 rounded-[2.5rem] shadow-2xl p-8 text-center relative z-10">
             <div class="w-20 h-20 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-amber-500/20 text-slate-950 text-3xl rotate-3">
                 <i class="fa-solid fa-mug-hot"></i>
             </div>
-
-            <div class="inline-block bg-slate-800/80 border border-slate-700/60 px-4 py-1 rounded-full text-xs font-bold text-amber-400 mb-3 shadow-inner">
+            <div class="inline-block bg-slate-800 border border-slate-700 px-4 py-1 rounded-full text-xs font-bold text-amber-400 mb-3">
                 FPs Coffee System
             </div>
-
             <h1 class="text-2xl font-black text-white mb-2">نعد لك شيئاً مميزاً!</h1>
-            <p class="text-amber-400/90 text-xs font-bold mb-4">We'll be back soon / سنعود قريباً</p>
-            
+            <p class="text-amber-400 text-xs font-bold mb-4">We'll be back soon / سنعود قريباً</p>
             <p class="text-slate-400 text-xs leading-relaxed mb-6">
                 الموقع يخضع حالياً لتحديثات برمجية شاملة لتقديم أفضل تجربة طلب. نرجو زيارتنا لاحقاً.
             </p>
-
-            <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 mb-6 text-right flex items-center justify-between shadow-inner" dir="rtl">
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 mb-6 text-right flex items-center justify-between" dir="rtl">
                 <div class="flex items-center gap-2.5">
                     <div class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></div>
                     <span class="text-xs text-slate-300 font-bold">جاري أعمال الصيانة والتحديث</span>
                 </div>
                 <span class="text-[10px] font-mono bg-slate-900 text-amber-400 px-2.5 py-1 rounded-xl border border-slate-800">v1.4</span>
             </div>
-
-            <button onclick="window.location.reload();" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-blue-600/25 text-xs flex items-center justify-center gap-2 group">
-                <i class="fa-solid fa-rotate-right group-hover:rotate-180 transition-transform duration-500"></i>
+            <button onclick="window.location.reload();" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg text-xs flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i>
                 <span>تحقق من عودة الخدمة</span>
             </button>
-
             <p class="text-[10px] text-slate-500 mt-6 pt-4 border-t border-slate-800/60 font-medium">
                 جميع الحقوق محفوظة © FPs Coffee
             </p>
         </div>
     </div>
 
-    <!-- الحاوية الرئيسية الاحترافية (متوافقة بامتياز مع الموبايل واللابتوب) -->
-    <div id="mainWebsiteContent" class="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-6 sm:p-8 flex flex-col items-center text-center relative z-10 transition-all">
+    <!-- الحاوية الرئيسية الاحترافية -->
+    <div id="mainWebsiteContent" class="w-full max-w-lg bg-slate-900/50 backdrop-blur-2xl border border-slate-800/80 rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.6)] p-6 sm:p-8 flex flex-col items-center text-center relative z-10 transition-all">
         
-        <!-- زر تغيير اللغة العصري -->
-        <div class="w-full flex justify-end mb-2">
-            <button onclick="changeLang()" class="bg-slate-800/80 hover:bg-slate-700/80 text-amber-400 border border-slate-700/60 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+        <!-- زر تغيير اللغة والشير -->
+        <div class="w-full flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="systemStatus" class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Live System</span>
+            </div>
+            <button onclick="changeLang()" class="bg-slate-800/80 hover:bg-slate-700 text-amber-400 border border-slate-700/60 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-globe text-[11px]"></i>
                 <span id="langBtnText">العربية</span>
             </button>
         </div>
 
-        <!-- اللوجو (Avatar) بتصميم فاخر مع إطار مضيء -->
+        <!-- اللوجو مع تأثير هالة مضيئة -->
         <div class="relative w-28 h-28 mx-auto mb-4 group">
-            <div class="absolute inset-0 bg-gradient-to-tr from-amber-500 to-blue-600 rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity"></div>
-            <img class="relative w-28 h-28 rounded-full object-cover border-4 border-slate-900 shadow-xl" src="breadfastlogo.jpg" alt="Logo">
+            <div class="absolute inset-0 bg-gradient-to-tr from-amber-500 to-blue-600 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity"></div>
+            <img class="relative w-28 h-28 rounded-full object-cover border-4 border-slate-900 shadow-2xl" src="breadfastlogo.jpg" alt="Logo">
         </div>
 
-        <!-- الاسم والمسمى الوظيفي -->
+        <!-- الاسم والمسمى -->
         <h1 id="name" class="text-2xl font-black text-white tracking-wide mb-1">Moaaz Mohamed</h1>
         <p id="desc" class="text-xs font-bold text-amber-400 tracking-wider uppercase mb-6 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">Senior Manager</p>
 
-        <!-- حقل البحث الاحترافي -->
+        <!-- حقل البحث -->
         <div class="w-full relative mb-6">
             <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
             <input id="search" placeholder="Search Location..." onkeyup="searchLocation()" class="w-full bg-slate-950/80 border border-slate-800 text-white placeholder-slate-500 rounded-2xl px-11 py-3.5 text-sm focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner">
@@ -110,13 +106,31 @@
             <span>جاري تحميل الفروع...</span>
         </div>
 
-        <!-- قائمة الفروع (تتعبى ديناميكياً) -->
-        <div id="branches" class="w-full space-y-3.5 max-h-[380px] overflow-y-auto pr-1"></div>
+        <!-- قائمة الفروع -->
+        <div id="branches" class="w-full space-y-3.5 max-h-[350px] overflow-y-auto pr-1"></div>
 
-        <!-- التذييل (Footer) -->
+        <!-- حقوق النشر -->
         <div class="w-full mt-6 pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 font-medium text-center">
             © 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
         </div>
+    </div>
+
+    <!-- شريط التنقل العائم السفلي (Floating Dock) - ميزة تخليه يفرقع إبهاراً -->
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/60 px-6 py-3 rounded-full shadow-2xl flex items-center gap-6 z-50">
+        <a href="index.html" class="flex flex-col items-center text-amber-400 text-xs font-bold gap-1 transition-transform hover:scale-110">
+            <i class="fa-solid fa-house text-base"></i>
+            <span id="navHome">الرئيسية</span>
+        </a>
+        <div class="w-[1px] h-6 bg-slate-700"></div>
+        <a href="analytics.html" class="flex flex-col items-center text-slate-400 hover:text-amber-400 text-xs font-bold gap-1 transition-all hover:scale-110">
+            <i class="fa-solid fa-chart-pie text-base"></i>
+            <span id="navAnalytics">الإحصائيات</span>
+        </a>
+        <div class="w-[1px] h-6 bg-slate-700"></div>
+        <a href="directory.html" class="flex flex-col items-center text-slate-400 hover:text-amber-400 text-xs font-bold gap-1 transition-all hover:scale-110">
+            <i class="fa-solid fa-address-book text-base"></i>
+            <span id="navDirectory">الدليل</span>
+        </a>
     </div>
 
 <script type="module">
@@ -127,20 +141,15 @@ const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// مراقبة حالة الصيانة
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
     const overlay = document.getElementById("maintenanceOverlay");
     const mainContent = document.getElementById("mainWebsiteContent");
-
-    if (docSnap.exists()) {
-        const isMaint = docSnap.data().isMaintenance;
-        if (isMaint === true) {
-            overlay.style.display = "flex";
-            if(mainContent) mainContent.style.display = "none";
-        } else {
-            overlay.style.display = "none";
-            if(mainContent) mainContent.style.display = "flex";
-        }
+    if (docSnap.exists() && docSnap.data().isMaintenance === true) {
+        overlay.style.display = "flex";
+        if(mainContent) mainContent.style.display = "none";
+    } else {
+        overlay.style.display = "none";
+        if(mainContent) mainContent.style.display = "flex";
     }
 });
 
@@ -155,7 +164,6 @@ onSnapshot(collection(db,"branches"), (snap)=>{
             data.push(branchData); 
         }
     });
-
     data.sort((a, b) => a.order - b.order);
     window.branches = data; 
     currentList = data;
@@ -171,9 +179,7 @@ function render(list){
     }
     list.forEach(b=>{
         let a = document.createElement("a"); 
-        // تصميم احترافي لأزرار الفروع بـ Tailwind بدل الـ CSS القديم
         a.className = "w-full bg-slate-950/70 hover:bg-slate-950 border border-slate-800/80 hover:border-amber-500/40 text-slate-200 hover:text-white font-bold py-3.5 px-5 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-between group block text-sm";
-        
         let branchName = isArabic ? (b.nameAr || b.name) : (b.name || b.nameAr);
         a.innerHTML = `
             <span>${branchName}</span>
@@ -202,7 +208,12 @@ window.changeLang = function(){
     document.getElementById("desc").innerText = isArabic ? "مدير أول" : "Senior Manager";
     document.getElementById("search").placeholder = isArabic ? "ابحث عن المكان..." : "Search Location...";
     document.getElementById("langBtnText").innerText = isArabic ? "English" : "العربية";
+    document.getElementById("systemStatus").innerText = isArabic ? "النظام يعمل" : "Live System";
     
+    document.getElementById("navHome").innerText = isArabic ? "الرئيسية" : "Home";
+    document.getElementById("navAnalytics").innerText = isArabic ? "الإحصائيات" : "Analytics";
+    document.getElementById("navDirectory").innerText = isArabic ? "الدليل" : "Directory";
+
     render(currentList);
 }
 </script>
