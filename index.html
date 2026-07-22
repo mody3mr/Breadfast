@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FPs Location Coffee - Home</title>
+<title>FPs Location Coffee</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- FontAwesome Icons -->
@@ -32,7 +32,7 @@
     }
 </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden pb-24">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden">
 
     <!-- خلفيات إضاءة متحركة وعصرية -->
     <div class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none"></div>
@@ -70,15 +70,16 @@
     </div>
 
     <!-- الحاوية الرئيسية الاحترافية -->
-    <div id="mainWebsiteContent" class="w-full max-w-lg bg-slate-900/50 backdrop-blur-2xl border border-slate-800/80 rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.6)] p-6 sm:p-8 flex flex-col items-center text-center relative z-10 transition-all">
+    <div id="mainWebsiteContent" class="w-full max-w-lg bg-slate-900/60 backdrop-blur-2xl border border-slate-800/80 rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.6)] p-6 sm:p-8 flex flex-col items-center text-center relative z-10 transition-all">
         
-        <!-- زر تغيير اللغة والشير -->
-        <div class="w-full flex justify-between items-center mb-4">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span id="systemStatus" class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Live System</span>
+        <!-- شريط التنقل العلوي داخل البطاقة (Tabs) -->
+        <div class="w-full flex items-center justify-between bg-slate-950/60 border border-slate-800/80 p-1.5 rounded-2xl mb-6">
+            <div class="flex items-center gap-1">
+                <a href="index.html" id="tabHome" class="bg-amber-500/15 text-amber-400 border border-amber-500/30 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">الرئيسية</a>
+                <a href="analytics.html" id="tabAnalytics" class="text-slate-400 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">الإحصائيات</a>
+                <a href="directory.html" id="tabDirectory" class="text-slate-400 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">الدليل</a>
             </div>
-            <button onclick="changeLang()" class="bg-slate-800/80 hover:bg-slate-700 text-amber-400 border border-slate-700/60 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+            <button onclick="changeLang()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700/60 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-globe text-[11px]"></i>
                 <span id="langBtnText">العربية</span>
             </button>
@@ -113,24 +114,6 @@
         <div class="w-full mt-6 pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 font-medium text-center">
             © 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
         </div>
-    </div>
-
-    <!-- شريط التنقل العائم السفلي (Floating Dock) - ميزة تخليه يفرقع إبهاراً -->
-    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/60 px-6 py-3 rounded-full shadow-2xl flex items-center gap-6 z-50">
-        <a href="index.html" class="flex flex-col items-center text-amber-400 text-xs font-bold gap-1 transition-transform hover:scale-110">
-            <i class="fa-solid fa-house text-base"></i>
-            <span id="navHome">الرئيسية</span>
-        </a>
-        <div class="w-[1px] h-6 bg-slate-700"></div>
-        <a href="analytics.html" class="flex flex-col items-center text-slate-400 hover:text-amber-400 text-xs font-bold gap-1 transition-all hover:scale-110">
-            <i class="fa-solid fa-chart-pie text-base"></i>
-            <span id="navAnalytics">الإحصائيات</span>
-        </a>
-        <div class="w-[1px] h-6 bg-slate-700"></div>
-        <a href="directory.html" class="flex flex-col items-center text-slate-400 hover:text-amber-400 text-xs font-bold gap-1 transition-all hover:scale-110">
-            <i class="fa-solid fa-address-book text-base"></i>
-            <span id="navDirectory">الدليل</span>
-        </a>
     </div>
 
 <script type="module">
@@ -208,11 +191,10 @@ window.changeLang = function(){
     document.getElementById("desc").innerText = isArabic ? "مدير أول" : "Senior Manager";
     document.getElementById("search").placeholder = isArabic ? "ابحث عن المكان..." : "Search Location...";
     document.getElementById("langBtnText").innerText = isArabic ? "English" : "العربية";
-    document.getElementById("systemStatus").innerText = isArabic ? "النظام يعمل" : "Live System";
     
-    document.getElementById("navHome").innerText = isArabic ? "الرئيسية" : "Home";
-    document.getElementById("navAnalytics").innerText = isArabic ? "الإحصائيات" : "Analytics";
-    document.getElementById("navDirectory").innerText = isArabic ? "الدليل" : "Directory";
+    document.getElementById("tabHome").innerText = isArabic ? "الرئيسية" : "Home";
+    document.getElementById("tabAnalytics").innerText = isArabic ? "الإحصائيات" : "Analytics";
+    document.getElementById("tabDirectory").innerText = isArabic ? "الدليل" : "Directory";
 
     render(currentList);
 }
