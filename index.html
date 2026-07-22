@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FPs Location Coffee</title>
-<!-- استدعاء Tailwind CSS للتصميم الاحترافي -->
+<!-- استدعاء Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- استدعاء FontAwesome للأيقونات -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- استدعاء خط Tajawal العصري -->
+<!-- استدعاء خط Tajawal -->
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
     body { font-family: 'Tajawal', sans-serif; }
     
-    /* شاشة صيانة تملى الشاشة بالكامل وتفصل الموقع تماماً عند تفعيلها */
+    /* شاشة صيانة بتملى الشاشة وتخفي أي حاجة تحتها بأمان تام */
     #maintenanceOverlay {
         position: fixed;
         inset: 0;
-        background: #020617; /* لون داكن وفخم جداً */
+        background-color: #020617;
         z-index: 999999;
         display: none;
         align-items: center;
@@ -27,16 +27,14 @@
     }
 </style>
 </head>
-<body class="bg-slate-950 min-h-screen flex items-center justify-center">
+<body class="bg-slate-955 min-h-screen">
 
-<!-- شاشة الصيانة الفخمة والمنفصلة كلياً -->
+<!-- شاشة الصيانة الفخمة -->
 <div id="maintenanceOverlay">
-    <!-- خلفيات مضيئة وناعمة -->
     <div class="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
     <div class="max-w-md w-full bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-2xl p-8 text-center relative z-10">
-        <!-- أيقونة القهوة المميزة -->
         <div class="w-20 h-20 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-500/20 text-slate-950 text-3xl rotate-3">
             <i class="fa-solid fa-mug-hot"></i>
         </div>
@@ -72,7 +70,7 @@
 </div>
 
 <!-- المحتوى الأصلي للموقع -->
-<div class="phone">
+<div class="phone" id="mainWebsiteContent">
     <div class="lang"><button onclick="changeLang()">العربية</button></div>
     <img class="avatar" src="breadfastlogo.jpg">
     <h1 id="name">Moaaz Mohamed</h1>
@@ -91,17 +89,20 @@ const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// مراقبة حالة الصيانة وعرضها بشكل كامل يغطي الشاشة
+// مراقبة دقيقة لحالة الصيانة وإخفاء الموقع تماماً عند تفعيلها
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
     const overlay = document.getElementById("maintenanceOverlay");
-    const phoneContainer = document.querySelector(".phone");
-    
-    if (docSnap.exists() && docSnap.data().isMaintenance) {
-        overlay.style.display = "flex";
-        if(phoneContainer) phoneContainer.style.display = "none"; // إخفاء محتوى الموقع تماماً
-    } else {
-        overlay.style.display = "none";
-        if(phoneContainer) phoneContainer.style.display = "block"; // إظهار الموقع عند انتهاء الصيانة
+    const mainContent = document.getElementById("mainWebsiteContent");
+
+    if (docSnap.exists()) {
+        const maintenanceStatus = docSnap.data().isMaintenance;
+        if (maintenanceStatus === true) {
+            overlay.style.display = "flex";
+            if(mainContent) mainContent.style.display = "none";
+        } else {
+            overlay.style.display = "none";
+            if(mainContent) mainContent.style.display = "block";
+        }
     }
 });
 
