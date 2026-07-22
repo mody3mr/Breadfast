@@ -13,7 +13,7 @@
 <style>
     body { font-family: 'Tajawal', sans-serif; }
     
-    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.4); }
@@ -32,11 +32,11 @@
     }
 </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 sm:p-8 relative overflow-x-hidden">
 
     <!-- خلفيات إضاءة متحركة وعصرية -->
-    <div class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[700px] h-[700px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none"></div>
 
     <!-- شاشة الصيانة الفخمة -->
     <div id="maintenanceOverlay">
@@ -69,49 +69,44 @@
         </div>
     </div>
 
-    <!-- الحاوية الرئيسية الاحترافية -->
-    <div id="mainWebsiteContent" class="w-full max-w-lg bg-slate-900/60 backdrop-blur-2xl border border-slate-800/80 rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.6)] p-6 sm:p-8 flex flex-col items-center text-center relative z-10 transition-all">
+    <!-- البطاقة الرئيسية بتصميم نظيف وخالٍ من أي شرايط مزعجة -->
+    <div id="mainWebsiteContent" class="w-full max-w-xl bg-slate-900/50 backdrop-blur-2xl border border-slate-800/80 rounded-[3rem] shadow-[0_30px_70px_rgba(0,0,0,0.7)] p-8 sm:p-10 flex flex-col items-center text-center relative z-10 transition-all">
         
-        <!-- شريط التنقل العلوي داخل البطاقة (Tabs) -->
-        <div class="w-full flex items-center justify-between bg-slate-950/60 border border-slate-800/80 p-1.5 rounded-2xl mb-6">
-            <div class="flex items-center gap-1">
-                <a href="index.html" id="tabHome" class="bg-amber-500/15 text-amber-400 border border-amber-500/30 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">الرئيسية</a>
-                <a href="analytics.html" id="tabAnalytics" class="text-slate-400 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">الإحصائيات</a>
-                <a href="directory.html" id="tabDirectory" class="text-slate-400 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">الدليل</a>
-            </div>
-            <button onclick="changeLang()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700/60 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
-                <i class="fa-solid fa-globe text-[11px]"></i>
+        <!-- زر تغيير اللغة في أعلى اليمين بشكل أنيق -->
+        <div class="w-full flex justify-end mb-2">
+            <button onclick="changeLang()" class="bg-slate-800/80 hover:bg-slate-700 text-amber-400 border border-slate-700/60 px-4 py-2 rounded-2xl text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer hover:scale-105">
+                <i class="fa-solid fa-globe text-xs"></i>
                 <span id="langBtnText">العربية</span>
             </button>
         </div>
 
-        <!-- اللوجو مع تأثير هالة مضيئة -->
-        <div class="relative w-28 h-28 mx-auto mb-4 group">
-            <div class="absolute inset-0 bg-gradient-to-tr from-amber-500 to-blue-600 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity"></div>
-            <img class="relative w-28 h-28 rounded-full object-cover border-4 border-slate-900 shadow-2xl" src="breadfastlogo.jpg" alt="Logo">
+        <!-- اللوجو الفاخر مع هالة مضيئة -->
+        <div class="relative w-32 h-32 mx-auto mb-5 group">
+            <div class="absolute inset-0 bg-gradient-to-tr from-amber-500 to-blue-600 rounded-full blur-xl opacity-80 group-hover:opacity-100 transition-opacity"></div>
+            <img class="relative w-32 h-32 rounded-full object-cover border-4 border-slate-900 shadow-2xl" src="breadfastlogo.jpg" alt="Logo">
         </div>
 
-        <!-- الاسم والمسمى -->
-        <h1 id="name" class="text-2xl font-black text-white tracking-wide mb-1">Moaaz Mohamed</h1>
-        <p id="desc" class="text-xs font-bold text-amber-400 tracking-wider uppercase mb-6 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">Senior Manager</p>
+        <!-- الاسم والمسمى الوظيفي -->
+        <h1 id="name" class="text-3xl font-black text-white tracking-wide mb-2">Moaaz Mohamed</h1>
+        <p id="desc" class="text-xs font-bold text-amber-400 tracking-widest uppercase mb-8 bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 inline-block">Senior Manager</p>
 
-        <!-- حقل البحث -->
-        <div class="w-full relative mb-6">
-            <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input id="search" placeholder="Search Location..." onkeyup="searchLocation()" class="w-full bg-slate-950/80 border border-slate-800 text-white placeholder-slate-500 rounded-2xl px-11 py-3.5 text-sm focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner">
+        <!-- حقل البحث الاحترافي -->
+        <div class="w-full relative mb-8">
+            <i class="fa-solid fa-magnifying-glass absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+            <input id="search" placeholder="Search Location..." onkeyup="searchLocation()" class="w-full bg-slate-950/90 border border-slate-800 text-white placeholder-slate-500 rounded-2xl px-12 py-4 text-sm focus:outline-none focus:border-amber-500/60 focus:ring-4 focus:ring-amber-500/15 transition-all shadow-inner">
         </div>
 
         <!-- حالة التحميل -->
-        <div id="loading" class="text-slate-400 text-xs py-8 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-circle-notch fa-spin text-amber-500 text-base"></i>
-            <span>جاري تحميل الفروع...</span>
+        <div id="loading" class="text-slate-400 text-xs py-10 flex items-center justify-center gap-2.5">
+            <i class="fa-solid fa-circle-notch fa-spin text-amber-500 text-lg"></i>
+            <span class="font-medium">جاري جلب الفروع المتاحة...</span>
         </div>
 
-        <!-- قائمة الفروع -->
-        <div id="branches" class="w-full space-y-3.5 max-h-[350px] overflow-y-auto pr-1"></div>
+        <!-- قائمة الفروع (بتصميم بطاقات فخمة ومتجاوبة) -->
+        <div id="branches" class="w-full space-y-4 max-h-[420px] overflow-y-auto pr-1"></div>
 
         <!-- حقوق النشر -->
-        <div class="w-full mt-6 pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 font-medium text-center">
+        <div class="w-full mt-8 pt-5 border-t border-slate-800/80 text-xs text-slate-500 font-medium text-center">
             © 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم
         </div>
     </div>
@@ -124,6 +119,7 @@ const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// مراقبة حالة الصيانة
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
     const overlay = document.getElementById("maintenanceOverlay");
     const mainContent = document.getElementById("mainWebsiteContent");
@@ -157,16 +153,20 @@ onSnapshot(collection(db,"branches"), (snap)=>{
 function render(list){
     let box = document.getElementById("branches"); box.innerHTML = "";
     if(list.length === 0) {
-        box.innerHTML = `<div class="text-slate-500 text-xs py-6">لا توجد فروع تطابق بحثك</div>`;
+        box.innerHTML = `<div class="text-slate-500 text-xs py-8 font-medium">لا توجد فروع تطابق بحثك</div>`;
         return;
     }
     list.forEach(b=>{
         let a = document.createElement("a"); 
-        a.className = "w-full bg-slate-950/70 hover:bg-slate-950 border border-slate-800/80 hover:border-amber-500/40 text-slate-200 hover:text-white font-bold py-3.5 px-5 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-between group block text-sm";
+        // تصميم أزرار فروع فاخر مع تأثيرات حركة ناعمة عند تمرير الماوس
+        a.className = "w-full bg-slate-950/80 hover:bg-slate-950 border border-slate-800 hover:border-amber-500/50 text-slate-100 hover:text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg hover:shadow-amber-500/10 flex items-center justify-between group block text-base";
+        
         let branchName = isArabic ? (b.nameAr || b.name) : (b.name || b.nameAr);
         a.innerHTML = `
-            <span>${branchName}</span>
-            <i class="fa-solid fa-chevron-${isArabic ? 'left' : 'right'} text-slate-500 group-hover:text-amber-400 transition-colors text-xs"></i>
+            <span class="tracking-wide">${branchName}</span>
+            <div class="w-8 h-8 rounded-xl bg-slate-900 group-hover:bg-amber-500 group-hover:text-slate-950 text-slate-400 flex items-center justify-center transition-all text-xs shadow-inner">
+                <i class="fa-solid fa-chevron-${isArabic ? 'left' : 'right'}"></i>
+            </div>
         `;
         a.href = "branch.html?id=" + b.id; 
         box.appendChild(a);
@@ -191,10 +191,6 @@ window.changeLang = function(){
     document.getElementById("desc").innerText = isArabic ? "مدير أول" : "Senior Manager";
     document.getElementById("search").placeholder = isArabic ? "ابحث عن المكان..." : "Search Location...";
     document.getElementById("langBtnText").innerText = isArabic ? "English" : "العربية";
-    
-    document.getElementById("tabHome").innerText = isArabic ? "الرئيسية" : "Home";
-    document.getElementById("tabAnalytics").innerText = isArabic ? "الإحصائيات" : "Analytics";
-    document.getElementById("tabDirectory").innerText = isArabic ? "الدليل" : "Directory";
 
     render(currentList);
 }
