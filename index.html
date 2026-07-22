@@ -55,8 +55,8 @@
 <div id="securityViolationScreen">
     <div style="font-size: 50px; margin-bottom: 15px;">⚠️</div>
     <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #f87171;">تنبيه أمني - انتهاك حقوق الملكية الفكرية</h2>
-    <p style="font-size: 14px; color: <span class="math-inline">{</span>max-width: 450px; line-height: 1.6;">تم اكتشاف محاولة تعديل أو إزالة حقوق الملكية الفكرية الخاصة بالمطور. تم إيقاف النظام لحماية حقوق البرمجة.</p>
-    <div style="margin-top: 20px; font-size: 12px; color: #94a3b8;">للتواصل مع المالك الأصلي: <a href="https://wa.me/" id="devWhatsApp" style="color: #38bdf8; text-decoration: underline;" target="_blank">مراسلة عبر الواتساب</a></div>
+    <p style="font-size: 14px; color: #cbd5e1; max-width: 450px; line-height: 1.6; margin-bottom: 20px;">تم اكتشاف محاولة تعديل أو إزالة حقوق الملكية الفكرية الخاصة بالمطور. تم إيقاف النظام لحماية حقوق البرمجة.</p>
+    <div style="font-size: 14px; color: #94a3b8;">للتواصل مع المالك الأصلي: <a href="https://wa.me/201015383568" style="color: #38bdf8; text-decoration: underline; font-weight: bold;" target="_blank">مراسلة عبر الواتساب</a></div>
 </div>
 
 <!-- شاشة الصيانة -->
@@ -84,21 +84,16 @@ import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.c
 
 // --- نظام الحماية والتشفير المتقدم للحقوق ---
 (function() {
-    // نصوص مشفرة Base64 للاسم ورقم الواتساب لمنع التلاعب المباشر
     const encName = "محمد عمرو ابراهيم";
-    const encPhone = "201000000000"; // حط رقم الواتساب بتاعك هنا لو حابب بصيغة الدولة (مثلا 201...)
     
     function verifySecurity() {
         const watermark = document.getElementById("devWatermark");
         const violationScreen = document.getElementById("securityViolationScreen");
-        const waLink = document.getElementById("devWhatsApp");
-        
-        if(waLink) waLink.href = "https://wa.me/" + encPhone;
 
         // التحقق من وجود النص الأصلي بدقة وعدم حذفه أو تغييره
         if (!watermark || !watermark.innerText.includes(encName)) {
             if(violationScreen) violationScreen.style.display = "flex";
-            document.body.innerHTML = ""; // تدمير محتوى الصفحة بالكامل
+            document.body.innerHTML = ""; // تدمير محتوى الصفحة بالكامل لمنع الاستخدام غير المشروع
             if(violationScreen) document.body.appendChild(violationScreen);
             throw new Error("Security Violation: Copyright Modified!");
         }
