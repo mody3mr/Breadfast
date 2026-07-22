@@ -14,12 +14,14 @@
 <style>
     body { font-family: 'Tajawal', sans-serif; }
     
-    /* شاشة صيانة بتملى الشاشة وتخفي أي حاجة تحتها بأمان تام */
+    /* شاشة صيانة تملى الشاشة وتغطي كل شيء بطبقة نهائية */
     #maintenanceOverlay {
-        position: fixed;
-        inset: 0;
-        background-color: #020617;
-        z-index: 999999;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: #020617 !important;
+        z-index: 99999999 !important;
         display: none;
         align-items: center;
         justify-content: center;
@@ -27,9 +29,9 @@
     }
 </style>
 </head>
-<body class="bg-slate-955 min-h-screen">
+<body class="bg-slate-950 min-h-screen">
 
-<!-- شاشة الصيانة الفخمة -->
+<!-- شاشة الصيانة الفخمة والحديثة -->
 <div id="maintenanceOverlay">
     <div class="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -89,20 +91,24 @@ const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// مراقبة دقيقة لحالة الصيانة وإخفاء الموقع تماماً عند تفعيلها
+// مراقبة حالة الصيانة من الـ Firebase وتطبيق الإخفاء التام
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
     const overlay = document.getElementById("maintenanceOverlay");
     const mainContent = document.getElementById("mainWebsiteContent");
 
     if (docSnap.exists()) {
-        const maintenanceStatus = docSnap.data().isMaintenance;
-        if (maintenanceStatus === true) {
+        const isMaint = docSnap.data().isMaintenance;
+        console.log("حالة الصيانة في الفايربيس:", isMaint); // للتأكد من القيمة في الـ Console
+
+        if (isMaint === true) {
             overlay.style.display = "flex";
             if(mainContent) mainContent.style.display = "none";
         } else {
             overlay.style.display = "none";
             if(mainContent) mainContent.style.display = "block";
         }
+    } else {
+        console.log("مستند الإعدادات غير موجود في الـ Firebase!");
     }
 });
 
