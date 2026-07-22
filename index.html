@@ -10,22 +10,38 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- استدعاء خط Tajawal -->
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 <style>
     body { font-family: 'Tajawal', sans-serif; }
     
-    /* شاشة صيانة تملى الشاشة وتغطي كل شيء بطبقة نهائية */
+    /* شاشة الصيانة الفخمة */
     #maintenanceOverlay {
         position: fixed !important;
         inset: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
         background-color: #020617 !important;
-        z-index: 99999999 !important;
+        z-index: 999999999 !important;
         display: none;
         align-items: center;
         justify-content: center;
         padding: 20px;
+    }
+
+    /* تثبيت اللوجو، الاسم، الوصف، وحقل البحث في المنتصف دائماً بغض النظر عن اللغة */
+    .phone {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    .phone .avatar,
+    .phone h1,
+    .phone p,
+    .phone input#search {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center !important;
     }
 </style>
 </head>
@@ -91,15 +107,13 @@ const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// مراقبة حالة الصيانة من الـ Firebase وتطبيق الإخفاء التام
+// مراقبة حالة الصيانة
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
     const overlay = document.getElementById("maintenanceOverlay");
     const mainContent = document.getElementById("mainWebsiteContent");
 
     if (docSnap.exists()) {
         const isMaint = docSnap.data().isMaintenance;
-        console.log("حالة الصيانة في الفايربيس:", isMaint); // للتأكد من القيمة في الـ Console
-
         if (isMaint === true) {
             overlay.style.display = "flex";
             if(mainContent) mainContent.style.display = "none";
@@ -107,8 +121,6 @@ onSnapshot(doc(db, "settings", "general"), (docSnap) => {
             overlay.style.display = "none";
             if(mainContent) mainContent.style.display = "block";
         }
-    } else {
-        console.log("مستند الإعدادات غير موجود في الـ Firebase!");
     }
 });
 
