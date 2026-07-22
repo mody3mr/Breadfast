@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FPs Location Coffee</title>
 <link rel="stylesheet" href="style.css">
+<!-- FontAwesome للأيقونات -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     /* تنسيق صفحة الصيانة الاحترافية لتغطي الشاشة بالكامل */
     #maintenanceOverlay {
@@ -41,6 +43,32 @@
         text-align: center !important;
     }
 
+    /* تصميم شريط الحقوق الفخم (مثل أداة Odoo) */
+    .custom-footer-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        color: #475569;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        font-size: 13px;
+        font-family: 'Tajawal', sans-serif;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+        margin-top: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    .custom-footer-badge:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-1px);
+    }
+    .custom-footer-badge i {
+        color: #22c55e; /* لون أيقونة الواتساب الأخضر */
+        font-size: 15px;
+    }
+
     /* تنسيق شاشة الحماية والتحذير عند العبث بالحقوق */
     #securityViolationScreen {
         position: fixed; inset: 0; background: #0f172a; color: #ef4444; z-index: 999999999;
@@ -74,8 +102,11 @@
     <div id="loading">Loading...</div>
     <div id="branches" style="width:100%"></div>
     
-    <!-- حقوق الملكية المشفرة والمحمية -->
-    <div class="footer" id="devWatermark">© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</div>
+    <!-- حقوق الملكية المشفرة بتصميم أداة Odoo الفخم وزر الواتساب -->
+    <a href="https://wa.me/201015383568" target="_blank" class="custom-footer-badge" id="devWatermark">
+        <span>© 2026 تم الإنشاء بواسطة | محمد عمرو ابراهيم</span>
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 </div>
 
 <script type="module">
@@ -93,13 +124,13 @@ import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.c
         // التحقق من وجود النص الأصلي بدقة وعدم حذفه أو تغييره
         if (!watermark || !watermark.innerText.includes(encName)) {
             if(violationScreen) violationScreen.style.display = "flex";
-            document.body.innerHTML = ""; // تدمير محتوى الصفحة بالكامل لمنع الاستخدام غير المشروع
+            document.body.innerHTML = ""; // تدمير محتوى الصفحة تماماً لمنع الاستخدام غير المشروع
             if(violationScreen) document.body.appendChild(violationScreen);
             throw new Error("Security Violation: Copyright Modified!");
         }
     }
 
-    // الفحص الفوري والفحص الدوري كل ثانيتين لضمان عدم التلاعب من الـ Inspect
+    // الفحص الفوري والفحص الدوري كل ثانيتين لمنع أي تلاعب
     window.addEventListener('DOMContentLoaded', verifySecurity);
     setInterval(verifySecurity, 2000);
 })();
