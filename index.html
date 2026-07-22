@@ -4,85 +4,74 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FPs Location Coffee</title>
-<!-- استدعاء Tailwind CSS لتنسيق صفحة الصيانة الاحترافية -->
+<!-- استدعاء Tailwind CSS للتصميم الاحترافي -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- استدعاء FontAwesome للأيقونات -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- استدعاء خط Tajawal ليتناسب مع التصميم -->
+<!-- استدعاء خط Tajawal العصري -->
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-    /* دمج خط تباجوال مع صفحة الصيانة */
+    body { font-family: 'Tajawal', sans-serif; }
+    
+    /* شاشة صيانة تملى الشاشة بالكامل وتفصل الموقع تماماً عند تفعيلها */
     #maintenanceOverlay {
-        font-family: 'Tajawal', sans-serif;
+        position: fixed;
+        inset: 0;
+        background: #020617; /* لون داكن وفخم جداً */
+        z-index: 999999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
     }
 </style>
 </head>
-<body>
+<body class="bg-slate-950 min-h-screen flex items-center justify-center">
 
-<!-- شاشة الصيانة الاحترافية الجديدة -->
-<div id="maintenanceOverlay" class="fixed inset-0 bg-slate-950 text-slate-100 hidden flex-col items-center justify-center p-6 relative overflow-hidden z-[99999]">
-    <!-- دوائر إضاءة خلفية لإعطاء عمق وتصميم عصري -->
-    <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+<!-- شاشة الصيانة الفخمة والمنفصلة كلياً -->
+<div id="maintenanceOverlay">
+    <!-- خلفيات مضيئة وناعمة -->
+    <div class="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-    <!-- البطاقة الرئيسية -->
-    <div class="max-w-lg w-full bg-slate-900/80 backdrop-blur-2xl border border-slate-800 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] p-10 text-center relative z-10">
-        
-        <!-- أيقونة مع تأثير نبض وخلفية دائرية -->
-        <div class="relative w-24 h-24 mx-auto mb-8 flex items-center justify-center">
-            <div class="absolute inset-0 bg-amber-500/10 rounded-3xl border border-amber-500/20 animate-pulse"></div>
-            <div class="w-16 h-16 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30 text-slate-950 text-3xl rotate-3">
-                <i class="fa-solid fa-mug-hot"></i>
-            </div>
+    <div class="max-w-md w-full bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-2xl p-8 text-center relative z-10">
+        <!-- أيقونة القهوة المميزة -->
+        <div class="w-20 h-20 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-500/20 text-slate-950 text-3xl rotate-3">
+            <i class="fa-solid fa-mug-hot"></i>
         </div>
 
-        <!-- الشعار أو اسم المشروع -->
-        <div class="inline-block bg-slate-800/80 border border-slate-700/60 px-4 py-1.5 rounded-full text-xs font-bold text-amber-400 tracking-wider mb-4 shadow-inner">
+        <div class="inline-block bg-slate-800 px-3.5 py-1 rounded-full text-xs font-bold text-amber-400 mb-3 border border-slate-700">
             FPs Coffee System
         </div>
 
-        <!-- العنوان الرئيسي -->
-        <h1 class="text-3xl font-extrabold text-white mb-3 tracking-wide">
-            نعد لك شيئاً مميزاً!
-        </h1>
-        <p class="text-amber-500/90 text-sm font-bold mb-6">
-            We'll be back soon / سنعود قريباً
-        </p>
+        <h1 class="text-2xl font-black text-white mb-2">نعد لك شيئاً مميزاً!</h1>
+        <p class="text-amber-500 text-xs font-bold mb-4">We'll be back soon / سنعود قريباً</p>
         
-        <!-- الوصف بالعربي والإنجليزية -->
-        <p class="text-slate-400 text-sm leading-relaxed mb-8 px-4">
-            الموقع يخضع حالياً لتحديثات برمجية وتحسينات شاملة في الفروع لتقديم أفضل تجربة طلب وخدمة ممكنة. نرجو زيارتنا لاحقاً.
+        <p class="text-slate-400 text-xs leading-relaxed mb-6">
+            الموقع يخضع حالياً لتحديثات برمجية شاملة لتقديم أفضل تجربة طلب. نرجو زيارتنا لاحقاً.
         </p>
 
-        <!-- صندوق حالة النظام (Status Box) -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 mb-8 text-right flex items-center justify-between shadow-inner" dir="rtl">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full bg-amber-500 animate-ping"></div>
-                <div class="text-xs">
-                    <p class="text-slate-300 font-bold">جاري أعمال الصيانة</p>
-                    <p class="text-slate-500 text-[10px] mt-0.5">الفريق التقني يعمل على الإنهاء فوراً</p>
-                </div>
+        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-3 mb-6 text-right flex items-center justify-between" dir="rtl">
+            <div class="flex items-center gap-2.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></div>
+                <span class="text-xs text-slate-300 font-bold">جاري أعمال الصيانة والتحديث</span>
             </div>
-            <span class="text-xs font-mono bg-slate-800 text-amber-400 px-3 py-1 rounded-xl border border-slate-700">v1.4</span>
+            <span class="text-[10px] font-mono bg-slate-900 text-amber-400 px-2 py-0.5 rounded border border-slate-800">v1.4</span>
         </div>
 
-        <!-- أزرار الإجراءات -->
-        <div class="space-y-3">
-            <button onclick="window.location.reload();" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 text-sm group">
-                <i class="fa-solid fa-rotate-right group-hover:rotate-180 transition-transform duration-500"></i>
-                <span>تحقق من عودة الخدمة</span>
-            </button>
-        </div>
+        <button onclick="window.location.reload();" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-blue-600/20 text-xs flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>تحقق من عودة الخدمة</span>
+        </button>
 
-        <!-- تذييل البطاقة -->
-        <div class="mt-8 pt-6 border-t border-slate-800/80 text-xs text-slate-500 font-medium">
+        <p class="text-[10px] text-slate-500 mt-6 pt-4 border-t border-slate-800/60">
             جميع الحقوق محفوظة © FPs Coffee
-        </div>
-
+        </p>
     </div>
 </div>
 
+<!-- المحتوى الأصلي للموقع -->
 <div class="phone">
     <div class="lang"><button onclick="changeLang()">العربية</button></div>
     <img class="avatar" src="breadfastlogo.jpg">
@@ -102,12 +91,17 @@ const firebaseConfig = { apiKey:"AIzaSyAvV18awCYpoXyDjpM4r2HKRztNxg8UgW8", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// مراقبة حالة الصيانة
+// مراقبة حالة الصيانة وعرضها بشكل كامل يغطي الشاشة
 onSnapshot(doc(db, "settings", "general"), (docSnap) => {
+    const overlay = document.getElementById("maintenanceOverlay");
+    const phoneContainer = document.querySelector(".phone");
+    
     if (docSnap.exists() && docSnap.data().isMaintenance) {
-        document.getElementById("maintenanceOverlay").style.display = "flex";
+        overlay.style.display = "flex";
+        if(phoneContainer) phoneContainer.style.display = "none"; // إخفاء محتوى الموقع تماماً
     } else {
-        document.getElementById("maintenanceOverlay").style.display = "none";
+        overlay.style.display = "none";
+        if(phoneContainer) phoneContainer.style.display = "block"; // إظهار الموقع عند انتهاء الصيانة
     }
 });
 
@@ -117,17 +111,13 @@ onSnapshot(collection(db,"branches"), (snap)=>{
     let data = []; 
     snap.forEach(d=>{ 
         let branchData = {id:d.id, ...d.data()};
-        // إخفاء الفروع غير النشطة (إذا لم تكن الخاصية موجودة نعتبره نشط افتراضياً)
         if(branchData.isActive !== false) {
-            // تعيين قيمة افتراضية للترتيب لو غير موجودة
             branchData.order = branchData.order !== undefined ? branchData.order : 999;
             data.push(branchData); 
         }
     });
 
-    // ترتيب الفروع محلياً بناءً على حقل الـ order ليتطابق تماماً مع لوحة التحكم
     data.sort((a, b) => a.order - b.order);
-
     window.branches = data; 
     currentList = data;
     document.getElementById("loading").style.display="none";
